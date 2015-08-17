@@ -22,6 +22,7 @@
     "gulp-clean": "^0.3.1",
     "gulp-gzip": "^1.2.0",
     "gulp-install": "^0.5.0",
+    "gulp-live-server": "0.0.23",
     "gulp-mocha": "^2.1.3",
     "gulp-tar": "^1.4.0",
     "mocha": "^2.2.5",

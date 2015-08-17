@@ -1,10 +1,11 @@
 var gulp        = require('gulp');
 var clean       = require('gulp-clean');
 var gzip        = require('gulp-gzip');
+var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
-var runSequence = require('run-sequence');
 var tar         = require('gulp-tar');
+var runSequence = require('run-sequence');
 
 var commitId = require(__dirname + '/lib/sha.js');
 
@@ -52,6 +53,7 @@ gulp.task('dist:tar', function () {
 // 'dist' ties together all dist tasks
 gulp.task('dist', function(callback) {
   runSequence(
+    'clean',
     [
       'dist:app',
       'dist:lib',
@@ -66,9 +68,13 @@ gulp.task('dist', function(callback) {
 // Default is (for now) just test & dist
 gulp.task('default', function(callback) {
   runSequence(
-    'clean',
     'test',
     'dist',
     callback
   );
+});
+
+gulp.task('serve', function() {
+  var server = gls.new('app.js');
+  server.start();
 });
