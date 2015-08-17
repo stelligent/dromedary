@@ -14,9 +14,13 @@
                 <canvas id="myChart" width="350" height="350" style="padding: 0; margin: auto; display: block;"></canvas>
             </div>
             <div style="width: 50%; margin-left: 50%">
-                <h2 align="center">Last Response from API</h2>
-                <p><strong><span id="lastApiUrl">&nbsp;</span></strong></p>
-                <pre id="lastApiResponseText" style="white-space: pre-wrap;">&nbsp;</pre>
+                <h2 align="center">Last 3 Responses from API</h2>
+                <p><strong><span id="lastApiUrl1">&nbsp;</span></strong></p>
+                <pre id="lastApiResponseText1" style="white-space: pre-wrap;">&nbsp;</pre>
+                <p><strong><span id="lastApiUrl2">&nbsp;</span></strong></p>
+                <pre id="lastApiResponseText2" style="white-space: pre-wrap;">&nbsp;</pre>
+                <p><strong><span id="lastApiUrl3">&nbsp;</span></strong></p>
+                <pre id="lastApiResponseText3" style="white-space: pre-wrap;">&nbsp;</pre>
             </div>
         </div>
 
@@ -29,9 +33,17 @@
                 var reloadPage = false;
 
                 function updateLastApi(url, xhr) {
-                    document.getElementById("lastApiUrl").innerHTML =
+                    document.getElementById("lastApiUrl3").innerHTML =
+                        document.getElementById("lastApiUrl2").innerHTML;
+                    document.getElementById("lastApiResponseText3").innerHTML =
+                        document.getElementById("lastApiResponseText2").innerHTML;
+                    document.getElementById("lastApiUrl2").innerHTML =
+                        document.getElementById("lastApiUrl1").innerHTML;
+                    document.getElementById("lastApiResponseText2").innerHTML =
+                        document.getElementById("lastApiResponseText1").innerHTML;
+                    document.getElementById("lastApiUrl1").innerHTML =
                         location.protocol + "//" + location.host + url;
-                    document.getElementById("lastApiResponseText").innerHTML =
+                    document.getElementById("lastApiResponseText1").innerHTML =
                         xhr.getAllResponseHeaders() + "\n" + xhr.responseText;
                 };
 
