@@ -10,6 +10,7 @@
         <div>
             <div style="width: 50%; float: left;">
                 <h2 align="center">Example Chart</h2>
+                <p align="center" id="gitCommitSha">&nbsp;</p>
                 <canvas id="myChart" width="350" height="350" style="padding: 0; margin: auto; display: block;"></canvas>
             </div>
             <div style="width: 50%; margin-left: 50%">
@@ -23,6 +24,7 @@
             function chartHandler () {
                 var ctx = document.getElementById("myChart").getContext("2d");
                 var myPieChart;
+                var commitSha = "unknown";
                 var updateChart = false;
 
                 function updateLastApi(url, xhr) {
@@ -31,6 +33,12 @@
                     document.getElementById("lastApiResponseText").innerHTML =
                         xhr.getAllResponseHeaders() + "\n" + xhr.responseText;
                 };
+
+                $.getJSON("/sha", {}, function(data, status, xhr) {
+                    commitSha = data.sha;
+                    document.getElementById("gitCommitSha").innerHTML = commitSha;
+                    updateLastApi("/sha", xhr);
+                });
 
                 $.getJSON("/data", {}, function(data, status, xhr) {
                     myPieChart = new Chart(ctx).Pie(data);
