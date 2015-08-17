@@ -1,9 +1,18 @@
 var express = require('express');
 var app = express();
 var chartData = require(__dirname + '/lib/inMemoryStorage.js');
+var commitSha = require(__dirname + '/lib/sha.js');
 
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
+
+/* GET requests to /sha returns git commit sha */
+app.get('/sha', function (req, res) {
+  console.log('Request received from %s for /sha', req.ip);
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.send(JSON.stringify({sha: commitSha}));
+});
 
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
