@@ -20,67 +20,66 @@
         </div>
 
         <script>
-            $(document).ready( 
-                function () {
-                    var ctx = document.getElementById("myChart").getContext("2d");
-                    var myPieChart;
-                    var updateChart = false;
+            function chartHandler () {
+                var ctx = document.getElementById("myChart").getContext("2d");
+                var myPieChart;
+                var updateChart = false;
 
-                    function updateLastApi(url, xhr) {
-                        document.getElementById("lastApiUrl").innerHTML = url;
-                        document.getElementById("lastApiResponseText").innerHTML =
-                            xhr.getAllResponseHeaders() + "\n" + xhr.responseText;
-                    };
+                function updateLastApi(url, xhr) {
+                    document.getElementById("lastApiUrl").innerHTML = url;
+                    document.getElementById("lastApiResponseText").innerHTML =
+                        xhr.getAllResponseHeaders() + "\n" + xhr.responseText;
+                };
 
-                    $.getJSON("/data", {}, function(data, status, xhr) {
-                        myPieChart = new Chart(ctx).Pie(data);
-                        console.log('Chart data GET status: ' + status);
-                        updateLastApi("/data", xhr);
+                $.getJSON("/data", {}, function(data, status, xhr) {
+                    myPieChart = new Chart(ctx).Pie(data);
+                    console.log('Chart data GET status: ' + status);
+                    updateLastApi("/data", xhr);
+                });
+
+                $("#myChart").click(function(evt) {
+                    var activePoints = myPieChart.getSegmentsAtEvent(evt);
+                    var colorToInc = activePoints[0].label.toLowerCase();
+                    $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
+                        activePoints[0].value = data.count;
+                        console.log('Color increment GET status: ' + status);
+                        updateLastApi("/increment?color=" + colorToInc, xhr);
+                        updateChart = true;
                     });
+                });
 
-                    $("#myChart").click(function(evt) {
-                        var activePoints = myPieChart.getSegmentsAtEvent(evt);
-                        var colorToInc = activePoints[0].label.toLowerCase();
-                        $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
-                            activePoints[0].value = data.count;
-                            console.log('Color increment GET status: ' + status);
-                            updateLastApi("/increment?color=" + colorToInc, xhr);
-                            updateChart = true;
-                        });
-                    });
+                function pollForUpdates() {
+                    if (!myPieChart.hasOwnProperty("segments")) {
+                        return;
+                    }
+                    $.getJSON("/data?countsOnly=true", {}, function(data, status, xhr) {
+                        var segment;
+                        var segmentIndex;
+                        var color;
 
-                    function pollForUpdates() {
-                        if (!myPieChart.hasOwnProperty("segments")) {
-                            return;
-                        }
-                        $.getJSON("/data?countsOnly=true", {}, function(data, status, xhr) {
-                            var segment;
-                            var segmentIndex;
-                            var color;
+                        updateLastApi("/data?countsOnly=true", xhr);
 
-                            updateLastApi("/data?countsOnly=true", xhr);
-
-                            for (segmentIndex in myPieChart.segments) {
-                                segment = myPieChart.segments[segmentIndex];
-                                color = segment.label.toLowerCase();
-                                if (data.hasOwnProperty(color) && segment.value != data[color]) {
-                                    console.log('Updating count for ' + color + ' to ' + data[color]);
-                                    myPieChart.segments[segmentIndex].value = data[color];
-                                    updateChart = true;
-                                }
+                        for (segmentIndex in myPieChart.segments) {
+                            segment = myPieChart.segments[segmentIndex];
+                            color = segment.label.toLowerCase();
+                            if (data.hasOwnProperty(color) && segment.value != data[color]) {
+                                console.log('Updating count for ' + color + ' to ' + data[color]);
+                                myPieChart.segments[segmentIndex].value = data[color];
+                                updateChart = true;
                             }
-                        });
-                    };
-                    setInterval(pollForUpdates, 5000);
-
-                    setInterval(function() {
-                        if (updateChart) {
-                            myPieChart.update();
-                            updateChart = false;
                         }
-                    }, 100);
-                }
-            );
+                    });
+                };
+                setInterval(pollForUpdates, 5000);
+
+                setInterval(function() {
+                    if (updateChart) {
+                        myPieChart.update();
+                        updateChart = false;
+                    }
+                }, 100);
+            }
+            $(document).ready(chartHandler);
         </script>
     </body>
 </html>
