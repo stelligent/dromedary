@@ -26,7 +26,8 @@
                 var updateChart = false;
 
                 function updateLastApi(url, xhr) {
-                    document.getElementById("lastApiUrl").innerHTML = url;
+                    document.getElementById("lastApiUrl").innerHTML =
+                        location.protocol + "//" + location.host + url;
                     document.getElementById("lastApiResponseText").innerHTML =
                         xhr.getAllResponseHeaders() + "\n" + xhr.responseText;
                 };
