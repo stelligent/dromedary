@@ -26,6 +26,7 @@
                 var myPieChart;
                 var commitSha = "unknown";
                 var updateChart = false;
+                var reloadPage = false;
 
                 function updateLastApi(url, xhr) {
                     document.getElementById("lastApiUrl").innerHTML =
@@ -81,10 +82,22 @@
                 };
                 setInterval(pollForUpdates, 5000);
 
+                function pollForNewSha() {
+                    $.getJSON("/sha", {}, function(data, status, xhr) {
+                        if (commitSha != data.sha) {
+                            reloadPage = true;
+                        }
+                    });
+                };
+                setInterval(pollForNewSha, 1000);
+
                 setInterval(function() {
                     if (updateChart) {
                         myPieChart.update();
                         updateChart = false;
+                    }
+                    if (reloadPage) {
+                        console.log("New version detected");
                     }
                 }, 100);
             }
