@@ -1,0 +1,27 @@
+{
+  "name": "demo-chart-dashboard-api",
+  "version": "0.1.0",
+  "description": "Stelligent Demo Chart API",
+  "main": "app.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/stelligent/demo-chart-dashboard-api.git"
+  },
+  "author": "Stelligent Systems, LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stelligent/demo-chart-dashboard-api/issues"
+  },
+  "homepage": "https://github.com/stelligent/demo-chart-dashboard-api#readme",
+  "devDependencies": {
+    "spawn-sync": "^1.0.13"
+  },
+  "dependencies": {
+    "chai": "^3.2.0",
+    "express": "^4.13.3",
+    "mocha": "^2.2.5"
+  }
+}
