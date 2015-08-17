@@ -4,7 +4,7 @@
   "description": "Stelligent Demo Chart API",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/gulp test"
   },
   "repository": {
     "type": "git",
@@ -17,11 +17,18 @@
   },
   "homepage": "https://github.com/stelligent/demo-chart-dashboard-api#readme",
   "devDependencies": {
+    "chai": "^3.2.0",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-gzip": "^1.2.0",
+    "gulp-install": "^0.5.0",
+    "gulp-mocha": "^2.1.3",
+    "gulp-tar": "^1.4.0",
+    "mocha": "^2.2.5",
+    "run-sequence": "^1.1.2",
     "spawn-sync": "^1.0.13"
   },
   "dependencies": {
-    "chai": "^3.2.0",
-    "express": "^4.13.3",
-    "mocha": "^2.2.5"
+    "express": "^4.13.3"
   }
 }
