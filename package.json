@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/stelligent/demo-chart-dashboard-api#readme",
   "devDependencies": {
+    "aws-sdk": "^2.1.45",
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
     "gulp-clean": "^0.3.1",
