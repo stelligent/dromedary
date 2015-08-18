@@ -59,14 +59,17 @@ var Module = (function () {
     });
   }
 
-  function waitForEc2Instance(instanceId, callback) {
-    var instanceState = 'unknown';
+  function waitForEc2Instances(instanceIds, expectedState, callback) {
     var intervals = 0;
     var intervalId;
+    var instanceId;
+    var instanceState;
 
     function innerCallback(err, data) {
+      var numInstancesMatching = 0;
+      var i;
+      var j;
       if (err) {
-        instanceState = 'unknown_failure';
         clearInterval(intervalId);
         callback(err);
         return;
@@ -77,25 +80,25 @@ var Module = (function () {
         callback('Timeout exceeded polling for instance');
         return;
       }
-      instanceState = data.Reservations[0].Instances[0].State.Name;
-      console.log(instanceId + ' is ' + instanceState);
-      switch (instanceState) {
-        case 'pending':
-          break;
-        case 'running':
-          clearInterval(intervalId);
-          callback(undefined, data.Reservations[0].Instances[0]);
-          break;
-        default:
-          clearInterval(intervalId);
-          console.log('Unexpected instance state');
-          callback('Unexpected instance state');
-          break;
+
+      for (i=0; i<data.Reservations.length; i++) {
+        for (j=0; j<data.Reservations[i].Instances.length; j++) {
+          instanceId = data.Reservations[i].Instances[j].InstanceId;
+          instanceState = data.Reservations[i].Instances[j].State.Name;
+          console.log(instanceId + ' is ' + instanceState);
+          if (instanceState === expectedState) {
+            numInstancesMatching++;
+          }
+        }
+      }
+      if (numInstancesMatching === instanceIds.length) {
+        clearInterval(intervalId);
+        callback(undefined, data.Reservations);
       }
     }
 
     intervalId = setInterval(function() {
-      ec2.describeInstances({InstanceIds: [instanceId]}, innerCallback);
+      ec2.describeInstances({InstanceIds: instanceIds}, innerCallback);
     }, 2000);
   }
 
@@ -104,7 +107,7 @@ var Module = (function () {
       if (err) {
         callback(err);
       } else {
-        waitForEc2Instance(instanceId, callback);
+        waitForEc2Instances([instanceId], 'running', callback);
       }
     });
   };
@@ -128,7 +131,13 @@ var Module = (function () {
       }
       if (instanceIds.length > 0) {
         console.log('Terminating instances: ' + instanceIds);
-        ec2.terminateInstances({InstanceIds: instanceIds}, callback);
+        ec2.terminateInstances({InstanceIds: instanceIds}, function (err) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          waitForEc2Instances(instanceIds, 'terminated', callback);
+        });
       }
     });
   };
