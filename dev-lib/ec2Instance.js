@@ -113,7 +113,7 @@ var Module = (function () {
     var instanceIds = [];
     var params = {Filters: [
       {Name: 'tag:Name', Values: ['dromedary-demo-app']},
-      {Name: 'instance-state-name', Values: ['running']}
+      {Name: 'instance-state-name', Values: ['running', 'pending']}
     ]};
     ec2.describeInstances(params, function(err, data) {
       var i, j;
