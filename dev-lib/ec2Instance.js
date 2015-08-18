@@ -8,6 +8,7 @@ if (process.env.hasOwnProperty('AWS_DEFAULT_REGION')) {
 }
 
 var Module = (function () {
+
   var ec2 = new AWS.EC2();
 
   var ami = {};
@@ -17,7 +18,7 @@ var Module = (function () {
   var moduleObj = {};
 
   var userData = '#!/bin/bash -ex\n'
-               + 'sudo yum install nodejs npm --enablerepo=epel\n';
+               + 'yum --enablerepo=epel install -y nodejs npm\n';
 
   var launchParams = {
     ImageId: ami[AWS.config.region],
@@ -112,13 +113,15 @@ var Module = (function () {
     var instanceIds = [];
     var params = { Filters: [{ Name: 'tag:Name', Values: ['dromedary-demo-app']}] };
     ec2.describeInstances(params, function(err, data) {
-      var i;
+      var i, j;
       if (err) {
         callback(err);
         return;
       }
-      for (i=0; i<data.Reservations[0].Instances.length; i++) {
-        instanceIds.push(data.Reservations[0].Instances[i].InstanceId);
+      for (i=0; i<data.Reservations.length; i++) {
+        for (j=0; j<data.Reservations[i].Instances.length; j++) {
+          instanceIds.push(data.Reservations[i].Instances[j].InstanceId);
+        }
       }
       console.log('Terminating instances: ' + instanceIds);
       ec2.terminateInstances({InstanceIds: instanceIds}, callback);
