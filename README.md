@@ -2,7 +2,7 @@
 Sample app to demonstrate a working pipeline using AWS Code Services
 
 
-## Install Prerequisits
+## Install Prerequisites
 
 1. Ensure nodejs is installed
 1. Install dependencies: `npm install`
