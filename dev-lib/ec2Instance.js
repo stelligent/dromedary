@@ -27,9 +27,6 @@ var Module = (function () {
     InstanceType: 't2.micro',
     UserData: Buffer(userData).toString('base64')
   };
-  launchParams.KeyName = 'vrivellino-labs';
-  launchParams.SecurityGroupIds = undefined;
-  launchParams.SubnetId = undefined;
 
   function launchEc2Instance(params, callback) {
     var paramKey;
