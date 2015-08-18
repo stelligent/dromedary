@@ -111,7 +111,10 @@ var Module = (function () {
 
   moduleObj.terminateAllInstances = function (callback) {
     var instanceIds = [];
-    var params = { Filters: [{ Name: 'tag:Name', Values: ['dromedary-demo-app']}] };
+    var params = {Filters: [
+      {Name: 'tag:Name', Values: ['dromedary-demo-app']},
+      {Name: 'instance-state-name', Values: ['running']}
+    ]};
     ec2.describeInstances(params, function(err, data) {
       var i, j;
       if (err) {
@@ -123,8 +126,10 @@ var Module = (function () {
           instanceIds.push(data.Reservations[i].Instances[j].InstanceId);
         }
       }
-      console.log('Terminating instances: ' + instanceIds);
-      ec2.terminateInstances({InstanceIds: instanceIds}, callback);
+      if (instanceIds.length > 0) {
+        console.log('Terminating instances: ' + instanceIds);
+        ec2.terminateInstances({InstanceIds: instanceIds}, callback);
+      }
     });
   };
 
