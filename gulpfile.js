@@ -9,18 +9,6 @@ var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
 
 var commitId    = require(__dirname + '/lib/sha.js');
-var sgHelper    = require(__dirname + '/dev-lib/securityGroup.js');
-var ec2Helper   = require(__dirname + '/dev-lib/ec2Instance.js');
-
-var ec2KeyName;
-var vpcSubnetId;
-
-if (argv.key) {
-  ec2KeyName = argv.key;
-}
-if (argv.subnet) {
-  vpcSubnetId = argv.subnet;
-}
 
 // Delete the dist directory
 gulp.task('clean', function() {
@@ -85,36 +73,6 @@ gulp.task('test-functional', function () {
   }
   return gulp.src('test-functional/*.js', {read: false})
              .pipe(mocha({reporter: 'spec'}));
-});
-
-// launch an EC2 instance
-gulp.task('launchenv', function(callback) {
-  var launchParams = {KeyName: ec2KeyName};
-  if (!vpcSubnetId) {
-    callback('Error: --subnet must be specified');
-    return;
-  }
-  launchParams.SubnetId = vpcSubnetId;
-  sgHelper.ensureSecurityGroup(vpcSubnetId, function(err, data) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    console.log('Launching instance in VPC ' + data.vpcId + ' in security-group ' + data.groupId);
-    launchParams.SecurityGroupIds = [data.groupId];
-    ec2Helper.launchDromedaryInstance(launchParams, callback);
-  });
-});
-
-// term all ec2 instances and nuke security-group
-gulp.task('deleteallenvs', function(callback) {
-  ec2Helper.terminateAllInstances(function(err) {
-    if (err) {
-      callback(err);
-      return;
-    }
-    sgHelper.deleteAllSecurityGroups(callback);
-  });
 });
 
 // Default is (for now) just test & dist

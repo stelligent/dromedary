@@ -23,11 +23,3 @@ Sample app to demonstrate a working pipeline using AWS Code Services
 1. Run `gulp dist`
 1. Deliver `dist/archive.tar.gz` to server that has nodejs installed
 1. On server, run `node app.js` in directory where tarball was extracted
-
-### Launching Remote Envirment
-
-1. Run `gulp launchenv --subnet <SUBNET_ID> --key <EC2_KEY>`
-
-### Terminating Launched Environments
-
-1. Run `gulp deleteallenvs`
