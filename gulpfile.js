@@ -28,7 +28,7 @@ gulp.task('clean', function() {
     .pipe(clean());
 });
 
-// Execute mocha tests
+// Execute unit tests
 gulp.task('test', function () {
   return gulp.src('test/*.js', {read: false})
              .pipe(mocha({reporter: 'spec'}));
@@ -76,6 +76,12 @@ gulp.task('dist', function(callback) {
     'dist:tar',
     callback
   );
+});
+
+// Execute functional tests
+gulp.task('test-functional', function () {
+  return gulp.src('test-functional/*.js', {read: false})
+             .pipe(mocha({reporter: 'spec'}));
 });
 
 // launch an EC2 instance
