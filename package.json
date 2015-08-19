@@ -1,21 +1,21 @@
 {
-  "name": "demo-chart-dashboard-api",
+  "name": "dromedary",
   "version": "0.1.0",
-  "description": "Stelligent Demo Chart API",
+  "description": "- Stelligent Demo Chart API",
   "main": "app.js",
   "scripts": {
     "test": "./node_modules/.bin/gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/stelligent/demo-chart-dashboard-api.git"
+    "url": "git+ssh://git@github.com/stelligent/dromedary.git"
   },
   "author": "Stelligent Systems, LLC",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stelligent/demo-chart-dashboard-api/issues"
+    "url": "https://github.com/stelligent/dromedary/issues"
   },
-  "homepage": "https://github.com/stelligent/demo-chart-dashboard-api#readme",
+  "homepage": "https://github.com/stelligent/dromedary#readme",
   "devDependencies": {
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
