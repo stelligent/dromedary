@@ -354,6 +354,10 @@
                         "Value": {
                             "Ref": "AWS::StackId"
                         }
+                    },
+                    {
+                        "Key": "environment",
+                        "Value": "dromedary"
                     }
                 ],
                 "NetworkInterfaces": [
