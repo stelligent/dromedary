@@ -16,7 +16,7 @@
                         }, 
                         "outputArtifacts": [
                             {
-                                "name": "MyApp"
+                                "name": "dromedary"
                             }
                         ], 
                         "configuration": {
@@ -35,7 +35,7 @@
                     {
                         "inputArtifacts": [
                             {
-                                "name": "MyApp"
+                                "name": "dromedary"
                             }
                         ], 
                         "name": "Build", 
@@ -47,7 +47,7 @@
                         }, 
                         "outputArtifacts": [
                             {
-                                "name": "MyAppBuild"
+                                "name": "dromedary-deploy-artifact"
                             }
                         ], 
                         "configuration": {
@@ -63,7 +63,7 @@
                     {
                         "inputArtifacts": [
                             {
-                                "name": "MyAppBuild"
+                                "name": "dromedary-deploy-artifact"
                             }
                         ], 
                         "name": "dromedary", 
@@ -76,7 +76,7 @@
                         "outputArtifacts": [], 
                         "configuration": {
                             "ApplicationName": "dromedary", 
-                            "DeploymentGroupName": "dromedary"
+                            "DeploymentGroupName": "dromedary-beta"
                         }, 
                         "runOrder": 1
                     }
