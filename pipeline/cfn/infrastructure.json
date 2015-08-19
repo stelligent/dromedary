@@ -537,22 +537,14 @@
         }
     },
     "Outputs": {
-        "URL": {
+        "CodeDeployServiceRoleARN": {
             "Value": {
-                "Fn::Join": [
-                    "",
-                    [
-                        "http://",
-                        {
-                            "Fn::GetAtt": [
-                                "WebServerInstance",
-                                "PublicIp"
-                            ]
-                        }
-                    ]
+                "Fn::GetAtt": [
+                    "CodeDeployTrustRole",
+                    "Arn"
                 ]
             },
-            "Description": "Newly created application URL"
+            "Description": "The ARN of the Code Deploy Trust Role, which is needed to configure Code Deploy"
         }
     }
 }
