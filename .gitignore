@@ -26,7 +26,7 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-
+dev-lib/targetPort.js
 lib/sha-raw.js
 node_modules/
 dist/

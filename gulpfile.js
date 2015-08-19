@@ -80,6 +80,9 @@ gulp.task('dist', function(callback) {
 
 // Execute functional tests
 gulp.task('test-functional', function () {
+  if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
+    process.env.TARGET_URL = 'http://localhost:' + require(__dirname + '/dev-lib/targetPort.js');
+  }
   return gulp.src('test-functional/*.js', {read: false})
              .pipe(mocha({reporter: 'spec'}));
 });

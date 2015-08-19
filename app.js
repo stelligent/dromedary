@@ -2,6 +2,11 @@ var express = require('express');
 var app = express();
 var chartData = require(__dirname + '/lib/inMemoryStorage.js');
 var commitSha = require(__dirname + '/lib/sha.js');
+var serverPort = 8080;
+
+if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
+  serverPort = 0;
+}
 
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
@@ -42,8 +47,12 @@ app.get('/increment', function (req, res) {
   res.send(JSON.stringify({count: colorCount}));
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(serverPort, function () {
   var host = server.address().address;
   var port = server.address().port; 
   console.log('Listening on %s:%s', host, port); 
+  if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
+    require('fs').writeFileSync(__dirname + '/dev-lib/targetPort.js',
+                                'module.exports = ' + port + ';\n');
+  }
 });
