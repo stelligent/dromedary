@@ -1,0 +1,26 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /dromedary
+hooks:
+  # BeforeInstall:
+  #   - location: deploy/scripts/beforeInstall.sh
+  #     timeout: 30
+  #     runas: root
+  AfterInstall:
+    - location: deploy/scripts/afterInstall.sh
+      timeout: 30
+      runas: root
+  ApplicationStart:
+    - location: deploy/scripts/applicationStart.sh
+      timeout: 30
+      runas: root
+  ApplicationStop:
+    - location: deploy/scripts/applicationStop.sh
+      timeout: 30
+      runas: root
+  ValidateService:
+    - location: deploy/scripts/validateService.sh
+      timeout: 30
+      runas: root
