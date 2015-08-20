@@ -1,19 +1,18 @@
 var gulp        = require('gulp');
-var clean       = require('gulp-clean');
 var gzip        = require('gulp-gzip');
 var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
 var tar         = require('gulp-tar');
+var del         = require('del');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
 
 var commitId    = require(__dirname + '/lib/sha.js');
 
 // Delete the dist directory
-gulp.task('clean', function() {
-  return gulp.src('dist')
-    .pipe(clean());
+gulp.task('clean', function (cb) {
+  del(['dist'], cb);
 });
 
 // Execute unit tests
