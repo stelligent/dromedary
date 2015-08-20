@@ -78,8 +78,8 @@
                         var segment;
                         var segmentIndex;
                         var color;
+                        var doUpdate = false;
 
-                        updateLastApi("/data?countsOnly=true", xhr);
 
                         for (segmentIndex in myPieChart.segments) {
                             segment = myPieChart.segments[segmentIndex];
@@ -87,8 +87,12 @@
                             if (data.hasOwnProperty(color) && segment.value != data[color]) {
                                 console.log('Updating count for ' + color + ' to ' + data[color]);
                                 myPieChart.segments[segmentIndex].value = data[color];
-                                updateChart = true;
+                                doUpdate = true;
                             }
+                        }
+                        if (doUpdate) {
+                            updateLastApi("/data?countsOnly=true", xhr);
+                            updateChart = true;
                         }
                     });
                 };
