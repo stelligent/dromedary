@@ -2,13 +2,16 @@ var expect    = require("chai").expect;
 var request   = require('urllib-sync').request;
 
 var targetUrl   = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
-var chartData   = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
-var colorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
 
 var expectedNumberOfItems = 3;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("Chart Data Response", function() {
+  var chartData;
+  before(function() {
+    chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
+  });
+
   it("Has exactly " + expectedNumberOfItems + " items", function() {
     expect(chartData).to.have.length(expectedNumberOfItems);
   });
@@ -34,6 +37,13 @@ describe("Chart Data Response", function() {
 });
 
 describe("Color Counts Response", function() {
+  var chartData;
+  var colorCounts;
+  before(function() {
+    chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
+    colorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
+  });
+
   it("Has exactly " + expectedNumberOfItems + " keys", function() {
     expect(Object.keys(colorCounts)).to.have.length(expectedNumberOfItems);
   });
