@@ -1,6 +1,7 @@
 var expect  = require("chai").expect;
 var backend = require("../lib/inMemoryStorage.js");
 
+var expectedNumberOfItems = 3;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("Chart Data", function() {
@@ -9,8 +10,8 @@ describe("Chart Data", function() {
     chartData = backend.getForChartJs();
   });
 
-  it("Has exactly 3 items", function() {
-    expect(chartData).to.have.length(3);
+  it("Has exactly " + expectedNumberOfItems + " items", function() {
+    expect(chartData).to.have.length(expectedNumberOfItems);
   });
 
   it("Each item has exactly " + expectedProperties.length + " properties", function() {
@@ -39,8 +40,8 @@ describe("Color Counts", function() {
     colorCounts = backend.getAllCounts();
   });
 
-  it("Has exactly 3 items", function() {
-    expect(Object.keys(colorCounts)).to.have.length(3);
+  it("Has exactly " + expectedNumberOfItems + " items", function() {
+    expect(Object.keys(colorCounts)).to.have.length(expectedNumberOfItems);
   });
 
   it("Each item is a number", function() {
