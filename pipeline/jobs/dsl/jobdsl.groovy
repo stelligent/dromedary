@@ -22,13 +22,13 @@ jobs.each { currentJob ->
         (scm / 'model' / 'actionTypeCategory').setValue("Build")
 
         (scm / 'model' / 'outputBuildArtifacts' / 'compressionType ').setValue("None")
-        (scm / 'model' / 'outputBuildArtifacts' / 'com.amazonaws.services.codepipeline.model.Artifact' / 'name').setValue("MyAppBuild")
+        (scm / 'model' / 'outputBuildArtifacts' / 'com.amazonaws.services.codepipeline.model.Artifact' / 'name').setValue("dromedary")
         (scm / 'model' / 'outputBuildArtifacts' / 'com.amazonaws.services.codepipeline.model.Artifact' / 'location' / 'type').setValue("S3")
 
         pub = (job / publishers / "com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher")
 
         pub.attributes['class'] = 'com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher'
-        pub.attributes['plugin'] = 'codepipeline @0.2'
+        pub.attributes['plugin'] = 'codepipeline@0.2'
 
         (pub / buildOutputs / "com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple" / "outputString").setValue("")
        }
