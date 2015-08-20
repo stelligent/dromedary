@@ -384,40 +384,23 @@
                                 "yum update -y aws-cfn-bootstrap\n",
                                 "yum -y update\n",
                                 "yum -y install ruby aws-cli\n",
+                                "yum -y install nodejs npm --enablerepo=epel\n",
+                                "npm install -g gulp\n",
+                                "npm install -g forever\n",
                                 "pushd /home/ec2-user\n",
-                                "aws s3 cp s3://aws-codedeploy-",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                "/latest/install . --region ",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                "\n",
+                                "aws s3 cp s3://aws-codedeploy-", {"Ref": "AWS::Region"}, "/latest/install . --region ", {"Ref": "AWS::Region"}, "\n",
                                 "chmod +x ./install\n",
                                 "./install auto\n",
                                 "popd\n",
                                 "/opt/aws/bin/cfn-init -v ",
-                                "         --stack ",
-                                {
-                                    "Ref": "AWS::StackName"
-                                },
+                                "         --stack ", {"Ref": "AWS::StackName"},
                                 "         --resource WebServerInstance ",
-                                "         --region ",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
+                                "         --region ", {"Ref": "AWS::Region"},
                                 "\n",
                                 "/opt/aws/bin/cfn-signal -e $? ",
-                                "         --stack ",
-                                {
-                                    "Ref": "AWS::StackName"
-                                },
+                                "         --stack ", {"Ref": "AWS::StackName"},
                                 "         --resource WebServerInstance ",
-                                "         --region ",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
+                                "         --region ", {"Ref": "AWS::Region"},
                                 "\n"
                             ]
                         ]
