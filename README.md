@@ -35,7 +35,7 @@ The `serve` task will start a node server listening on port 8080:
 
 #### Executing Unit Tests
 
-Unit tests located in `tests/` were written using [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/),
+Unit tests located in `test/` were written using [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/),
 and can be executed using the `test` task:
 
 1. Run `gulp test`
