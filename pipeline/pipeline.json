@@ -1,5 +1,4 @@
 {
-    "pipeline": {
         "roleArn": "arn:aws:iam::324320755747:role/AWS-CodePipeline-Service", 
         "stages": [
             {
@@ -16,14 +15,14 @@
                         }, 
                         "outputArtifacts": [
                             {
-                                "name": "dromedary"
+                                "name": "MyApp"
                             }
                         ], 
                         "configuration": {
                             "Owner": "stelligent", 
                             "Repo": "dromedary", 
-                            "Branch": "master", 
-                            "OAuthToken": "****"
+                            "Branch": "master",
+                            "OAuthToken" : "***"
                         }, 
                         "runOrder": 1
                     }
@@ -33,25 +32,17 @@
                 "name": "Build", 
                 "actions": [
                     {
-                        "inputArtifacts": [
-                            {
-                                "name": "dromedary"
-                            }
-                        ], 
-                        "name": "Build", 
+                        "inputArtifacts": [], 
+                        "name": "unit-test", 
                         "actionTypeId": {
                             "category": "Build", 
                             "owner": "Custom", 
                             "version": "1", 
-                            "provider": "Jenkins"
+                            "provider": "codepipeline-jenkins"
                         }, 
-                        "outputArtifacts": [
-                            {
-                                "name": "dromedary-deploy-artifact"
-                            }
-                        ], 
+                        "outputArtifacts": [], 
                         "configuration": {
-                            "ProjectName": "dromedary"
+                            "ProjectName": "unit-test"
                         }, 
                         "runOrder": 1
                     }
@@ -63,10 +54,10 @@
                     {
                         "inputArtifacts": [
                             {
-                                "name": "dromedary-deploy-artifact"
+                                "name": "MyApp"
                             }
                         ], 
-                        "name": "dromedary", 
+                        "name": "dromedary-beta", 
                         "actionTypeId": {
                             "category": "Deploy", 
                             "owner": "AWS", 
@@ -87,7 +78,6 @@
             "type": "S3", 
             "location": "codepipeline-us-east-1-68654752802"
         }, 
-        "name": "dromedary", 
+        "name": "pipeline-test", 
         "version": 1
     }
-}
