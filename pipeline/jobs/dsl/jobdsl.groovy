@@ -1,11 +1,9 @@
-def jobs =  [ "unit-test", "static-analysis", "acceptance-test"]
+//def jobs =  [ "unit-test", "static-analysis", "acceptance-test"]
+def jobs =  [ "unit-test"]
 
 jobs.each { currentJob ->
 
-  job {
-    println "configuring ${currentJob}"
-    name "${currentJob}-dsl"
-
+  freeStyleJob("${currentJob}-dsl") {
     scm {
       configure { scm ->
 
@@ -30,7 +28,7 @@ jobs.each { currentJob ->
         (scm / 'model' / 'outputBuildArtifacts' / 'com.amazonaws.services.codepipeline.model.Artifact' / 'name').setValue("dromedary-build")
         (scm / 'model' / 'outputBuildArtifacts' / 'com.amazonaws.services.codepipeline.model.Artifact' / 'location' / 'type').setValue("S3")
 
-        (scm).@class = 'com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM'
+        (scm).@'class' = 'com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM'
         (scm).@plugin = 'codepipeline@0.2'
        }
      }
@@ -55,3 +53,5 @@ jobs.each { currentJob ->
     }
   }
 }
+
+println "generated xml"
