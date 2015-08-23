@@ -1,7 +1,7 @@
 # dromedary :dromedary_camel:
 Sample app to demonstrate a working pipeline using AWS Code Services
 
-## The Demo App
+## The Demo App :dromedary_camel:
 
 The Dromedary demo app is a simple nodejs application that displays a pie chart to users. The data that
 describes the pie chart (eg: the colors and their values) is served by the application.
@@ -12,9 +12,51 @@ backend to increment the value for that color and update the chart with the new 
 The frontend will also poll the backend for changes to values of the colors of the pie chart and update the chart
 appropriately. If it detects that a new version of the app has been deployed, it will reload the page.
 
-### Running Locally
+Directions are provided to run this demo in AWS and locally. 
 
-#### Install Prerequisites
+### Running in AWS :dromedary_camel:
+
+You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) to start.
+
+Then, run the CloudFormation template to set up the required resources:
+
+export STACKNAME="dromedary-`date +%Y%m%d%H%M%S`"
+
+    aws cloudformation create-stack \
+      --stack-name $STACKNAME  \
+      --template-body file://pipeline/cfn/infrastructure.json \
+      --capabilities CAPABILITY_IAM
+
+Once that stack is complete, you'll need to run these commands to create the Code Deploy resources:
+
+    # get the service role from the stack resources
+    export SVCROLE=`aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'CodeDeployServiceRoleARN\'].OutputValue`
+
+    # create cloud patrol app in code deploy
+    aws deploy create-application \
+      --application-name dromedary
+
+    # create a deployment group, you'll need to look up the ARN from the first CFN template
+    aws deploy create-deployment-group \
+      --application-name dromedary \
+      --deployment-group-name dromedary-beta \
+      --deployment-config-name CodeDeployDefault.OneAtATime \
+      --ec2-tag-filters Key=environment,Value=dromedary,Type=KEY_AND_VALUE \
+      --service-role-arn "$SVCROLE"
+
+To push a deployment of the Dromedary application, run this command:
+
+    zip -qr ../dromedary.zip * && \
+    aws s3 cp ../dromedary.zip s3://jps-codepipeline-test && \
+    aws deploy create-deployment --application-name dromedary \
+        --deployment-group-name dromedary-beta \
+        --description "Deploy application to instances" \
+        --s3-location bundleType=zip,bucket=jps-codepipeline-test,key=dromedary.zip
+
+ 
+### Running Locally :dromedary_camel:
+
+#### Install Prerequisites 
 
 1. Ensure [nodejs](https://nodejs.org/) and [npm](https://www.npmjs.com/) are installed
   * On Mac OS X, this can be done via [Homebrew](http://brew.sh/): `brew install node`
