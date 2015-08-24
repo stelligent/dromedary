@@ -4,7 +4,7 @@ var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_UR
 
 describe("Sha Endpoint", function() {
   var shaResp;
-  before(function() {
+  beforeEach(function() {
     shaResp = JSON.parse(request(targetUrl + '/sha').data.toString('utf-8'));
   });
 

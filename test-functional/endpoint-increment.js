@@ -11,7 +11,7 @@ describe("Increment endpoint", function() {
   var incrementResponse;
   var newColorCounts;
 
-  before(function() {
+  beforeEach(function() {
     chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
     color = chartData[0].label.toLowerCase();
     initialColorCount = chartData[0].value;

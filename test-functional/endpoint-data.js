@@ -8,7 +8,7 @@ var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("Chart Data Response", function() {
   var chartData;
-  before(function() {
+  beforeEach(function() {
     chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
   });
 
@@ -39,7 +39,7 @@ describe("Chart Data Response", function() {
 describe("Color Counts Response", function() {
   var chartData;
   var colorCounts;
-  before(function() {
+  beforeEach(function() {
     chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
     colorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
   });

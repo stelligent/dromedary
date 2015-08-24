@@ -6,7 +6,7 @@ var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("Chart Data", function() {
   var chartData;
-  before(function() {
+  beforeEach(function() {
     chartData = backend.getForChartJs();
   });
 
@@ -36,7 +36,7 @@ describe("Chart Data", function() {
 
 describe("Color Counts", function() {
   var colorCounts;
-  before(function() {
+  beforeEach(function() {
     colorCounts = backend.getAllCounts();
   });
 
@@ -54,7 +54,7 @@ describe("Color Counts", function() {
 
 describe("Increment Color", function() {
   var colorCounts;
-  before(function() {
+  beforeEach(function() {
     var color;
     for (color in colorCounts) {
       backend.incrementCount(color);
