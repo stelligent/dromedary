@@ -4,27 +4,21 @@ var request   = require('urllib-sync').request;
 var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
 
 describe("Increment endpoint", function() {
-  var chartData;
-  var color;
-  var initialColorCount;
-  var expectedNewColorCount;
-  var incrementResponse;
-  var newColorCounts;
-
   beforeEach(function() {
-    chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
-    color = chartData[0].label.toLowerCase();
-    initialColorCount = chartData[0].value;
-    expectedNewColorCount = initialColorCount + 1;
-    incrementResponse = JSON.parse(request(targetUrl + '/increment?color=' + color).data.toString('utf-8'));
-    newColorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
+    var chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
+    var initialColorCount = chartData[0].value;
+
+    this.color = chartData[0].label.toLowerCase();
+    this.expectedNewColorCount = initialColorCount + 1;
+    this.incrementResponse = JSON.parse(request(targetUrl + '/increment?color=' + this.color).data.toString('utf-8'));
+    this.newColorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
   });
 
   it("Returns new count", function() {
-    expect(incrementResponse.count).to.equal(expectedNewColorCount);
+    expect(this.incrementResponse.count).to.equal(this.expectedNewColorCount);
   });
 
   it("New count matches expected value", function() {
-    expect(newColorCounts[color]).to.equal(expectedNewColorCount);
+    expect(this.newColorCounts[this.color]).to.equal(this.expectedNewColorCount);
   });
 });
