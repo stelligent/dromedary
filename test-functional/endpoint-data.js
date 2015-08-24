@@ -6,23 +6,23 @@ var targetUrl   = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_
 var expectedNumberOfItems = 3;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
-describe("Chart Data Response", function() {
+describe("/data", function() {
   beforeEach(function() {
     this.chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
   });
 
-  it("Has exactly " + expectedNumberOfItems + " items", function() {
+  it("response has exactly " + expectedNumberOfItems + " items", function() {
     expect(this.chartData).to.have.length(expectedNumberOfItems);
   });
 
-  it("Each item has exactly " + expectedProperties.length + " properties", function() {
+  it("each item has exactly " + expectedProperties.length + " properties", function() {
     var index;
     for (index = 0; index < this.chartData.length; index++) {
       expect(Object.keys(this.chartData[index])).to.have.length(expectedProperties.length);
     }
   });
 
-  it("Each item has properties: " + expectedProperties, function() {
+  it("each item has properties: " + expectedProperties, function() {
     var itemProperties;
     var itemIndex;
     var propIndex;
@@ -35,16 +35,16 @@ describe("Chart Data Response", function() {
   });
 });
 
-describe("Color Counts Response", function() {
+describe("/data?countsOnly", function() {
   beforeEach(function() {
     this.chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
     this.colorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
   });
 
-  it("Has exactly " + expectedNumberOfItems + " keys", function() {
+  it("response has exactly " + expectedNumberOfItems + " keys", function() {
     expect(Object.keys(this.colorCounts)).to.have.length(expectedNumberOfItems);
   });
-  it("Matches values in chart data response", function() {
+  it("matches values in /data response", function() {
     var index;
     var color;
     var value;
