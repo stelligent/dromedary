@@ -94,7 +94,7 @@ endpoints defined in `app.js`.
 
 #### Building a Distributable Archive
 
-The `dist` task copies relevent files to `dist/` and installs only dependencies required to run the standalone
+The `dist` task copies relevant files to `dist/` and installs only dependencies required to run the standalone
 app:
 
 1. Run `gulp dist`
