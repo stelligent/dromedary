@@ -1,5 +1,5 @@
 # dromedary :dromedary_camel:
-Sample app to demonstrate a working pipeline using AWS Code Services
+Sample app to demonstrate a working pipeline using [AWS Code Services](https://aws.amazon.com/awscode/)
 
 ## The Demo App :dromedary_camel:
 
