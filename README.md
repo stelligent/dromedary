@@ -27,7 +27,7 @@ export STACKNAME="dromedary-`date +%Y%m%d%H%M%S`"
       --template-body file://pipeline/cfn/infrastructure.json \
       --capabilities CAPABILITY_IAM
 
-Once that stack is complete, you'll need to run these commands to create the Code Deploy resources:
+Once that stack is complete, you'll need to run these commands to create the [CodeDeploy](https://aws.amazon.com/codedeploy/) resources:
 
     # get the service role from the stack resources
     export SVCROLE=`aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'CodeDeployServiceRoleARN\'].OutputValue`
