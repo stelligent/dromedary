@@ -20,7 +20,7 @@ You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [conf
 
 Then, run the CloudFormation template to set up the required resources:
 
-export STACKNAME="dromedary-`date +%Y%m%d%H%M%S`"
+    export STACKNAME="dromedary-`date +%Y%m%d%H%M%S`"
 
     aws cloudformation create-stack \
       --stack-name $STACKNAME  \
