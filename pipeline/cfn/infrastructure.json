@@ -130,6 +130,23 @@
                 }
             }
         },
+        "InboundHTTPNetworkAclEntry2": {
+            "Type": "AWS::EC2::NetworkAclEntry",
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "NetworkAcl"
+                },
+                "RuleNumber": "103",
+                "Protocol": "6",
+                "RuleAction": "allow",
+                "Egress": "false",
+                "CidrBlock": "0.0.0.0/0",
+                "PortRange": {
+                    "From": "8080",
+                    "To": "8080"
+                }
+            }
+        },
         "InboundSSHNetworkAclEntry": {
             "Type": "AWS::EC2::NetworkAclEntry",
             "Properties": {
@@ -178,6 +195,23 @@
                 "PortRange": {
                     "From": "80",
                     "To": "80"
+                }
+            }
+        },
+        "OutBoundHTTPNetworkAclEntry2": {
+            "Type": "AWS::EC2::NetworkAclEntry",
+            "Properties": {
+                "NetworkAclId": {
+                    "Ref": "NetworkAcl"
+                },
+                "RuleNumber": "103",
+                "Protocol": "6",
+                "RuleAction": "allow",
+                "Egress": "true",
+                "CidrBlock": "0.0.0.0/0",
+                "PortRange": {
+                    "From": "8080",
+                    "To": "8080"
                 }
             }
         },
@@ -244,6 +278,12 @@
                         "IpProtocol": "tcp",
                         "FromPort": "80",
                         "ToPort": "80",
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "8080",
+                        "ToPort": "8080",
                         "CidrIp": "0.0.0.0/0"
                     }
                 ]
