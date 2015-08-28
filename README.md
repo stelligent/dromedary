@@ -53,6 +53,57 @@ To push a deployment of the Dromedary application, run this command:
         --description "Deploy application to instances" \
         --s3-location bundleType=zip,bucket=jps-codepipeline-test,key=dromedary.zip
 
+Since ideally we want CodePipeline to facilitate our deployments, we'll need to create a new pipeline. Unfortunately, there's no good easy way to do this via the CLI, so here's the directions for doing it via [the Code Pipeline console](https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/dashboard). You will also need a [GitHub account](https://www.github.com).
+
+* Click Create Pipeline
+* For pipeline name, enter `dromedary` (or whatever you like) and click next.
+* So we have to set up a source provider. For Source Provider, select `github`
+* Click "connect to github" and you'll be prompted to log in and allow access for CodePipeline.
+* For repository enter `stelligent/dromedary` and for branch enter `master` and then click next.
+* Now we set up a build provider. For build provider, click "Add Jenkins"
+* For provider name, enter `DromedaryJenkins`
+* For server URL, enter this command to get the server URL:
+ 
+    aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'JenkinsURL\'].OutputValue
+
+* For project name, enter `build` and click next.
+* Now we set up a deployment provider. For Deployment Provider, select AWS CodeDeploy.
+* For Application name, enter `dromedary`
+* For Deployment group, enter `dromedary-beta` and click next.
+* Finally we have to configure the service role. In Role Name, enter `AWS-CodePipeline-Service` and click next.
+* Review your options and click "Create Pipeline"
+
+That handles the CodePipeline end, but we also have to configure Jenkins to pull the job.
+
+To get the URL of your Jenkins server, you can run this command:
+
+    aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'JenkinsURL\'].OutputValue
+
+Alternatively, you can look up it up in the CloudFormation console.
+
+Once you have CodePipeline set up, we'll need to tackle setting up Jenkins.
+
+* Click New Item.
+* For item name, enter `build`
+* Select Freestyle project and click next.
+
+We'll need to do three things in the job setup:
+
+* First, set up the Source Code Management
+** Under "Source Code Management" select "AWS CodePipeline"
+** Under "Category" select "Build"
+** Under "Provider" enter `DromedaryJenkins` (this needs to match what you entered when creating your Jenkins Provider when configuring your CodePipeline, so double check spelling).
+** Under "Build Triggers", select "Poll SCM"
+** Under schedule, enter `* * * * *`
+* Second, set up the build step
+** Click "Add build step" and select "Execute Shell"
+** Under command, enter `zip -qr dromedary.zip *`
+* Finally, set up the Post-build action:
+** Click "Add Post Build Action" and select "AWS CodePipeline Publisher"
+** Click "Add"
+** Enter `dromedary.zip`
+
+Once that's done, click "Save".
  
 ### Running Locally :dromedary_camel:
 
