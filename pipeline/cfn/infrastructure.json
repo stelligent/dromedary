@@ -387,7 +387,6 @@
                 "IamInstanceProfile": {
                     "Ref": "InstanceProfile"
                 },
-                "KeyName": "jonny-labs",
                 "Tags": [
                     {
                         "Key": "Application",
@@ -480,7 +479,7 @@
                 "IamInstanceProfile": {
                     "Ref": "InstanceProfile"
                 },
-                "KeyName": "jonny-labs",
+                "KeyName": "jonny-training",
                 "Tags": [
                     {
                         "Key": "Application",
