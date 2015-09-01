@@ -1,11 +1,13 @@
 var expect    = require("chai").expect;
 var request   = require('urllib-sync').request;
 var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
-var shaRegex  = /^[0-9a-f]{40}$/;
+// var shaRegex  = /^[0-9a-f]{40}$/;
+var shaRegex  = /^[0-9a-f]*$/;
 
 describe("/sha", function() {
   beforeEach(function() {
     this.shaResp = JSON.parse(request(targetUrl + '/sha').data.toString('utf-8'));
+    console.log(this.shaResp)
   });
 
   it("response contains sha key", function() {
