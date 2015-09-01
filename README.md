@@ -44,14 +44,16 @@ Once that stack is complete, you'll need to run these commands to create the [Co
       --ec2-tag-filters Key=environment,Value=dromedary,Type=KEY_AND_VALUE \
       --service-role-arn "$SVCROLE"
 
-To push a deployment of the Dromedary application, run this command:
+To manually push a deployment of the Dromedary application using CodeDeploy, run this command. 
+
+Note: You'll need an S3 bucket set up to hold your artifact, and insert that bucket name on the second and last lines.
 
     zip -qr ../dromedary.zip * && \
-    aws s3 cp ../dromedary.zip s3://jps-codepipeline-test && \
+    aws s3 cp ../dromedary.zip s3://your-s3-bucket && \
     aws deploy create-deployment --application-name dromedary \
         --deployment-group-name dromedary-beta \
         --description "Deploy application to instances" \
-        --s3-location bundleType=zip,bucket=jps-codepipeline-test,key=dromedary.zip
+        --s3-location bundleType=zip,bucket=your-s3-bucket,key=dromedary.zip
 
 Since ideally we want CodePipeline to facilitate our deployments, we'll need to create a new pipeline. Unfortunately, there's no good easy way to do this via the CLI, so here's the directions for doing it via [the Code Pipeline console](https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/dashboard). You will also need a [GitHub account](https://www.github.com).
 
@@ -70,7 +72,9 @@ Since ideally we want CodePipeline to facilitate our deployments, we'll need to 
 * Now we set up a deployment provider. For Deployment Provider, select AWS CodeDeploy.
 * For Application name, enter `dromedary`
 * For Deployment group, enter `dromedary-beta` and click next.
-* Finally we have to configure the service role. In Role Name, enter `AWS-CodePipeline-Service` and click next.
+* Finally we have to configure the service role. 
+** If you already have one configured, just select it here (it's probably called `AWS-CodePipeline-Service`) and click next.
+** If you don't have one, click "Create Role", "Allow", and then it'll auto-fill in the name (probably `AWS-CodePipeline-Service), and then click next.
 * Review your options and click "Create Pipeline"
 
 That handles the CodePipeline end, but we also have to configure Jenkins to pull the job.
@@ -101,10 +105,19 @@ We'll need to do three things in the job setup:
 * Finally, set up the Post-build action:
 ** Click "Add Post Build Action" and select "AWS CodePipeline Publisher"
 ** Click "Add"
-** Enter `dromedary.zip`
+** Leave the line blank. This will cause it to put the entire workspace into the artifact, which is what we want.g
 
 Once that's done, click "Save".
  
+#### Troubleshooting:
+
+* The build job failed right away!
+** The first run of the Job will fail due to some funkiness with the Polling of SCM. Since no build has ever been run, it will attempt to run the build, _but_ since there's nothing in the workspace, the build fails. If you wait two minutes, CodePipeline should trigger a build correctly, and populate the workspace.
+* The Build step has been sitting there for several minutes and isn't doing anything!
+** Make sure the provider name you have listed in your Jenkins Job matches _exactly_ to what you called it when you configured CodePipeline (probably `DromedaryJenkins`).
+
+
+
 ### Running Locally :dromedary_camel:
 
 #### Install Prerequisites 
