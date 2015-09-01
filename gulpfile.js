@@ -37,7 +37,7 @@ gulp.task('dist:public', function() {
 
 });
 gulp.task('dist:package', function() {
-  return gulp.src('package.json')
+  return gulp.src(['package.json', 'appspec.yml'])
              .pipe(gulp.dest('dist'))
              .pipe(install({production: true}));
 });
