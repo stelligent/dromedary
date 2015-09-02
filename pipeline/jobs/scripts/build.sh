@@ -1,3 +1,3 @@
 #!/bin/bash -ex
 npm install
-gulp test
+gulp dist
