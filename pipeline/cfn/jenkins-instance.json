@@ -21,13 +21,24 @@
         }
     },
 
+    "Mappings": {
+        "RegionConfig": {
+            "us-east-1": {
+                "ami": "ami-290f8942"
+            },
+            "us-west-2": {
+                "ami": "ami-51322161"
+            }
+        }
+    },
+
     "Resources": {
 
         "JenkinsInstance": {
             "Type": "AWS::EC2::Instance",
 
             "Properties": {
-                "ImageId": "ami-db55e4b0",
+                "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.large",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
                 "KeyName": "Ec2Key",
