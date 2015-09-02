@@ -267,6 +267,10 @@
         "InstanceSecurityGroupId" : {
             "Description": "Id of application security group",
             "Value": { "Ref": "InstanceSecurityGroup" }
+        },
+        "JenkinsSecurityGroup" : {
+            "Description": "Id of Jenkins security group",
+            "Value": { "Ref": "JenkinsSecurityGroup" }
         }
     }
 }
