@@ -2,7 +2,7 @@ var expect  = require("chai").expect;
 var backend = require("../lib/inMemoryStorage.js");
 
 // var expectedNumberOfItems = 3;
-var expectedNumberOfItems = 4;
+var expectedNumberOfItems = 5;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("inMemoryStorage", function() {
