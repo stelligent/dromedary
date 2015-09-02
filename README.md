@@ -60,7 +60,7 @@ Since ideally we want CodePipeline to facilitate our deployments, we'll need to 
 * Click the **Create pipeline** button
 * For pipeline name, enter `dromedary` (or whatever you like) and click next.
 * So we have to set up a source provider. For Source Provider, select `github`
-* Click "connect to github" and you'll be prompted to log in and allow access for CodePipeline.
+* Click the **connect to GitHub** button and you'll be prompted to log in and allow access for CodePipeline.
 * For repository enter `stelligent/dromedary` and for branch enter `master` and then click next.
 * Now we set up a build provider. For build provider, click "Add Jenkins"
 * For provider name, enter `DromedaryJenkins`
