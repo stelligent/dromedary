@@ -395,6 +395,10 @@
                         }
                     },
                     {
+                        "Key": "Name",
+                        "Value": "Dromedary"
+                    },
+                    {
                         "Key": "environment",
                         "Value": "dromedary"
                     }
@@ -479,13 +483,16 @@
                 "IamInstanceProfile": {
                     "Ref": "InstanceProfile"
                 },
-                "KeyName": "jonny-training",
                 "Tags": [
                     {
                         "Key": "Application",
                         "Value": {
                             "Ref": "AWS::StackId"
                         }
+                    },
+                    {
+                        "Key": "Name",
+                        "Value": "DromedaryJenkins"
                     }
                 ],
                 "NetworkInterfaces": [
@@ -653,6 +660,15 @@
         }
     },
     "Outputs": {
+        "JenkinsURL" : {
+           "Description": "The URL of the Jenkins server",  
+           "Value" : {"Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "JenkinsInstance", "PublicIp" ]}, ":8080" ] ]}
+         },
+        "DromedaryURL" : {
+           "Description": "The URL of the Dromedary server (note: this URL won't work until CodeDeploy has deployed to the instance successfully)",  
+           "Value" : {"Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "WebServerInstance", "PublicIp" ]}, ":8080" ] ]}
+         },
+
         "CodeDeployServiceRoleARN": {
             "Value": {
                 "Fn::GetAtt": [
