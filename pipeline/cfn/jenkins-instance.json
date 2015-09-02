@@ -24,10 +24,10 @@
     "Mappings": {
         "RegionConfig": {
             "us-east-1": {
-                "ami": "ami-290f8942"
+                "ami": "ami-db55e4b0"
             },
             "us-west-2": {
-                "ami": "ami-51322161"
+                "ami": ""
             }
         }
     },
@@ -41,8 +41,9 @@
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.large",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
-                "KeyName": "Ec2Key",
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } }],
+                "KeyName": { "Ref": "Ec2Key" },
+                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
+                         { "Key": "Name", "Value": "DromedaryJenkins" }],
                 "NetworkInterfaces": [{
                     "GroupSet": [{ "Ref": "SecurityGroupId" }],
                     "AssociatePublicIpAddress": "true",
@@ -54,13 +55,23 @@
                     "#!/bin/bash -xe\n",
                     "yum update -y aws-cfn-bootstrap\n",
                     "yum -y update\n",
-                    "yum -y install nodejs npm --enablerepo=epel\n",
-                    "npm install gulp -g\n",
                     "\n",
-                    "/opt/aws/bin/cfn-init -v",
-                      " --stack ", { "Ref": "AWS::StackName" },
-                      " --resource WebServerInstance ",
-                      " --region ", { "Ref": "AWS::Region" }, "\n",
+                    "if [ \"$(/usr/local/bin/node --version 2>/dev/null)\" != 'v0.12.7' ]; then\n",
+                    "  yum remove nodejs npm\n",
+                    "  wget https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz -O /tmp/node-install.tar.gz\n",
+                    "  cd /usr/local && tar --strip-components 1 -xzf /tmp/node-install.tar.gz\n",
+                    "fi\n",
+                    "if [ ! -e /usr/bin/node ]; then\n",
+                    "  ln -s /usr/local/bin/node /usr/bin/node\n",
+                    "fi\n",
+                    "if [ ! -e /usr/bin/npm ]; then\n",
+                    "  ln -s /usr/local/bin/npm /usr/bin/npm\n",
+                    "fi\n",
+                    "node -v \n",
+                    "npm -v\n",
+                    "npm install -g gulp\n",
+                    "service jenkins stop\n",
+                    "service jenkins start\n",
                     "\n",
                     "/opt/aws/bin/cfn-signal -e $? ",
                         " --stack ", { "Ref": "AWS::StackName" },
@@ -71,6 +82,13 @@
             "CreationPolicy": {
                 "ResourceSignal": { "Timeout": "PT15M" }
             }
+        }
+    },
+
+    "Outputs": {
+        "PublicDns": {
+            "Description": "Public DNS of Jenkins instance",
+            "Value": { "Fn::GetAtt": [ "JenkinsInstance", "PublicIp" ]}
         }
     }
 }
