@@ -71,7 +71,7 @@ Since ideally we want CodePipeline to facilitate our deployments, we'll need to 
 * For project name, enter `build` and click next.
 * Now we set up a deployment provider. For Deployment Provider, select AWS CodeDeploy.
 * For Application name, enter `dromedary`
-* For Deployment group, enter `dromedary-beta` and click next.
+* For Deployment group, enter `dromedary-beta` and click the **Next step** button.
 * Finally we have to configure the service role. 
 ** If you already have one configured, just select it here (it's probably called `AWS-CodePipeline-Service`) and click next.
 ** If you don't have one, click "Create Role", "Allow", and then it'll auto-fill in the name (probably `AWS-CodePipeline-Service), and then click next.
