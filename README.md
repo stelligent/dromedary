@@ -57,7 +57,7 @@ Note: You'll need an S3 bucket set up to hold your artifact, and insert that buc
 
 Since ideally we want CodePipeline to facilitate our deployments, we'll need to create a new pipeline. Unfortunately, there's no good easy way to do this via the CLI, so here's the directions for doing it via [the Code Pipeline console](https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/dashboard). You will also need a [GitHub account](https://www.github.com).
 
-* Click Create Pipeline
+* Click the **Create pipeline** button
 * For pipeline name, enter `dromedary` (or whatever you like) and click next.
 * So we have to set up a source provider. For Source Provider, select `github`
 * Click "connect to github" and you'll be prompted to log in and allow access for CodePipeline.
