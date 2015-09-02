@@ -66,7 +66,7 @@ Since ideally we want CodePipeline to facilitate our deployments, we'll need to 
 * For provider name, enter `DromedaryJenkins`
 * For server URL, enter this command to get the server URL:
 
-     aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'JenkinsURL\'].OutputValue
+    aws cloudformation describe-stacks --stack-name $STACKNAME --output text --query Stacks[*].Outputs[?OutputKey==\'JenkinsURL\'].OutputValue
 
 * For project name, enter `build` and click next.
 * Now we set up a deployment provider. For Deployment Provider, select AWS CodeDeploy.
