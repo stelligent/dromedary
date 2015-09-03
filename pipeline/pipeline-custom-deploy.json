@@ -1,0 +1,181 @@
+{
+    "name": "DromedaryPipelineName", 
+    "version": 10,
+    "roleArn": "arn:aws:iam::324320755747:role/AWS-CodePipeline-Service", 
+    "artifactStore": {
+        "type": "S3", 
+        "location": "codepipeline-us-east-1-68654752802"
+    }, 
+    "stages": [
+        {
+            "name": "Source", 
+            "actions": [
+                {
+                    "inputArtifacts": [], 
+                    "name": "Source", 
+                    "actionTypeId": {
+                        "category": "Source", 
+                        "owner": "AWS", 
+                        "version": "1", 
+                        "provider": "S3"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedarySource"
+                        }
+                    ], 
+                    "configuration": {
+                        "S3Bucket": "codepipeline-dromedary-test", 
+                        "S3ObjectKey": "source/object.zip"
+                    }, 
+                    "runOrder": 1
+                }
+            ]
+        }, 
+        {
+            "name": "CommitStage", 
+            "actions": [
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedarySource"
+                        }
+                    ], 
+                    "name": "PrepWorkspace", 
+                    "actionTypeId": {
+                        "category": "Build", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedaryWorkspace"
+                        }
+                    ], 
+                    "configuration": {
+                        "ProjectName": "prep-workspace"
+                    }, 
+                    "runOrder": 1
+                }, 
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryWorkspace"
+                        }
+                    ], 
+                    "name": "UnitTest", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [], 
+                    "configuration": {
+                        "ProjectName": "unit-test"
+                    }, 
+                    "runOrder": 2
+                }, 
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryWorkspace"
+                        }
+                    ], 
+                    "name": "Build", 
+                    "actionTypeId": {
+                        "category": "Build", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedaryBuild"
+                        }
+                    ], 
+                    "configuration": {
+                        "ProjectName": "build"
+                    }, 
+                    "runOrder": 3
+                }
+            ]
+        }, 
+        {
+            "name": "Acceptance", 
+            "actions": [
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryBuild"
+                        }
+                    ], 
+                    "name": "CreateEnvironment", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedaryCreate"
+                        }
+                    ], 
+                    "configuration": {
+                        "ProjectName": "create-environment"
+                    }, 
+                    "runOrder": 1
+                }, 
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryCreate"
+                        }
+                    ], 
+                    "name": "AcceptanceTest", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedaryAccepted"
+                        }
+                    ], 
+                    "configuration": {
+                        "ProjectName": "acceptance-test"
+                    }, 
+                    "runOrder": 2
+                }
+            ]
+        }, 
+        {
+            "name": "Production", 
+            "actions": [
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryAccepted"
+                        }
+                    ], 
+                    "name": "PromoteEnvironment", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [], 
+                    "configuration": {
+                        "ProjectName": "promote-environment"
+                    }, 
+                    "runOrder": 1
+                }
+            ]
+        }
+    ]
+}
