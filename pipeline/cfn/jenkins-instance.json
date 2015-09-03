@@ -5,7 +5,8 @@
     "Parameters" : {
         "Ec2Key": {
             "Type": "String",
-            "Description": "Ec2 key for ssh access"
+            "Description": "Ec2 key for ssh access",
+            "Default": ""
         },
         "SubnetId": {
             "Type": "String",
@@ -27,6 +28,10 @@
             "Type": "String",
             "Description": "Artifact Bucket"
         }
+    },
+
+    "Conditions": {
+        "NoEc2Key": { "Fn::Equals" : [ { "Ref" : "Ec2Key" }, "" ]}
     },
 
     "Mappings": {
@@ -103,7 +108,7 @@
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.large",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
-                "KeyName": { "Ref": "Ec2Key" },
+                "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
                 "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
                          { "Key": "Name", "Value": "DromedaryJenkins" }],
                 "NetworkInterfaces": [{
