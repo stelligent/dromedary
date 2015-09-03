@@ -36,7 +36,7 @@ cp "$script_dir/../pipeline/pipeline-custom-deploy.json" $pipelinejson
 
 sed s/DromedaryJenkins/$dromedary_custom_action_provider/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s/DromedaryPipelineName/$pipeline_name/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
-sed s/arn:aws:iam::123456789012:role\/AWS-CodePipeline-Service/$codepipeline_role_arn/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
+sed s,arn:aws:iam::123456789012:role/AWS-CodePipeline-Service,$codepipeline_role_arn,g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s/codepipeline-us-east-1-XXXXXXXXXXX/$dromedary_s3_bucket/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 
 aws codepipeline create-pipeline --pipeline file://$pipelinejson || exit $?
