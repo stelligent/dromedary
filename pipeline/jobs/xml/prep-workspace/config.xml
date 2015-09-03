@@ -6,7 +6,9 @@
   <properties>
     <EnvInjectJobProperty plugin="envinject@1.91.4">
       <info>
-        <propertiesContent>DROMEDARY_S3_BUCKET=S3BUCKET_PLACEHOLDER</propertiesContent>
+        <propertiesContent>DROMEDARY_S3_BUCKET=S3BUCKET_PLACEHOLDER
+DROMEDARY_VPC_STACK=VPC_PLACEHOLDER
+DROMEDARY_IAM_STACK=IAM_PLACEHOLDER</propertiesContent>
         <loadFilesFromMaster>false</loadFilesFromMaster>
       </info>
       <on>true</on>

@@ -3,19 +3,7 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties>
-    <EnvInjectJobProperty plugin="envinject@1.91.4">
-      <info>
-        <propertiesContent>DROMEDARY_S3_BUCKET=S3BUCKET_PLACEHOLDER</propertiesContent>
-        <loadFilesFromMaster>false</loadFilesFromMaster>
-      </info>
-      <on>true</on>
-      <keepJenkinsSystemVariables>true</keepJenkinsSystemVariables>
-      <keepBuildVariables>true</keepBuildVariables>
-      <overrideBuildParameters>false</overrideBuildParameters>
-      <contributors/>
-    </EnvInjectJobProperty>
-  </properties>
+  <properties/>
   <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.2">
     <model>
       <AVAILABLE__REGIONS>

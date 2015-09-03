@@ -39,9 +39,12 @@ config_dir="$(dirname $0)/../pipeline/jobs/xml"
 cp -r $config_dir/* $temp_dir/
 pushd $temp_dir > /dev/null
 for f in */config.xml; do
-    sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ $f > $f.new && mv $f.new $f
     sed s/DromedaryJenkins/$jenkins_custom_action_provider_name/ $f > $f.new && mv $f.new $f
 done
+sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+
 tar czf job-configs.tgz *
 aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/jenkins-job-configs.tgz
 popd > /dev/null
