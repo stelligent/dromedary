@@ -33,7 +33,7 @@
             ]
         }, 
         {
-            "name": "CommitStage", 
+            "name": "Prep", 
             "actions": [
                 {
                     "inputArtifacts": [
@@ -41,7 +41,7 @@
                             "name": "DromedarySource"
                         }
                     ], 
-                    "name": "PrepWorkspace", 
+                    "name": "PrepareWorkspace", 
                     "actionTypeId": {
                         "category": "Build", 
                         "owner": "Custom", 
@@ -57,7 +57,12 @@
                         "ProjectName": "prep-workspace"
                     }, 
                     "runOrder": 1
-                }, 
+                }
+            ]
+        }, 
+        {
+            "name": "Commit", 
+            "actions": [
                 {
                     "inputArtifacts": [
                         {
@@ -75,7 +80,7 @@
                     "configuration": {
                         "ProjectName": "unit-test"
                     }, 
-                    "runOrder": 2
+                    "runOrder": 1
                 }, 
                 {
                     "inputArtifacts": [
@@ -98,7 +103,7 @@
                     "configuration": {
                         "ProjectName": "build"
                     }, 
-                    "runOrder": 3
+                    "runOrder": 2
                 }
             ]
         }, 
