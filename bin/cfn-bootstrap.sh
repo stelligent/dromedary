@@ -2,14 +2,17 @@
 
 script_dir="$(dirname "$0")"
 ENVIRONMENT_FILE="$script_dir/../environment.sh"
-if [ -f "$ENVIRONMENT_FILE" ]; then
-    echo "Fatal: environment file $ENVIRONMENT_FILE ... remove if you need to bootstrap!" 2>&1
+if [ ! -f "$ENVIRONMENT_FILE" ]; then
+    echo "Fatal: environment file $ENVIRONMENT_FILE does not exist!" 2>&1
     exit 1
 fi
 
-stack_basename=dromedary
-if [ -n "$1" ]; then
-    stack_basename="$1"
+. $ENVIRONMENT_FILE
+
+stack_basename="$1"
+if [ -z "$stack_basename" ]; then
+    echo "Usage: $(basename $0) <stack-basename>" >&2
+    exit 1
 fi
 vpc_stack_name="$stack_basename-vpc"
 iam_stack_name="$stack_basename-iam"
@@ -66,7 +69,7 @@ jenkins_subnet_id="$(aws cloudformation describe-stacks --stack-name $vpc_stack_
 jenkins_secgrp_id="$(aws cloudformation describe-stacks --stack-name $vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
 jenkins_instance_profile="$(aws cloudformation describe-stacks --stack-name $iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceProfile`].OutputValue')"
 
-echo "export dromedary_vpc_stack_name=$vpc_stack_name" > "$ENVIRONMENT_FILE"
+echo "export dromedary_vpc_stack_name=$vpc_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_iam_stack_name=$iam_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_jenkins_stack_name=$jenkins_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_s3_bucket=$s3_bucket" >> "$ENVIRONMENT_FILE"

@@ -44,6 +44,9 @@ done
 sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
 sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
 sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+sed s/DROMEDARY_HOSTNAME/$dromedary_hostname/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+sed s/DROMEDARY_DOMAINNAME/$dromedary_domainname/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
+sed s/DROMEDARY_ZONE_ID/$dromedary_zone_id/ prep-workspace/config.xml > prep-workspace/config.xml.new && mv prep-workspace/config.xml.new prep-workspace/config.xml
 
 tar czf job-configs.tgz *
 aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/jenkins-job-configs.tgz

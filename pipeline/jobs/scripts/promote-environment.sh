@@ -1,4 +1,5 @@
 #!/bin/bash -ex
 
-# DNS SWAP HERE
-exit 0
+. environment.sh
+
+bash "$(dirname $0)/../../../bin/route53-update-prod-dns.sh" $dromedary_accepted_ip

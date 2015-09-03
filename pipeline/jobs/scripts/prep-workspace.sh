@@ -14,3 +14,6 @@ echo "export dromedary_s3_bucket=$DROMEDARY_S3_BUCKET" >> environment.sh
 echo "export dromedary_vpc_stack_name=$DROMEDARY_VPC_STACK" >> environment.sh
 echo "export dromedary_iam_stack_name=$DROMEDARY_IAM_STACK" >> environment.sh
 echo "export dromedary_ec2_key=$DROMEDARY_EC2_KEY" >> environment.sh
+echo "export dromedary_hostname=$DROMEDARY_HOSTNAME" >> environment.sh
+echo "export dromedary_domainname=$DROMEDARY_DOMAINNAME" >> environment.sh
+echo "export dromedary_zone_id=$DROMEDARY_ZONE_ID" >> environment.sh

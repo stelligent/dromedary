@@ -12,6 +12,7 @@ fi
 echo 'This will delete all dromedary resources.'
 read -p '<ENTER> to continue ...'
 
+$script_dir/route53-delete-recordset.sh
 $script_dir/codepipeline-delete.sh
 $script_dir/cfn-delete-stacks.sh
 

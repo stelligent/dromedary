@@ -7,3 +7,4 @@ export TARGET_URL=http://$dest_host:8080
 
 npm install
 gulp test-functional
+echo "export dromedary_accepted_ip=$dest_host" >> environment.sh
