@@ -44,7 +44,7 @@ gulp.task('dist:package', function() {
 
 // Create tarball
 gulp.task('dist:tar', function () {
-  return gulp.src('dist/*')
+  return gulp.src('dist/**/*')
              .pipe(tar('archive.tar'))
              .pipe(gzip())
              .pipe(gulp.dest('dist'));
