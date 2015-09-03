@@ -86,6 +86,10 @@
         "InstanceProfile": {
             "Description": "Name if instance-profile for Jenkins and application instances",
             "Value": { "Ref": "InstanceProfile" }
+        },
+        "InstanceRole": {
+            "Description": "IAM Role for Jenkins and application instance profile",
+            "Value": { "Ref": "InstanceRole" }
         }
     }
 }
