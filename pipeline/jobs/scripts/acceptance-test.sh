@@ -1,19 +1,9 @@
 #!/bin/bash -ex
 
-## Uncomment when ready to execute tests locally
-#npm install
-#export AUTOMATED_ACCEPTANCE_TEST=true
-#node app.js > server.log 2>&1 &
-#server_pid=$!
-#sleep 1
-#if ! gulp test-functional; then
-#    rc=$?
-#    kill $server_pid
-#    exit $rc
-#fi
-#kill $server_pid
+. environment.sh
+
+dest_host="$(aws cloudformation describe-stacks --stack-name $(basename $dromedary_artifact .tar.gz) --output text --query 'Stacks[0].Outputs[?OutputKey==`PublicDns`].OutputValue')"
+export TARGET_URL=http://$dest_host:8080
 
 npm install
-export TARGET_URL=SOME_URL
-# gulp test-functional
-echo "All tests passed!"
+gulp test-functional
