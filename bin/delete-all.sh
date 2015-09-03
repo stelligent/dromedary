@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 script_dir="$(dirname "$0")"
 ENVIRONMENT_FILE="$script_dir/../environment.sh"
@@ -12,7 +12,7 @@ fi
 echo 'This will delete all dromedary resources.'
 read -p '<ENTER> to continue ...'
 
-$script_dir/codepipeline-delete.sh || exit $?
-$script_dir/cfn-delete-all.sh || exit $?
+$script_dir/codepipeline-delete.sh
+$script_dir/cfn-delete-stacks.sh
 
 rm -f "$ENVIRONMENT_FILE"
