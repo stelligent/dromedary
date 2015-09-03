@@ -75,6 +75,83 @@
                     }
                 }]
             }
+        },
+
+        "CodePipelineTrustRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [{
+                        "Sid": "1",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "codedeploy.us-east-1.amazonaws.com",
+                                "codedeploy.us-west-2.amazonaws.com"
+                            ]
+                        },
+                        "Action": "sts:AssumeRole"
+                    }]
+                },
+                "Path": "/",
+                "Policies": [{
+                    "PolicyName": "CodePipelinePolicy",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Action": [
+                                "s3:GetObject",
+                                "s3:GetObjectVersion",
+                                "s3:GetBucketVersioning"
+                            ],
+                            "Resource": "*",
+                            "Effect": "Allow"
+                        },{
+                            "Action": [ "s3:PutObject" ],
+                            "Resource": [
+                                "arn:aws:s3:::codepipeline*",
+                                "arn:aws:s3:::dromedary*",
+                                "arn:aws:s3:::elasticbeanstalk*"
+                            ],
+                            "Effect": "Allow"
+                        },{
+                            "Action": [
+                                "codedeploy:CreateDeployment",
+                                "codedeploy:GetApplicationRevision",
+                                "codedeploy:GetDeployment",
+                                "codedeploy:GetDeploymentConfig",
+                                "codedeploy:RegisterApplicationRevision"
+                            ],
+                            "Resource": "*",
+                            "Effect": "Allow"
+                        },{
+                            "Action": [
+                                "elasticbeanstalk:*",
+                                "ec2:*",
+                                "elasticloadbalancing:*",
+                                "autoscaling:*",
+                                "cloudwatch:*",
+                                "s3:*",
+                                "sns:*",
+                                "cloudformation:*",
+                                "rds:*",
+                                "sqs:*",
+                                "ecs:*",
+                                "iam:PassRole"
+                            ],
+                            "Resource": "*",
+                            "Effect": "Allow"
+                        },{
+                            "Action": [
+                                "lambda:InvokeFunction",
+                                "lambda:ListFunctions"
+                            ],
+                            "Resource": "*",
+                            "Effect": "Allow"
+                        }]
+                    }
+                }]
+            }
         }
     },
 
@@ -82,6 +159,10 @@
         "CodeDeployServiceRoleARN": {
             "Description": "The ARN of the Code Deploy Trust Role, which is needed to configure Code Deploy",
             "Value": { "Fn::GetAtt": [ "CodeDeployTrustRole", "Arn" ]}
+        },
+        "CodePipelineTrustRole": {
+            "Description": "The ARN of the Code Pipeline Trust Role, which is needed to configure Code Pipeline",
+            "Value": { "Fn::GetAtt": [ "CodePipelineTrustRole", "Arn" ]}
         },
         "InstanceProfile": {
             "Description": "Name if instance-profile for Jenkins and application instances",
