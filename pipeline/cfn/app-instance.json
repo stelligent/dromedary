@@ -5,7 +5,8 @@
     "Parameters" : {
         "Ec2Key": {
             "Type": "String",
-            "Description": "Ec2 key for ssh access"
+            "Description": "Ec2 key for ssh access",
+            "Default": ""
         },
         "SubnetId": {
             "Type": "String",
@@ -15,10 +16,34 @@
             "Type": "String",
             "Description": "Security-group id in which to place instance"
         },
+        "CfnInitRole": {
+            "Type": "String",
+            "Description": "IAM Role for cfn-init"
+        },
         "InstanceProfile": {
             "Type": "String",
             "Description": "Instance profile for app instance"
+        },
+        "S3Bucket": {
+            "Type": "String",
+            "Description": "Artifact Bucket"
+        },
+        "ArtifactPath": {
+            "Type": "String",
+            "Description": "Path to tarabll in Artifact Bucket",
+            "Default": ""
+        },
+        "CodeDeployTag": {
+            "Type": "String",
+            "Description": "Resource Tags for Deployment Group",
+            "Default": ""
         }
+    },
+
+    "Conditions": {
+        "NoEc2Key": { "Fn::Equals" : [ { "Ref" : "Ec2Key" }, "" ]},
+        "InstallCodeDeploy": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "CodeDeployTag" }, "" ]} ]},
+        "DeployFromS3": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "ArtifactPath" }, "" ]} ]}
     },
 
     "Mappings": {
@@ -37,61 +62,91 @@
         "WebServerInstance": {
             "Type": "AWS::EC2::Instance",
             "Metadata": {
-
+                "AWS::CloudFormation::Authentication" : {
+                    "S3AccessCreds" : {
+                        "type" : "S3",
+                        "roleName" : { "Ref" : "CfnInitRole" },
+                        "buckets" : [{ "Ref" : "S3Bucket" }]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
-                    "config": {
-                        "packages": {
-                            "yum": {
-                                "httpd": []
-                            }
-                        },
+                    "configSets" : {
+                        "base" : [ "base" ],
+                        "codedeploy" : [ "codedeploy" ],
+                        "s3" : [ "s3" ],
+                        "default" : [ { "ConfigSet" : "base" }]
+                    },
+                    "base": {
                         "files": {
-                            "/var/www/html/index.html": {
-                                "content": { "Fn::Join": [ "\n", [
-                                    "<h1>Congratulations, you have successfully launched the AWS CloudFormation sample.</h1>"
-                                ]]},
+                            "/tmp/node-install.tar.gz": {
+                                "source": "https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz",
                                 "mode": "000644",
                                 "owner": "root",
                                 "group": "root"
-                            },
-                            "/etc/cfn/cfn-hup.conf": {
-                                "content": { "Fn::Join": [ "", [
-                                    "[main]\n",
-                                    "stack=", { "Ref": "AWS::StackId" }, "\n",
-                                    "region=", { "Ref": "AWS::Region" }, "\n"
-                                ]]},
-                                "mode": "000400",
-                                "owner": "root",
-                                "group": "root"
-                            },
-                            "/etc/cfn/hooks.d/cfn-auto-reloader.conf": {
-                                "content": { "Fn::Join": [ "", [
-                                    "[cfn-auto-reloader-hook]\n",
-                                    "triggers=post.update\n",
-                                    "path=Resources.WebServerInstance.Metadata.AWS::CloudFormation::Init\n",
-                                    "action=/opt/aws/bin/cfn-init -v",
-                                      " --stack ", { "Ref": "AWS::StackName" },
-                                      " --resource WebServerInstance ",
-                                      " --region ", { "Ref": "AWS::Region" },
-                                      "\n",
-                                      "runas=root\n"
-                                ]]}
                             }
                         },
-                        "services": {
-                            "sysvinit": {
-                                "httpd": {
-                                    "enabled": "true",
-                                    "ensureRunning": "true"
-                                },
-                                "cfn-hup": {
-                                    "enabled": "true",
-                                    "ensureRunning": "true",
-                                    "files": [
-                                        "/etc/cfn/cfn-hup.conf",
-                                        "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
-                                    ]
-                                }
+                        "commands": {
+                            "10-install-node": {
+                                "test": "test \"$(/usr/local/bin/node --version 2>/dev/null)\" != 'v0.12.7'",
+                                "command": { "Fn::Join" : [ "", [
+                                    "yum remove -y nodejs npm\n",
+                                    "\n",
+                                    "cd /usr/local && tar --strip-components 1 -xzf /tmp/node-install.tar.gz\n",
+                                    "if [ ! -e /usr/bin/node ]; then\n",
+                                    "  ln -s /usr/local/bin/node /usr/bin/node\n",
+                                    "fi\n",
+                                    "if [ ! -e /usr/bin/npm ]; then\n",
+                                    "  ln -s /usr/local/bin/npm /usr/bin/npm\n",
+                                    "fi\n"
+                                ]]}
+                            },
+                            "15-install-node-modules": {
+                                "command": "npm install -g forever"
+                            }
+                        }
+                    },
+                    "codedeploy": {
+                        "package": {
+                            "yum": {
+                                "ruby": []
+                            }
+                        },
+                        "files": {
+                            "/tmp/codedeploy-install": {
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/aws-codedeploy-", {"Ref": "AWS::Region"}, "/latest/install" ]]},
+                                "mode": "000755",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        },
+                        "commands": {
+                            "10-install-codedeploy": {
+                                "cwd": "/tmp",
+                                "command": "./install auto\n"
+                            }
+                        }
+                    },
+                    "s3": {
+                        "files": {
+                            "/tmp/dromedary.tgz": {
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
+                                "authentication": "S3AccessCreds",
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        },
+                        "commands": {
+                            "00-extract-dromedary": {
+                                "command": { "Fn::Join" : [ "", [
+                                    "mkdir -p -m755 /dromedary/log\n",
+                                    "cd /dromedary\n",
+                                    "tar xzf /tmp/dromedary.tgz\n"
+                                ]]}
+                            },
+                            "10-start-node": {
+                                "cwd": "/dromedary",
+                                "command": "/usr/bin/forever app.js > /dromedary/log/server.log 2>&1 &\n"
                             }
                         }
                     }
@@ -101,9 +156,14 @@
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.large",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
-                "KeyName": { "Ref": "Ec2Key" },
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
-                         { "Key": "environment", "Value": "dromedary" }],
+                "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
+                "Tags": { "Fn::If": [ "InstallCodeDeploy",
+                    [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
+                     { "Key": "Name", "Value": "DromedaryApp" },
+                     { "Key": "environment", "Value": "dromedary" }],
+                    [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
+                     { "Key": "Name", "Value": "DromedaryApp" }]
+                ]},
                 "NetworkInterfaces": [{
                     "GroupSet": [{ "Ref": "SecurityGroupId" }],
                     "AssociatePublicIpAddress": "true",
@@ -114,29 +174,26 @@
                 "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
                     "#!/bin/bash -xe\n",
                     "yum update -y aws-cfn-bootstrap\n",
-                    "yum -y update\n",
-                    "yum -y install ruby aws-cli\n",
+                    "yum -y upgrade\n",
                     "\n",
-                    "yum remove nodejs npm\n",
-                    "wget https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz -O /tmp/node-install.tar.gz\n",
-                    "cd /usr/local && tar --strip-components 1 -xzf /tmp/node-install.tar.gz\n",
-                    "ln -s /usr/local/bin/node /usr/bin/node\n",
-                    "ln -s /usr/local/bin/npm /usr/bin/npm\n",
-                    "node -v \n",
-                    "npm -v\n",
-                    "npm install -g gulp\n",
-                    "npm install -g forever\n",
-                    "\n",
-                    "pushd /home/ec2-user\n",
-                    "aws s3 cp s3://aws-codedeploy-", {"Ref": "AWS::Region"}, "/latest/install . --region ", {"Ref": "AWS::Region"}, "\n",
-                    "chmod +x ./install\n",
-                    "./install auto\n",
-                    "popd\n",
-                    "/opt/aws/bin/cfn-init -v",
+                    { "Fn::If": [ "InstallCodeDeploy", 
+                        "cfn_configsets='base,codedeploy'\n",
+                        "cfn_configsets='default'\n"
+                    ]},
+                    { "Fn::If": [ "DeployFromS3", 
+                        "cfn_configsets='base,s3'\n",
+                        "cfn_configsets='default'\n"
+                    ]},
+                    "/opt/aws/bin/cfn-init -v --configsets $cfn_configsets",
                       " --stack ", {"Ref": "AWS::StackName"},
                       " --resource WebServerInstance ",
+                      " --role ", {"Ref": "CfnInitRole"},
                       " --region ", {"Ref": "AWS::Region"},
                       "\n",
+                    "\n",
+                    "node -v \n",
+                    "npm -v\n",
+                    "\n",
                     "/opt/aws/bin/cfn-signal -e $? ",
                       " --stack ", {"Ref": "AWS::StackName"},
                       " --resource WebServerInstance ",
