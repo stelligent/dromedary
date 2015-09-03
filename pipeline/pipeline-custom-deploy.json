@@ -1,10 +1,10 @@
 {
     "name": "DromedaryPipelineName", 
     "version": 10,
-    "roleArn": "arn:aws:iam::324320755747:role/AWS-CodePipeline-Service", 
+    "roleArn": "arn:aws:iam::123456789012:role/AWS-CodePipeline-Service", 
     "artifactStore": {
         "type": "S3", 
-        "location": "codepipeline-us-east-1-68654752802"
+        "location": "codepipeline-us-east-1-XXXXXXXXXXX"
     }, 
     "stages": [
         {
