@@ -205,5 +205,12 @@
                 "ResourceSignal": { "Timeout": "PT15M" }
             }
         }
+    },
+
+    "Outputs": {
+        "PublicDns": {
+            "Description": "Public DNS of Dromedary App instance",
+            "Value": { "Fn::GetAtt": [ "WebServerInstance", "PublicIp" ]}
+        }
     }
 }
