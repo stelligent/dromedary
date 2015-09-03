@@ -478,7 +478,7 @@
             "DependsOn": "AttachGateway",
 
             "Properties": {
-                "ImageId": "ami-db55e4b0",
+                "ImageId": "ami-f33e5e96",
                 "InstanceType": "t2.large",
                 "IamInstanceProfile": {
                     "Ref": "InstanceProfile"
