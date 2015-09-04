@@ -12,9 +12,9 @@
             "Type": "String",
             "Description": "VPC subnet id in which to place instance"
         },
-        "SecurityGroupId": {
+        "VPC": {
             "Type": "String",
-            "Description": "Security-group id in which to place instance"
+            "Description": "VPC id in which to place instance"
         },
         "CfnInitRole": {
             "Type": "String",
@@ -58,6 +58,18 @@
     },
 
     "Resources": {
+        "InstanceSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": { "Ref": "VPC" },
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0" },
+                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0" },
+                    { "IpProtocol": "tcp", "FromPort": "8080", "ToPort": "8080", "CidrIp": "0.0.0.0/0" }
+                ]
+            }
+        },
 
         "WebServerInstance": {
             "Type": "AWS::EC2::Instance",
@@ -165,7 +177,7 @@
                      { "Key": "Name", "Value": "DromedaryApp" }]
                 ]},
                 "NetworkInterfaces": [{
-                    "GroupSet": [{ "Ref": "SecurityGroupId" }],
+                    "GroupSet": [{ "Ref": "InstanceSecurityGroup" }],
                     "AssociatePublicIpAddress": "true",
                     "DeviceIndex": "0",
                     "DeleteOnTermination": "true",

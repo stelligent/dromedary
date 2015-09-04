@@ -37,7 +37,8 @@ if [ -z "$dromedary_artifact" ]; then
 fi
 
 app_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
-app_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
+# app_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
+vpc="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`VPC`].OutputValue')"
 app_instance_profile="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceProfile`].OutputValue')"
 app_instance_role="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceRole`].OutputValue')"
 app_custom_action_provider_name="DromedaryJnkns$(date +%s)"
@@ -48,7 +49,7 @@ aws cloudformation create-stack \
     --template-body file://./pipeline/cfn/app-instance.json \
     --parameters ParameterKey=Ec2Key,ParameterValue=$dromedary_ec2_key \
         ParameterKey=SubnetId,ParameterValue=$app_subnet_id \
-        ParameterKey=SecurityGroupId,ParameterValue=$app_secgrp_id \
+        ParameterKey=VPC,ParameterValue=$vpc \
         ParameterKey=InstanceProfile,ParameterValue=$app_instance_profile \
         ParameterKey=CfnInitRole,ParameterValue=$app_instance_role \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \

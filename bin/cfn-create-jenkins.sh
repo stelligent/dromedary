@@ -29,6 +29,7 @@ wait_for_stack() {
 
 jenkins_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
 jenkins_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
+vpc="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`VPC`].OutputValue')"
 jenkins_instance_profile="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceProfile`].OutputValue')"
 jenkins_instance_role="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceRole`].OutputValue')"
 jenkins_custom_action_provider_name="DromedaryJnkns$(date +%s)"
@@ -58,12 +59,26 @@ if ! aws s3 ls s3://$dromedary_s3_bucket/jenkins-job-configs.tgz; then
     exit 1
 fi
 
+echo aws cloudformation create-stack \
+    --stack-name $dromedary_jenkins_stack_name \
+    --template-body file://./pipeline/cfn/jenkins-instance.json \
+    --disable-rollback \
+    --parameters ParameterKey=Ec2Key,ParameterValue=$dromedary_ec2_key \
+        ParameterKey=SubnetId,ParameterValue=$jenkins_subnet_id \
+        ParameterKey=VPC,ParameterValue=$vpc \
+        ParameterKey=InstanceProfile,ParameterValue=$jenkins_instance_profile \
+        ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
+        ParameterKey=CfnInitRole,ParameterValue=$jenkins_instance_role
+
+
+
 aws cloudformation create-stack \
     --stack-name $dromedary_jenkins_stack_name \
     --template-body file://./pipeline/cfn/jenkins-instance.json \
+    --disable-rollback \
     --parameters ParameterKey=Ec2Key,ParameterValue=$dromedary_ec2_key \
         ParameterKey=SubnetId,ParameterValue=$jenkins_subnet_id \
-        ParameterKey=SecurityGroupId,ParameterValue=$jenkins_secgrp_id \
+        ParameterKey=VPC,ParameterValue=$vpc \
         ParameterKey=InstanceProfile,ParameterValue=$jenkins_instance_profile \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
         ParameterKey=CfnInitRole,ParameterValue=$jenkins_instance_role

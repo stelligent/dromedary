@@ -12,9 +12,9 @@
             "Type": "String",
             "Description": "VPC subnet id in which to place jenkins"
         },
-        "SecurityGroupId": {
+        "VPC": {
             "Type": "String",
-            "Description": "Security-group id in which to place jenkins"
+            "Description": "VPC ID in which to place Jenkins"
         },
         "CfnInitRole": {
             "Type": "String",
@@ -47,6 +47,16 @@
 
     "Resources": {
 
+        "JenkinsSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": { "Ref": "VPC" },
+                "GroupDescription": "Open ALL the ports",
+                "SecurityGroupIngress": [
+                    { "IpProtocol": "tcp", "FromPort": "1", "ToPort": "65535", "CidrIp": "0.0.0.0/0" }
+                ]
+            }
+        },
         "JenkinsInstance": {
             "Type": "AWS::EC2::Instance",
             "Metadata" : {
@@ -112,7 +122,7 @@
                 "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
                          { "Key": "Name", "Value": "DromedaryJenkins" }],
                 "NetworkInterfaces": [{
-                    "GroupSet": [{ "Ref": "SecurityGroupId" }],
+                    "GroupSet": [{ "Ref": "JenkinsSecurityGroup" }],
                     "AssociatePublicIpAddress": "true",
                     "DeviceIndex": "0",
                     "DeleteOnTermination": "true",
