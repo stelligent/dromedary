@@ -60,5 +60,4 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "export dromedary_custom_action_provider=$app_custom_action_provider_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_app_stack_name=$dromedary_app_stack_name" >> "$ENVIRONMENT_FILE"
