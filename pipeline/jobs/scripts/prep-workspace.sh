@@ -1,4 +1,5 @@
-#!/bin/bash -ex
+#!/bin/bash
+set -ex
 
 # since the workspace is maintained throughout the build,
 # install dependencies now in a clear workspace
