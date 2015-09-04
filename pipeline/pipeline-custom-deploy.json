@@ -33,55 +33,8 @@
             ]
         }, 
         {
-            "name": "Prep", 
-            "actions": [
-                {
-                    "inputArtifacts": [
-                        {
-                            "name": "DromedarySource"
-                        }
-                    ], 
-                    "name": "PrepareWorkspace", 
-                    "actionTypeId": {
-                        "category": "Build", 
-                        "owner": "Custom", 
-                        "version": "1", 
-                        "provider": "DromedaryJenkins"
-                    }, 
-                    "outputArtifacts": [
-                        {
-                            "name": "DromedaryWorkspace"
-                        }
-                    ], 
-                    "configuration": {
-                        "ProjectName": "prep-workspace"
-                    }, 
-                    "runOrder": 1
-                }
-            ]
-        }, 
-        {
             "name": "Commit", 
             "actions": [
-                {
-                    "inputArtifacts": [
-                        {
-                            "name": "DromedaryWorkspace"
-                        }
-                    ], 
-                    "name": "UnitTest", 
-                    "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
-                        "provider": "DromedaryJenkins"
-                    }, 
-                    "outputArtifacts": [], 
-                    "configuration": {
-                        "ProjectName": "unit-test"
-                    }, 
-                    "runOrder": 1
-                }, 
                 {
                     "inputArtifacts": [
                         {
@@ -103,8 +56,27 @@
                     "configuration": {
                         "ProjectName": "build"
                     }, 
+                    "runOrder": 1
+                },
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryWorkspace"
+                        }
+                    ], 
+                    "name": "UnitTest", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [], 
+                    "configuration": {
+                        "ProjectName": "unit-test"
+                    }, 
                     "runOrder": 2
-                }
+                } 
             ]
         }, 
         {
