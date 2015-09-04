@@ -264,6 +264,10 @@
             "Description": "Id of VPC Subnet",
             "Value": { "Ref": "Subnet" }
         },
+        "VPC" : {
+            "Description": "VPC ID",
+            "Value": { "Ref": "VPC" }
+        },
         "InstanceSecurityGroupId" : {
             "Description": "Id of application security group",
             "Value": { "Ref": "InstanceSecurityGroup" }
