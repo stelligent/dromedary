@@ -232,30 +232,6 @@
                 "SubnetId": { "Ref": "Subnet" },
                 "NetworkAclId": { "Ref": "NetworkAcl" }
             }
-        },
-
-        "InstanceSecurityGroup": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-                "VpcId": { "Ref": "VPC" },
-                "GroupDescription": "Enable SSH access via port 22",
-                "SecurityGroupIngress": [
-                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": "80", "ToPort": "80", "CidrIp": "0.0.0.0/0" },
-                    { "IpProtocol": "tcp", "FromPort": "8080", "ToPort": "8080", "CidrIp": "0.0.0.0/0" }
-                ]
-            }
-        },
-
-        "JenkinsSecurityGroup": {
-            "Type": "AWS::EC2::SecurityGroup",
-            "Properties": {
-                "VpcId": { "Ref": "VPC" },
-                "GroupDescription": "Open ALL the ports",
-                "SecurityGroupIngress": [
-                    { "IpProtocol": "tcp", "FromPort": "1", "ToPort": "65535", "CidrIp": "0.0.0.0/0" }
-                ]
-            }
         }
     },
 
@@ -267,14 +243,6 @@
         "VPC" : {
             "Description": "VPC ID",
             "Value": { "Ref": "VPC" }
-        },
-        "InstanceSecurityGroupId" : {
-            "Description": "Id of application security group",
-            "Value": { "Ref": "InstanceSecurityGroup" }
-        },
-        "JenkinsSecurityGroup" : {
-            "Description": "Id of Jenkins security group",
-            "Value": { "Ref": "JenkinsSecurityGroup" }
         }
     }
 }
