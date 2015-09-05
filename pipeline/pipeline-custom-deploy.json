@@ -127,6 +127,29 @@
                         "ProjectName": "acceptance-test"
                     }, 
                     "runOrder": 2
+                },
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedaryCreate"
+                        }
+                    ], 
+                    "name": "InfrastructureTest", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [
+                        {
+                            "name": "DromedaryInfra"
+                        }
+                    ], 
+                    "configuration": {
+                        "ProjectName": "infra-test"
+                    }, 
+                    "runOrder": 3
                 }
             ]
         }, 
