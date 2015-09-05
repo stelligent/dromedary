@@ -38,7 +38,7 @@
                 {
                     "inputArtifacts": [
                         {
-                            "name": "DromedaryWorkspace"
+                            "name": "DromedarySource"
                         }
                     ], 
                     "name": "Build", 
@@ -61,7 +61,7 @@
                 {
                     "inputArtifacts": [
                         {
-                            "name": "DromedaryWorkspace"
+                            "name": "DromedaryBuild"
                         }
                     ], 
                     "name": "UnitTest", 
