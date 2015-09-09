@@ -33,9 +33,14 @@ if [ -n "$existing_records" ]; then
     exit 1
 fi
 
+# ensure S3 bucket exists
+s3_bucket="dromedary-$AWS_ACCOUNT_ID"
+aws s3 mb s3://$s3_bucket || exit $?
+
 echo "export dromedary_hostname=$hostname" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_domainname=$domainname" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_zone_id=$route53_zone_id" >> "$ENVIRONMENT_FILE"
+echo "export dromedary_s3_bucket=$s3_bucket" >> "$ENVIRONMENT_FILE"
 
 set -ex
 "$script_dir/cfn-bootstrap.sh" "$hostname"
