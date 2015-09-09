@@ -36,6 +36,7 @@ jenkins_custom_action_provider_name="DromedaryJnkns$(date +%s)"
 
 temp_dir=$(mktemp -d /tmp/dromedary.XXXX)
 config_dir="$(dirname $0)/../pipeline/jobs/xml"
+config_tar_path="$dromedary_jenkins_stack_name/jenkins-job-configs-$(date +%s).tgz"
 
 cp -r $config_dir/* $temp_dir/
 pushd $temp_dir > /dev/null
@@ -50,12 +51,12 @@ sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ build/config.xml > build/con
 sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 
 tar czf job-configs.tgz *
-aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/jenkins-job-configs.tgz
+aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/$config_tar_path
 popd > /dev/null
 rm -rf $temp_dir
 
 if ! aws s3 ls s3://$dromedary_s3_bucket/jenkins-job-configs.tgz; then
-    echo "Fatal: Unable to upload Jenkins job configs to s3://$dromedary_s3_bucket/jenkins-job-configs.tgz" >&2
+    echo "Fatal: Unable to upload Jenkins job configs to s3://$dromedary_s3_bucket/$config_tar_path" >&2
     exit 1
 fi
 
@@ -68,6 +69,7 @@ echo aws cloudformation create-stack \
         ParameterKey=VPC,ParameterValue=$vpc \
         ParameterKey=InstanceProfile,ParameterValue=$jenkins_instance_profile \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
+        ParameterKey=JobConfigsTarball,ParameterValue=$config_tar_path \
         ParameterKey=CfnInitRole,ParameterValue=$jenkins_instance_role
 
 
@@ -81,6 +83,7 @@ aws cloudformation create-stack \
         ParameterKey=VPC,ParameterValue=$vpc \
         ParameterKey=InstanceProfile,ParameterValue=$jenkins_instance_profile \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
+        ParameterKey=JobConfigsTarball,ParameterValue=$config_tar_path \
         ParameterKey=CfnInitRole,ParameterValue=$jenkins_instance_role
 
 jenkins_stack_status="$(wait_for_stack $dromedary_jenkins_stack_name)"

@@ -27,6 +27,10 @@
         "S3Bucket": {
             "Type": "String",
             "Description": "Artifact Bucket"
+        },
+        "JobConfigsTarball": {
+            "Type": "String",
+            "Description": "Path to config tarball in S3Bucket"
         }
     },
 
@@ -71,7 +75,7 @@
                     "config": {
                         "files": {
                             "/tmp/job-configs.tgz": {
-                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/jenkins-job-configs.tgz" ]]},
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref" : "JobConfigsTarball" } ]]},
                                 "authentication": "S3AccessCreds",
                                 "mode": "000644",
                                 "owner": "root",
