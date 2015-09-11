@@ -34,6 +34,9 @@ if [ -n "$existing_records" ]; then
 fi
 
 # ensure S3 bucket exists
+if [ -z "$AWS_ACCOUNT_ID" ]; then
+    export AWS_ACCOUNT_ID="$(aws iam get-user --output=text --query 'User.Arn' | cut -f 5 -d :)"
+fi
 s3_bucket="dromedary-$AWS_ACCOUNT_ID"
 aws s3 mb s3://$s3_bucket || exit $?
 
