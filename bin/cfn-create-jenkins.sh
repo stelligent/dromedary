@@ -55,7 +55,7 @@ aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/$config_tar_path
 popd > /dev/null
 rm -rf $temp_dir
 
-if ! aws s3 ls s3://$dromedary_s3_bucket/jenkins-job-configs.tgz; then
+if ! aws s3 ls s3://$dromedary_s3_bucket/$config_tar_path; then
     echo "Fatal: Unable to upload Jenkins job configs to s3://$dromedary_s3_bucket/$config_tar_path" >&2
     exit 1
 fi
