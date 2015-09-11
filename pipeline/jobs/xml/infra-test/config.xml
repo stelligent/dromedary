@@ -3,30 +3,19 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
-  <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.2">
-    <model>
-      <AVAILABLE__REGIONS>
-        <com.amazonaws.regions.Regions>US_EAST_1</com.amazonaws.regions.Regions>
-      </AVAILABLE__REGIONS>
-      <ACTION__TYPE>
-        <com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>PleaseChooseACategory</com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>
-        <com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>Build</com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>
-        <com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>Test</com.amazonaws.codepipeline.jenkinsplugin.CodePipelineStateModel_-CategoryType>
-      </ACTION__TYPE>
-      <region>us-east-1</region>
-      <proxyHost></proxyHost>
-      <proxyPort>0</proxyPort>
-      <awsAccessKey></awsAccessKey>
-      <awsSecretKey></awsSecretKey>
-      <compressionType>None</compressionType>
-      <actionTypeCategory>Test</actionTypeCategory>
-      <allPluginsInstalled>true</allPluginsInstalled>
-    </model>
+  <properties />
+  <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.6">
     <clearWorkspace>true</clearWorkspace>
+    <projectName>infra-test</projectName>
     <actionTypeCategory>Test</actionTypeCategory>
     <actionTypeProvider>DromedaryJenkins</actionTypeProvider>
     <actionTypeVersion>1</actionTypeVersion>
+    <region>us-east-1</region>
+    <awsAccessKey></awsAccessKey>
+    <awsSecretKey></awsSecretKey>
+    <proxyHost></proxyHost>
+    <proxyPort>0</proxyPort>
+    <awsClientFactory/>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -45,13 +34,13 @@
     </hudson.tasks.Shell>
   </builders>
   <publishers>
-    <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher plugin="codepipeline@0.2">
-      <model reference="../../../scm/model"/>
+    <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher plugin="codepipeline@0.6">
       <buildOutputs>
         <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
           <outputString></outputString>
         </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
       </buildOutputs>
+      <awsClientFactory/>
     </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher>
   </publishers>
   <buildWrappers>
