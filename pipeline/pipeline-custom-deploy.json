@@ -61,7 +61,7 @@
                 {
                     "inputArtifacts": [
                         {
-                            "name": "DromedaryBuild"
+                            "name": "DromedarySource"
                         }
                     ], 
                     "name": "UnitTest", 
@@ -75,7 +75,7 @@
                     "configuration": {
                         "ProjectName": "unit-test"
                     }, 
-                    "runOrder": 2
+                    "runOrder": 1
                 } 
             ]
         }, 
@@ -149,7 +149,7 @@
                     "configuration": {
                         "ProjectName": "infra-test"
                     }, 
-                    "runOrder": 3
+                    "runOrder": 2
                 }
             ]
         }, 
