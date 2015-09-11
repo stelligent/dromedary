@@ -31,3 +31,5 @@ dev-lib/targetPort.js
 lib/sha-raw.js
 dist/
 environment.sh
+.kitchen/
+.kitchen.local.yml
