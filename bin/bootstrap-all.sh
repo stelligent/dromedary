@@ -35,7 +35,16 @@ fi
 
 # ensure S3 bucket exists
 if [ -z "$AWS_ACCOUNT_ID" ]; then
-    export AWS_ACCOUNT_ID="$(aws iam get-user --output=text --query 'User.Arn' | cut -f 5 -d :)"
+    aws_account_id="$(curl --connect-timeout 1 --retry 0 -s http://169.254.169.254/latest/meta-data/iam/info | grep -o 'arn:aws:iam::[0-9]\+:' | cut -f 5 -d :)"
+    if [ -z "$aws_account_id" ]; then
+        aws_account_id="$(aws iam get-user --output=text --query 'User.Arn' | cut -f 5 -d :)"
+    fi
+    if [ -z "$aws_account_id" ]; then
+        echo "Fatal: unable to determine AWS Account Id!" >&2
+        echo "Your environment may not configured properly" >&2
+        exit 1
+    fi
+    export AWS_ACCOUNT_ID="$aws_account_id"
 fi
 s3_bucket="dromedary-$AWS_ACCOUNT_ID"
 aws s3 mb s3://$s3_bucket || exit $?
