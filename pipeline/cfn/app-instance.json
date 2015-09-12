@@ -95,6 +95,12 @@
                                 "mode": "000644",
                                 "owner": "root",
                                 "group": "root"
+                            },
+                            "/tmp/chefdk.rpm": {
+                                "source": "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.7.0-1.el6.x86_64.rpm",
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
                             }
                         },
                         "commands": {
@@ -114,8 +120,11 @@
                             },
                             "15-install-node-modules": {
                                 "command": "npm install -g forever"
+                            },
+                            "20-install-chef": {
+                                "command": "rpm -ivh /tmp/chefdk.rpm"
                             }
-                        }
+                         }
                     },
                     "codedeploy": {
                         "package": {
