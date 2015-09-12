@@ -9,5 +9,4 @@
 
 package "ruby" do
   action :install
-  version "2.0.0.598-25.el7_1"
 end
