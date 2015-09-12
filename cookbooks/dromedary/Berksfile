@@ -1,3 +1,7 @@
+
 source "https://supermarket.chef.io"
 
 metadata
+
+cookbook  'tarball', git: 'https://github.com/ooyala/tarball-chef-cookbook.git', ref: '6315c2746e81fb8e92613f3e1cab4ebf10d686d3'
+ 

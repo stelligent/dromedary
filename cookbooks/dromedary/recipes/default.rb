@@ -9,4 +9,4 @@
 
 include_recipe 'dromedary::node_modules'
 include_recipe 'dromedary::yum_packages'
-include_recipe 'dromedary::code_deploy'
+# include_recipe 'dromedary::code_deploy'

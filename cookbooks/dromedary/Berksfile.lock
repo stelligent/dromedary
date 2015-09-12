@@ -2,6 +2,10 @@ DEPENDENCIES
   dromedary
     path: .
     metadata: true
+  tarball
+    git: https://github.com/ooyala/tarball-chef-cookbook.git
+    revision: 6315c2746e81fb8e92613f3e1cab4ebf10d686d3
+    ref: 6315c27
 
 GRAPH
   7-zip (1.0.2)
@@ -17,6 +21,7 @@ GRAPH
   dromedary (0.1.0)
     nginx (>= 0.0.0)
     nodejs (>= 0.0.0)
+    tarball (>= 0.0.0)
   homebrew (1.13.0)
     build-essential (>= 2.1.2)
   nginx (2.7.6)
@@ -37,6 +42,7 @@ GRAPH
   rsyslog (2.1.0)
   runit (1.7.2)
     packagecloud (>= 0.0.0)
+  tarball (0.0.1)
   windows (1.38.1)
     chef_handler (>= 0.0.0)
   yum (3.7.1)

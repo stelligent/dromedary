@@ -15,5 +15,8 @@ suites:
       - recipe[nginx]
       - recipe[nodejs]
       - recipe[dromedary::default]
+      - recipe[dromedary::install_dromedary]
     attributes:
       region: us-east-1
+      dromedary:
+        artifact: https://s3.amazonaws.com/dromedary-114930652771/dromedary-20150911-161507.tar.gz
