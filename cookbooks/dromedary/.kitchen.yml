@@ -13,5 +13,7 @@ suites:
   - name: default
     run_list:
       - recipe[nginx]
+      - recipe[nodejs]
       - recipe[dromedary::default]
     attributes:
+      region: us-east-1
