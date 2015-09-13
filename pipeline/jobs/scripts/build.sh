@@ -24,5 +24,9 @@ rm -rf node_modules dist
 npm install
 
 # build and upload artifact
+zip -qr /tmp/dromedary.zip * .*
+aws s3 cp /tmp/dromedary.zip s3://$dromedary_s3_bucket/full-$dromedary_artifact
+
 gulp dist
 aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact
+
