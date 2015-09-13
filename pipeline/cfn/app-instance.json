@@ -84,73 +84,23 @@
                 "AWS::CloudFormation::Init": {
                     "configSets" : {
                         "base" : [ "base" ],
-                        "codedeploy" : [ "codedeploy" ],
-                        "s3" : [ "s3" ],
                         "default" : [ { "ConfigSet" : "base" }]
                     },
                     "base": {
+                        "packages": {
+                            "yum": {
+                                "git": []
+                            }
+                        },
                         "files": {
-                            "/tmp/node-install.tar.gz": {
-                                "source": "https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz",
-                                "mode": "000644",
-                                "owner": "root",
-                                "group": "root"
-                            },
                             "/tmp/chefdk.rpm": {
                                 "source": "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.7.0-1.el6.x86_64.rpm",
                                 "mode": "000644",
                                 "owner": "root",
                                 "group": "root"
-                            }
-                        },
-                        "commands": {
-                            "10-install-node": {
-                                "test": "test \"$(/usr/local/bin/node --version 2>/dev/null)\" != 'v0.12.7'",
-                                "command": { "Fn::Join" : [ "", [
-                                    "yum remove -y nodejs npm\n",
-                                    "\n",
-                                    "cd /usr/local && tar --strip-components 1 -xzf /tmp/node-install.tar.gz\n",
-                                    "if [ ! -e /usr/bin/node ]; then\n",
-                                    "  ln -s /usr/local/bin/node /usr/bin/node\n",
-                                    "fi\n",
-                                    "if [ ! -e /usr/bin/npm ]; then\n",
-                                    "  ln -s /usr/local/bin/npm /usr/bin/npm\n",
-                                    "fi\n"
-                                ]]}
                             },
-                            "15-install-node-modules": {
-                                "command": "npm install -g forever"
-                            },
-                            "20-install-chef": {
-                                "command": "rpm -ivh /tmp/chefdk.rpm"
-                            }
-                         }
-                    },
-                    "codedeploy": {
-                        "package": {
-                            "yum": {
-                                "ruby": []
-                            }
-                        },
-                        "files": {
-                            "/tmp/codedeploy-install": {
-                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/aws-codedeploy-", {"Ref": "AWS::Region"}, "/latest/install" ]]},
-                                "mode": "000755",
-                                "owner": "root",
-                                "group": "root"
-                            }
-                        },
-                        "commands": {
-                            "10-install-codedeploy": {
-                                "cwd": "/tmp",
-                                "command": "./install auto\n"
-                            }
-                        }
-                    },
-                    "s3": {
-                        "files": {
                             "/tmp/dromedary.tgz": {
-                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/full-", { "Ref": "ArtifactPath" } ]]},
                                 "authentication": "S3AccessCreds",
                                 "mode": "000644",
                                 "owner": "root",
@@ -158,18 +108,17 @@
                             }
                         },
                         "commands": {
-                            "00-extract-dromedary": {
+                            "10-install-chef": {
+                                "command": "rpm -ivh /tmp/chefdk.rpm"
+                            },
+                            "20-extract-dromedary": {
                                 "command": { "Fn::Join" : [ "", [
                                     "mkdir -p -m755 /dromedary/log\n",
                                     "cd /dromedary\n",
                                     "tar xzf /tmp/dromedary.tgz\n"
                                 ]]}
-                            },
-                            "10-start-node": {
-                                "cwd": "/dromedary",
-                                "command": "/usr/bin/forever app.js > /dromedary/log/server.log 2>&1 &\n"
                             }
-                        }
+                         }
                     }
                 }
             },
@@ -197,14 +146,7 @@
                     "yum update -y aws-cfn-bootstrap\n",
                     "yum -y upgrade\n",
                     "\n",
-                    { "Fn::If": [ "InstallCodeDeploy", 
-                        "cfn_configsets='base,codedeploy'\n",
-                        "cfn_configsets='default'\n"
-                    ]},
-                    { "Fn::If": [ "DeployFromS3", 
-                        "cfn_configsets='base,s3'\n",
-                        "cfn_configsets='default'\n"
-                    ]},
+                    "cfn_configsets='default'\n",
                     "/opt/aws/bin/cfn-init -v --configsets $cfn_configsets",
                       " --stack ", {"Ref": "AWS::StackName"},
                       " --resource WebServerInstance ",
@@ -212,6 +154,31 @@
                       " --region ", {"Ref": "AWS::Region"},
                       "\n",
                     "\n",
+                    "cd /dromedary/cookbooks/dromedary\n",
+                    "export HOME=/root\n",
+                    "berks vendor /userdata/cookbooks\n",
+                    "cat > /userdata/formattedattributes.json <<CHEFJSON\n",
+                    "{\n",
+                    "    \"run_list\": [\n",
+                    "        \"recipe[nginx]\",\n",
+                    "        \"recipe[nodejs]\",\n",
+                    "        \"recipe[dromedary::default]\",\n",
+                    "        \"recipe[dromedary::install_dromedary]\"\n",
+                    "    ],\n",
+                    "    \"region\": \"", {"Ref" : "AWS::Region"},"\",\n",
+                    "    \"dromedary\": {\n",
+                    "       \"S3Bucket\": \"", {"Ref": "S3Bucket"},"\",\n",
+                    "       \"ArtifactPath\": \"", {"Ref": "ArtifactPath"},"\"\n",
+                    "    }\n",
+                    "}\n",
+                    "CHEFJSON\n",
+                    "cat > /userdata/solo.rb <<SOLORB\n",
+                    "file_cache_path  '/userdata/'\n",
+                    "cookbook_path ['/userdata/cookbooks/']\n",
+                    "SOLORB\n",
+                    "\n",
+                    "cat /userdata/formattedattributes.json | awk '{printf(\"%s\",$0)}' > /userdata/attributes.json\n",
+                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/attributes.json\n",
                     "node -v \n",
                     "npm -v\n",
                     "\n",
