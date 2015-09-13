@@ -9,8 +9,10 @@
 
 include_recipe 'tarball::default'
 
+s3_url = "https://s3.amazonaws.com/#{node[:dromedary][:S3Bucket]}/#{node[:dromedary][:ArtifactPath]}" 
+
 remote_file "/tmp/dromedary.tar.gz" do
-  source node[:dromedary][:artifact]
+  source s3_url
   owner 'root'
   group 'root'
   mode '0755'

@@ -19,4 +19,5 @@ suites:
     attributes:
       region: us-east-1
       dromedary:
-        artifact: https://s3.amazonaws.com/dromedary-114930652771/dromedary-20150911-161507.tar.gz
+        S3Bucket: dromedary-114930652771
+        ArtifactPath: dromedary-20150911-161507.tar.gz
