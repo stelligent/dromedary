@@ -25,8 +25,9 @@ npm install
 
 # build and upload artifact
 tar -zcf /tmp/dromedary.tgz * .*
-aws s3 cp /tmp/dromedary.tgz s3://$dromedary_s3_bucket/full-$dromedary_artifact
+aws s3 cp /tmp/dromedary.tgz s3://$dromedary_s3_bucket/full-$dromedary_artifact --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
 gulp dist
-aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact
+aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+
 
