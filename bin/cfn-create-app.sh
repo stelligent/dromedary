@@ -42,7 +42,7 @@ app_instance_profile="$(aws cloudformation describe-stacks --stack-name $dromeda
 app_instance_role="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceRole`].OutputValue')"
 app_custom_action_provider_name="DromedaryJnkns$(date +%s)"
 
-dromedary_app_stack_name=$(basename $dromedary_artifact .tar.gz)
+dromedary_app_stack_name="$dromedary_hostname-$(basename $dromedary_artifact .tar.gz)"
 aws cloudformation create-stack \
     --stack-name $dromedary_app_stack_name \
     --template-body file://./pipeline/cfn/app-instance.json \
@@ -53,6 +53,8 @@ aws cloudformation create-stack \
         ParameterKey=CfnInitRole,ParameterValue=$app_instance_role \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
         ParameterKey=ArtifactPath,ParameterValue=$dromedary_artifact \
+    --tags Key=PipelineName,Value=$dromedary_codepipeline \
+        Key=BuiltBy,Value=$dromedary_custom_action_provider
 
 app_stack_status="$(wait_for_stack $dromedary_app_stack_name)"
 if [ $? -ne 0 ]; then
