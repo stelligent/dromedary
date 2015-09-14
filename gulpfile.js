@@ -12,7 +12,7 @@ var commitId    = require(__dirname + '/lib/sha.js');
 
 // Delete the dist directory
 gulp.task('clean', function (cb) {
-  del(['dist'], cb);
+  del(['cookbooks/dromedary/files/*', 'dist'], cb);
 });
 
 // Execute unit tests
@@ -36,6 +36,11 @@ gulp.task('dist:public', function() {
              .pipe(gulp.dest('dist/public'));
 
 });
+gulp.task('dist:cookbooks', function() {
+  return gulp.src('cookbooks/**/*')
+             .pipe(gulp.dest('dist/cookbooks'));
+
+});
 gulp.task('dist:package', function() {
   return gulp.src(['package.json', 'appspec.yml'])
              .pipe(gulp.dest('dist'))
@@ -54,16 +59,34 @@ gulp.task('dist:tar', function () {
 gulp.task('dist', function(callback) {
   runSequence(
     'clean',
+    'copy-to-cookbooks',
     [
       'dist:app',
       'dist:lib',
       'dist:public',
+      'dist:cookbooks',
       'dist:package'
     ],
     'dist:tar',
     callback
   );
 });
+
+
+// 'copy' is used to copy everything into the cookbooks dir
+gulp.task('copy-to-cookbooks', function () {
+  return gulp
+    .src(
+        [
+        'app.js',
+        'lib/*.js',
+        'public/*',
+        'package.json', 
+        'appspec.yml'
+        ]
+      )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default'))
+})
 
 // Execute functional tests
 gulp.task('test-functional', function () {

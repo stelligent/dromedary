@@ -33,3 +33,6 @@ dist/
 environment.sh
 .kitchen/
 .kitchen.local.yml
+
+# you might want to take this out if you ever start using files in a non-hacky way.
+cookbooks/dromedary/files/default
