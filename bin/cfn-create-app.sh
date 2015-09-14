@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 script_dir="$(dirname "$0")"
 ENVIRONMENT_FILE="$script_dir/../environment.sh"
