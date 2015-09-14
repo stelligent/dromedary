@@ -12,9 +12,13 @@ fi
 echo 'This will delete all dromedary resources.'
 read -p '<ENTER> to continue ...'
 
+echo deleting Route 53 record sets...
 $script_dir/route53-delete-recordset.sh
+echo deleting application stacks...
 $script_dir/cfn-delete-all-appstacks.sh
+echo deleting codepipeline pipeline...
 $script_dir/codepipeline-delete.sh
+echo deleting infrastructure stacks...
 $script_dir/cfn-delete-stacks.sh
 
 rm -f "$ENVIRONMENT_FILE"
