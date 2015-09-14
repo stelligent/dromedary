@@ -13,21 +13,39 @@ jenkins_ip="$(aws cloudformation describe-stacks --stack-name $dromedary_jenkins
 codepipeline_role_arn="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`CodePipelineTrustRoleARN`].OutputValue')"
 jenkins_url="http://$jenkins_ip:8080"
 
-aws codepipeline create-custom-action-type \
-    --category Build --provider $dromedary_custom_action_provider \
-    --action-version 1 \
-    --settings "entityUrlTemplate=$jenkins_url/job/{Config:ProjectName},executionUrlTemplate=$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}" \
-    --configuration-properties "name=ProjectName,required=true,key=true,secret=false,queryable=true" \
-    --input-artifact-details "minimumCount=0,maximumCount=5" \
-    --output-artifact-details "minimumCount=0,maximumCount=5"
+generate_cli_json() {
+    cat << _END_
+{
+    "category": "$1",
+    "provider": "$dromedary_custom_action_provider",
+    "version": "1",
+    "settings": {
+        "entityUrlTemplate": "$jenkins_url/job/{Config:ProjectName}",
+        "executionUrlTemplate": "executionUrlTemplate=$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}"
+    },
+    "configurationProperties": [
+        {
+            "name": "ProjectName",
+            "required": true,
+            "key": true,
+            "secret": false,
+            "queryable": true
+        }
+    ],
+    "inputArtifactDetails": {
+        "minimumCount": 0,
+        "maximumCount": 5
+    },
+    "outputArtifactDetails": {
+        "minimumCount": 0,
+        "maximumCount": 5
+    }
+}
+_END_
+}
 
-aws codepipeline create-custom-action-type \
-    --category Test --provider $dromedary_custom_action_provider \
-    --action-version 1 \
-    --settings "entityUrlTemplate=$jenkins_url/job/{Config:ProjectName},executionUrlTemplate=$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}" \
-    --configuration-properties "name=ProjectName,required=true,key=true,secret=false,queryable=true" \
-    --input-artifact-details "minimumCount=0,maximumCount=5" \
-    --output-artifact-details "minimumCount=0,maximumCount=5"
+aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Build)"
+aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
 
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
 pipeline_name="Dromedary$(date +%s)"
