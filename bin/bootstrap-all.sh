@@ -33,6 +33,14 @@ if [ -n "$existing_records" ]; then
     exit 1
 fi
 
+# ensure EC2 key pair exists (if specified)
+if [ -n "$DROMEDARY_EC2_KEY" ]; then
+    if ! aws ec2 describe-key-pairs --key-names $DROMEDARY_EC2_KEY > /dev/null ; then
+        echo "Fatal: \$DROMEDARY_EC2_KEY is set, but $DROMEDARY_EC2_KEY doesn't exist" >&2
+        exit 1
+    fi
+fi
+
 # ensure S3 bucket exists
 if [ -z "$AWS_ACCOUNT_ID" ]; then
     aws_account_id="$(curl --connect-timeout 1 --retry 0 -s http://169.254.169.254/latest/meta-data/iam/info | grep -o 'arn:aws:iam::[0-9]\+:' | cut -f 5 -d :)"
