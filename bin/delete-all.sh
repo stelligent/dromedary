@@ -11,6 +11,10 @@ fi
 . "$ENVIRONMENT_FILE"
 
 echo 'This will delete all dromedary resources.'
+echo
+echo "Dump of environment.sh:"
+cat $ENVIRONMENT_FILE
+echo
 read -p '<ENTER> to continue ...'
 
 echo deleting Route 53 record sets...
