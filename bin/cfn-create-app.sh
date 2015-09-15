@@ -54,8 +54,7 @@ aws cloudformation create-stack \
         ParameterKey=CfnInitRole,ParameterValue=$app_instance_role \
         ParameterKey=S3Bucket,ParameterValue=$dromedary_s3_bucket \
         ParameterKey=ArtifactPath,ParameterValue=$dromedary_artifact \
-    --tags Key=PipelineName,Value=$dromedary_codepipeline \
-        Key=BuiltBy,Value=$dromedary_custom_action_provider
+    --tags Key=BuiltBy,Value=$dromedary_custom_action_provider
 
 app_stack_status="$(wait_for_stack $dromedary_app_stack_name)"
 if [ $? -ne 0 ]; then

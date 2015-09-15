@@ -15,6 +15,7 @@ echo "export dromedary_hostname=$DROMEDARY_HOSTNAME" >> environment.sh
 echo "export dromedary_domainname=$DROMEDARY_DOMAINNAME" >> environment.sh
 echo "export dromedary_zone_id=$DROMEDARY_ZONE_ID" >> environment.sh
 echo "export dromedary_artifact=dromedary-$(date +%Y%m%d-%H%M%S).tar.gz" >> environment.sh
+echo "export dromedary_custom_action_provider=$DROMEDARY_ACTION_PROVIDER" >> environment.sh
 
 . environment.sh
 
@@ -30,5 +31,3 @@ aws s3 cp /tmp/dromedary.tgz s3://$dromedary_s3_bucket/full-$dromedary_artifact 
 
 gulp dist
 aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-
-

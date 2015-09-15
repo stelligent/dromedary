@@ -50,6 +50,7 @@ sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ build/config.xml > build/config
 sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
+sed s/ACTION_PROVIDER_PLACEHOLDER/$jenkins_custom_action_provider_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 
 tar czf job-configs.tgz *
 aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/$config_tar_path
