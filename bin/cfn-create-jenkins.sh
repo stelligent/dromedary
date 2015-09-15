@@ -33,7 +33,7 @@ jenkins_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_
 vpc="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`VPC`].OutputValue')"
 jenkins_instance_profile="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceProfile`].OutputValue')"
 jenkins_instance_role="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceRole`].OutputValue')"
-jenkins_custom_action_provider_name="DromedaryJnkns$(date +%s)"
+jenkins_custom_action_provider_name="Jenkins$(echo $dromedary_hostname | tr '[[:lower:]]' '[[:upper:]]')"
 
 temp_dir=$(mktemp -d /tmp/dromedary.XXXX)
 config_dir="$(dirname $0)/../pipeline/jobs/xml"

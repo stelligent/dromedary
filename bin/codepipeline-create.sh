@@ -49,7 +49,7 @@ aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json
 aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
 
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
-pipeline_name="Dromedary$(date +%s)"
+pipeline_name="Dromedary$(echo $dromedary_hostname | tr '[[:lower:]]' '[[:upper:]]')"
 
 cp "$script_dir/../pipeline/pipeline-custom-deploy.json" $pipelinejson
 
