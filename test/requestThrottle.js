@@ -32,4 +32,19 @@ describe("requestThrottle", function() {
       expect(reqThrottle.checkIp('127.0.0.3')).to.be.true;
     });
   });
+
+  describe(".gcMap()", function() {
+    beforeEach(function() {
+      reqThrottle.clearIpMap();
+      reqThrottle.logIp('127.0.0.1', Date.now() + 1000);
+      reqThrottle.logIp('127.0.0.2', Date.now() - 1000);
+      reqThrottle.gcMap();
+    });
+    it("removes expired ip", function() {
+      expect(reqThrottle.ipIsInMap('127.0.0.2')).to.be.false;
+    });
+    it("does not remove unexpired ip", function() {
+      expect(reqThrottle.ipIsInMap('127.0.0.1')).to.be.true;
+    });
+  });
 });
