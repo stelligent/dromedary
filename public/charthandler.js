@@ -7,6 +7,7 @@ function chartHandler () {
   var lastApiHtml = '\n';
 
   function updateLastApi(url, xhr) {
+    return;
     var urlHtml = '<p><strong>' + location.protocol + "//" + location.host + url + '</span></strong></p>\n';
     var responseHtml = '<pre style="white-space: pre-wrap;">' + xhr.getAllResponseHeaders() + '\n' + xhr.responseText + '</pre>\n';
 
@@ -14,16 +15,24 @@ function chartHandler () {
     document.getElementById("lastApiResponses").innerHTML = lastApiHtml;
   }
 
+  function updateLastApiMessage(message) {
+    var d = new Date();
+    lastApiHtml = '<p>' + d.toDateString() + ' ' + d.toLocaleTimeString() + ': &nbsp; ' + message + '</p>\n' + lastApiHtml;
+    document.getElementById("lastApiResponses").innerHTML = lastApiHtml;
+  }
+
   $.getJSON("/sha", {}, function(data, status, xhr) {
     commitSha = data.sha;
     document.getElementById("gitCommitSha").innerHTML = commitSha;
     updateLastApi("/sha", xhr);
+    updateLastApiMessage('App commit sha is ' + commitSha);
   });
 
   $.getJSON("/data", {}, function(data, status, xhr) {
     myPieChart = new Chart(ctx).Pie(data);
-    console.log('Chart data GET status: ' + status);
+    // console.log('Chart data GET status: ' + status);
     updateLastApi("/data", xhr);
+    updateLastApiMessage('Initial chart data received');
   });
 
   $("#myChart").click(function(evt) {
@@ -34,9 +43,11 @@ function chartHandler () {
       updateLastApi("/increment?color=" + colorToInc, xhr);
       if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
+        updateLastApiMessage('Error received from backend: ' + data.error);
       } else if (data.hasOwnProperty('count') && data.count > 0) {
         activePoints[0].value = data.count;
         updateChart = true;
+        updateLastApiMessage('Incremented ' + colorToInc + ' ... new count is ' + data.count);
       }
     });
   });
@@ -63,6 +74,7 @@ function chartHandler () {
       }
       if (doUpdate) {
         updateLastApi("/data?countsOnly=true", xhr);
+        updateLastApiMessage('New color counts received from backend');
         updateChart = true;
       }
     });
@@ -73,6 +85,7 @@ function chartHandler () {
     $.getJSON("/sha", {}, function(data, status, xhr) {
       if (commitSha != data.sha) {
         reloadPage = true;
+        updateLastApiMessage('New commit sha detected!');
       }
     });
   };
@@ -81,6 +94,7 @@ function chartHandler () {
   setInterval(function() {
     if (updateChart) {
       myPieChart.update();
+      updateLastApiMessage('Updating chart');
       updateChart = false;
     }
     if (reloadPage) {
