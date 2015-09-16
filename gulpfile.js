@@ -75,17 +75,12 @@ gulp.task('dist', function(callback) {
 
 // 'copy' is used to copy everything into the cookbooks dir
 gulp.task('copy-to-cookbooks', function () {
-  return gulp
-    .src(
-        [
-        'app.js',
-        'lib/*.js',
-        'public/*',
-        'package.json', 
-        'appspec.yml'
-        ]
-      )
+  gulp.src(['app.js', 'package.json', 'appspec.yml'] )
     .pipe(gulp.dest('cookbooks/dromedary/files/default'))
+  gulp.src([ 'lib/*.js' ] )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/lib'))
+  gulp.src(['public/*'] )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/public'))
 })
 
 // Execute functional tests
