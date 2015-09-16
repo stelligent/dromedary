@@ -30,10 +30,14 @@ function chartHandler () {
     var activePoints = myPieChart.getSegmentsAtEvent(evt);
     var colorToInc = activePoints[0].label.toLowerCase();
     $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
-      activePoints[0].value = data.count;
       console.log('Color increment GET status: ' + status);
       updateLastApi("/increment?color=" + colorToInc, xhr);
-      updateChart = true;
+      if (data.hasOwnProperty('error')) {
+        console.log('/increment error: ' + data.error);
+      } else if (data.hasOwnProperty('count') && data.count > 0) {
+        activePoints[0].value = data.count;
+        updateChart = true;
+      }
     });
   });
 

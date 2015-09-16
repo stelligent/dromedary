@@ -2,11 +2,15 @@ var express = require('express');
 var app = express();
 var chartData = require(__dirname + '/lib/inMemoryStorage.js');
 var commitSha = require(__dirname + '/lib/sha.js');
+var reqThrottle = require(__dirname + '/lib/requestThrottle.js');
 var serverPort = 8080;
 
 if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
   serverPort = 0;
 }
+
+/* clean up throttle map every minute to keep it tidy */
+setInterval(reqThrottle.gcMap, 1000);
 
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
@@ -34,7 +38,16 @@ app.get('/data', function (req, res) {
 /* GET requests to /increment to increment counts */
 app.get('/increment', function (req, res) {
   var colorCount = 0;
+  if (! reqThrottle.checkIp(req.ip) ) {
+    console.log('Request throttled from %s for /increment', req.ip);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(JSON.stringify({error: 'Request throttled'}));
+    return;
+  }
+
   console.log('Request received from %s for /increment', req.ip);
+  reqThrottle.logIp(req.ip);
   if (!req.query.hasOwnProperty('color')) {
     console.log('No color specified in params');
   } else {
