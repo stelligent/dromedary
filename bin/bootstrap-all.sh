@@ -28,7 +28,7 @@ if [ -z "$route53_zone_id" ]; then
     exit 1
 fi
 
-existing_records="$(aws route53 list-resource-record-sets --hosted-zone-id $route53_zone_id --output=json --query "ResourceRecordSets[?Name==\`${hostname}.${domainname}.\`].ResourceRecords")"
+existing_records="$(aws route53 list-resource-record-sets --hosted-zone-id $route53_zone_id --output=text --query "ResourceRecordSets[?Name==\`${hostname}.${domainname}.\`].ResourceRecords")"
 if [ -n "$existing_records" ]; then
     echo "Fatal: ${hostname}.${domainname} already exists in zone $route53_zone_id" >&2
     exit 1
