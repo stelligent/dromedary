@@ -26,7 +26,7 @@ gulp.task('test', function () {
 gulp.task('copy-to-cookbooks', function () {
   gulp.src(['app.js', 'appspec.yml'] )
     .pipe(gulp.dest('cookbooks/dromedary/files/default/app'));
-  gulp.src([ 'lib/*.js' ] )
+  gulp.src(['lib/*.js', 'dev-lib/sha.js'] )
     .pipe(gulp.dest('cookbooks/dromedary/files/default/app/lib'));
   gulp.src(['public/*'] )
     .pipe(gulp.dest('cookbooks/dromedary/files/default/app/public'));

@@ -27,8 +27,7 @@ build/Release
 node_modules
 
 # Project ignores
-dev-lib/targetPort.js
-lib/sha-raw.js
+dev-lib/sha.js
 dist/
 environment.sh
 .kitchen/
