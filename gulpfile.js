@@ -4,6 +4,7 @@ var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
 var tar         = require('gulp-tar');
+var exec        = require('child_process').exec;
 var del         = require('del');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
@@ -21,30 +22,30 @@ gulp.task('test', function () {
              .pipe(mocha({reporter: 'spec'}));
 });
 
-// Copy files to dist/ directory
-gulp.task('dist:app', function() {
-  return gulp.src('app.js')
-             .pipe(gulp.dest('dist'));
+// 'copy' is used to copy everything into the cookbooks dir
+gulp.task('copy-to-cookbooks', function () {
+  gulp.src(['app.js', 'appspec.yml'] )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/app'));
+  gulp.src([ 'lib/*.js' ] )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/app/lib'));
+  gulp.src(['public/*'] )
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/app/public'));
+  gulp.src(['package.json'])
+    .pipe(gulp.dest('cookbooks/dromedary/files/default/app'))
+    .pipe(install({production: true}));
 });
-gulp.task('dist:lib', function() {
-  return gulp.src('lib/*.js')
-             .pipe(gulp.dest('dist/lib'));
-});
- 
-gulp.task('dist:public', function() {
-  return gulp.src('public/*')
-             .pipe(gulp.dest('dist/public'));
 
+gulp.task('dist:berks-vendor', function (cb) {
+  exec('cd cookbooks/dromedary/ && berks vendor ../../dist', function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
 });
-gulp.task('dist:cookbooks', function() {
-  return gulp.src('cookbooks/**/*')
-             .pipe(gulp.dest('dist/cookbooks'));
 
-});
-gulp.task('dist:package', function() {
-  return gulp.src(['package.json', 'appspec.yml'])
-             .pipe(gulp.dest('dist'))
-             .pipe(install({production: true}));
+gulp.task('dist:copy-attributes-json', function () {
+  gulp.src(['node-attributes.json'] )
+    .pipe(gulp.dest('dist'));
 });
 
 // Create tarball
@@ -60,28 +61,12 @@ gulp.task('dist', function(callback) {
   runSequence(
     'clean',
     'copy-to-cookbooks',
-    [
-      'dist:app',
-      'dist:lib',
-      'dist:public',
-      'dist:cookbooks',
-      'dist:package'
-    ],
+    'dist:berks-vendor',
+    'dist:copy-attributes-json',
     'dist:tar',
     callback
   );
 });
-
-
-// 'copy' is used to copy everything into the cookbooks dir
-gulp.task('copy-to-cookbooks', function () {
-  gulp.src(['app.js', 'package.json', 'appspec.yml'] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default'))
-  gulp.src([ 'lib/*.js' ] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/lib'))
-  gulp.src(['public/*'] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/public'))
-})
 
 // Execute functional tests
 gulp.task('test-functional', function () {
