@@ -45,6 +45,7 @@ app_custom_action_provider_name="DromedaryJnkns$(date +%s)"
 
 dromedary_app_stack_name="$dromedary_hostname-$(basename $dromedary_artifact .tar.gz)"
 aws cloudformation create-stack \
+    --disable-rollback \
     --stack-name $dromedary_app_stack_name \
     --template-body file://./pipeline/cfn/app-instance.json \
     --parameters ParameterKey=Ec2Key,ParameterValue=$dromedary_ec2_key \
