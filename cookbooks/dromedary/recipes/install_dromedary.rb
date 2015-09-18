@@ -22,7 +22,14 @@ directory '/dromedary/log' do
   action :create
 end
 
-execute 'dromedary' do
+bash 'dromedary' do
   user 'root'
-  command '/usr/bin/forever /dromedary/app.js > /dromedary/log/server.log 2>&1 &'
+  flags '-ex'
+  code <<-EOH
+if /usr/local/bin/forever list | grep -q '^data:'; then
+  /usr/local/bin/forever stopall
+  sleep 1
+fi
+/usr/local/bin/forever /dromedary/app.js >> /dromedary/log/server.log 2>&1 &
+EOH
 end

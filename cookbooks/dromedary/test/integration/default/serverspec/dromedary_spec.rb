@@ -14,6 +14,6 @@ describe port(8080) do
   it { should be_listening }
 end
 
-describe command("forever list") do
+describe command("/usr/local/bin/forever list") do
   its(:stdout) { should match /dromedary\/app.js/ }
 end
