@@ -109,7 +109,7 @@
                         },
                         "files": {
                             "/tmp/dromedary.tgz": {
-                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/full-", { "Ref": "ArtifactPath" } ]]},
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
                                 "authentication": "S3AccessCreds",
                                 "mode": "000644",
                                 "owner": "root",
