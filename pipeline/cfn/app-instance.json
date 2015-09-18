@@ -129,8 +129,7 @@
                                 "env": { "HOME": "/root" },
                                 "command": { "Fn::Join" : [ "", [
                                     "cat > /userdata/solo.rb <<SOLORB\n",
-                                    "file_cache_path  '/userdata/'\n",
-                                    "cookbook_path ['/userdata/cookbooks/']\n",
+                                    "cookbook_path ['/userdata']\n",
                                     "SOLORB\n", "\n",
                                     "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/dromedary/attributes.json\n",
                                     "node -v \n",
