@@ -44,7 +44,7 @@ gulp.task('dist:berks-vendor', function (cb) {
 });
 
 gulp.task('dist:copy-attributes-json', function () {
-  gulp.src(['node-attributes.json'] )
+  gulp.src(['cookbooks/dromedary/attributes.json'] )
     .pipe(gulp.dest('dist'));
 });
 
