@@ -22,19 +22,38 @@ gulp.task('test', function () {
              .pipe(mocha({reporter: 'spec'}));
 });
 
-// 'copy' is used to copy everything into the cookbooks dir
-gulp.task('copy-to-cookbooks', function () {
-  gulp.src(['app.js', 'appspec.yml'] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/app'));
-  gulp.src(['lib/*.js', 'dev-lib/sha.js'] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/app/lib'));
-  gulp.src(['public/*'] )
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/app/public'));
-  gulp.src(['package.json'])
-    .pipe(gulp.dest('cookbooks/dromedary/files/default/app'))
-    .pipe(install({production: true}));
+// Copy dromedary app to cookbooks/dromedary/files/default/app
+gulp.task('cookbookfiles:app', function () {
+  return gulp.src(['app.js', 'appspec.yml'] )
+             .pipe(gulp.dest('cookbooks/dromedary/files/default/app'));
+});
+gulp.task('cookbookfiles:lib', function () {
+  return gulp.src(['lib/*.js', 'dev-lib/sha.js'] )
+             .pipe(gulp.dest('cookbooks/dromedary/files/default/app/lib'));
+});
+gulp.task('cookbookfiles:public', function () {
+  return gulp.src(['public/*'] )
+             .pipe(gulp.dest('cookbooks/dromedary/files/default/app/public'));
+});
+gulp.task('cookbookfiles:package', function () {
+  return gulp.src(['package.json'])
+             .pipe(gulp.dest('cookbooks/dromedary/files/default/app'))
+             .pipe(install({production: true}));
 });
 
+// Alias to run above tasks
+gulp.task('copy-to-cookbooks', function(callback) {
+  runSequence(
+    'clean',
+    [ 'cookbookfiles:app',
+      'cookbookfiles:lib',
+      'cookbookfiles:public',
+      'cookbookfiles:package' ],
+    callback
+  );
+});
+
+// Copy cookbooks to dist/
 gulp.task('dist:berks-vendor', function (cb) {
   exec('cd cookbooks/dromedary/ && berks vendor ../../dist', function (err, stdout, stderr) {
     console.log(stdout);
