@@ -9,7 +9,7 @@ fi
 
 . $ENVIRONMENT_FILE
 
-resource_records=$(aws route53 list-resource-record-sets --hosted-zone-id $dromedary_zone_id --output=json --query "ResourceRecordSets[?Name==\`${dromedary_hostname}.${dromedary_domainname}.\`].ResourceRecords[0]")
+resource_records=$(aws route53 list-resource-record-sets --hosted-zone-id $dromedary_zone_id --output=text --query "ResourceRecordSets[?Name==\`${dromedary_hostname}.${dromedary_domainname}.\`].ResourceRecords[0]")
 [ -n "$resource_records" ] || exit 0
 
 change_batch=$(mktemp /tmp/dromedary-route53.json.XXXX)
