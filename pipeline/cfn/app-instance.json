@@ -194,10 +194,10 @@
                     "}\n",
                     "\n",
                     "if ! which chef-solo > /dev/null 2>&2; then\n",
-                    "  cfn-init -c chef || error_exit 'Failed to run cfn-init chef'\n",
+                    "  cfn_init -c chef || error_exit 'Failed to run cfn-init chef'\n",
                     "fi\n",
                     "\n",
-                    "cfn-init || error_exit 'Failed to run cfn-init'\n",
+                    "cfn_init || error_exit 'Failed to run cfn-init'\n",
                     "cfn_signal_ok\n",
                     "\n"
                 ]]}}
