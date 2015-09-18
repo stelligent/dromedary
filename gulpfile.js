@@ -43,11 +43,6 @@ gulp.task('dist:berks-vendor', function (cb) {
   });
 });
 
-gulp.task('dist:copy-attributes-json', function () {
-  gulp.src(['cookbooks/dromedary/attributes.json'] )
-    .pipe(gulp.dest('dist'));
-});
-
 // Create tarball
 gulp.task('dist:tar', function () {
   return gulp.src('dist/**/*')
@@ -62,7 +57,6 @@ gulp.task('dist', function(callback) {
     'clean',
     'copy-to-cookbooks',
     'dist:berks-vendor',
-    'dist:copy-attributes-json',
     'dist:tar',
     callback
   );

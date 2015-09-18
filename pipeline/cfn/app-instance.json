@@ -132,7 +132,7 @@
                                     "file_cache_path  '/userdata/'\n",
                                     "cookbook_path ['/userdata/cookbooks/']\n",
                                     "SOLORB\n", "\n",
-                                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/attributes.json\n",
+                                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/dromedary/attributes.json\n",
                                     "node -v \n",
                                     "npm -v\n"
                                 ]]}
