@@ -44,7 +44,6 @@ gulp.task('cookbookfiles:package', function () {
 // Alias to run above tasks
 gulp.task('copy-to-cookbooks', function(callback) {
   runSequence(
-    'clean',
     [ 'cookbookfiles:app',
       'cookbookfiles:lib',
       'cookbookfiles:public',
@@ -64,10 +63,10 @@ gulp.task('dist:berks-vendor', function (cb) {
 
 // Create tarball
 gulp.task('dist:tar', function () {
-  gulp.src('dist/**/*')
-      .pipe(tar('archive.tar'))
-      .pipe(gzip())
-      .pipe(gulp.dest('dist'));
+  return gulp.src('dist/**/*')
+             .pipe(tar('archive.tar'))
+             .pipe(gzip())
+             .pipe(gulp.dest('dist'));
 });
 
 // 'dist' ties together all dist tasks
