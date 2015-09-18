@@ -117,17 +117,14 @@
                             }
                         },
                         "commands": {
-                            "10-install-chef": {
-                                "command": "rpm -ivh /tmp/chefdk.rpm"
-                            },
-                            "20-extract-dromedary": {
+                            "10-extract-dromedary": {
                                 "command": { "Fn::Join" : [ "", [
                                     "mkdir -p -m755 /userdata\n",
                                     "cd /userdata\n",
                                     "tar xzf /tmp/dromedary.tgz\n"
                                 ]]}
                             },
-                            "30-run-chef": {
+                            "20-run-chef": {
                                 "cwd": "/userdata",
                                 "env": { "HOME": "/root" },
                                 "command": { "Fn::Join" : [ "", [
