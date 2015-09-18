@@ -2,23 +2,15 @@ require 'serverspec'
 
 set :backend, :exec
 
-describe package('nodejs') do 
-  it { should be_installed }
+describe command('/usr/local/bin/node -v') do
+  its(:stdout) { should match /v0\.12\.7/ }
 end
 
-describe command('which node') do
-  its(:stdout) { should match /\/bin\/node/ }
+describe command('/usr/local/bin/npm -v') do
+  its(:stdout) { should match /2\.11\.3/ }
 end
 
-describe command('node -v') do
-  its(:stdout) { should match /v0\.10\.36/ }
-end
-
-describe command('npm -v') do
-  its(:stdout) { should match /1\.3\.6/ }
-end
-
-describe command('npm list --depth=0 -g 2> /dev/null | grep forever@') do
+describe command('/usr/local/bin/npm list --depth=0 -g 2> /dev/null | grep forever@') do
   its(:stdout) { should match /0\.15\.1/ }
 end
 

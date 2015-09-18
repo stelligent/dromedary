@@ -30,20 +30,19 @@
         },
         "ArtifactPath": {
             "Type": "String",
-            "Description": "Path to tarabll in Artifact Bucket",
+            "Description": "Path to tarball in Artifact Bucket",
             "Default": ""
         },
         "CodeDeployTag": {
             "Type": "String",
-            "Description": "Resource Tags for Deployment Group",
+            "Description": "Resource Tags for Deployment Group (non-zero enables CodeDeploy agent)",
             "Default": ""
         }
     },
 
     "Conditions": {
         "NoEc2Key": { "Fn::Equals" : [ { "Ref" : "Ec2Key" }, "" ]},
-        "InstallCodeDeploy": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "CodeDeployTag" }, "" ]} ]},
-        "DeployFromS3": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "ArtifactPath" }, "" ]} ]}
+        "InstallCodeDeploy": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "CodeDeployTag" }, "" ]} ]}
     },
 
     "Mappings": {
@@ -83,25 +82,14 @@
                 },
                 "AWS::CloudFormation::Init": {
                     "configSets" : {
+                        "chef" : [ "chef" ],
                         "base" : [ "base" ],
                         "default" : [ { "ConfigSet" : "base" }]
                     },
-                    "base": {
-                        "packages": {
-                            "yum": {
-                                "git": []
-                            }
-                        },
+                    "chef": {
                         "files": {
                             "/tmp/chefdk.rpm": {
                                 "source": "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.7.0-1.el6.x86_64.rpm",
-                                "mode": "000644",
-                                "owner": "root",
-                                "group": "root"
-                            },
-                            "/tmp/dromedary.tgz": {
-                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/full-", { "Ref": "ArtifactPath" } ]]},
-                                "authentication": "S3AccessCreds",
                                 "mode": "000644",
                                 "owner": "root",
                                 "group": "root"
@@ -110,12 +98,42 @@
                         "commands": {
                             "10-install-chef": {
                                 "command": "rpm -ivh /tmp/chefdk.rpm"
-                            },
-                            "20-extract-dromedary": {
+                            }
+                         }
+                    },
+                    "base": {
+                        "packages": {
+                            "yum": {
+                                "git": []
+                            }
+                        },
+                        "files": {
+                            "/tmp/dromedary.tgz": {
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
+                                "authentication": "S3AccessCreds",
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        },
+                        "commands": {
+                            "10-extract-dromedary": {
                                 "command": { "Fn::Join" : [ "", [
-                                    "mkdir -p -m755 /dromedary/log\n",
-                                    "cd /dromedary\n",
+                                    "mkdir -p -m755 /userdata\n",
+                                    "cd /userdata\n",
                                     "tar xzf /tmp/dromedary.tgz\n"
+                                ]]}
+                            },
+                            "20-run-chef": {
+                                "cwd": "/userdata",
+                                "env": { "HOME": "/root" },
+                                "command": { "Fn::Join" : [ "", [
+                                    "cat > /userdata/solo.rb <<SOLORB\n",
+                                    "cookbook_path ['/userdata']\n",
+                                    "SOLORB\n", "\n",
+                                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/dromedary/attributes.json\n",
+                                    "node -v \n",
+                                    "npm -v\n"
                                 ]]}
                             }
                          }
@@ -129,10 +147,10 @@
                 "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
                 "Tags": { "Fn::If": [ "InstallCodeDeploy",
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
-                     { "Key": "Name", "Value": "DromedaryApp" },
-                     { "Key": "environment", "Value": "dromedary" }],
+                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                     { "Key": "environment", "Value": { "Ref" : "CodeDeployTag" } }],
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
-                     { "Key": "Name", "Value": "DromedaryApp" }]
+                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }]
                 ]},
                 "NetworkInterfaces": [{
                     "GroupSet": [{ "Ref": "InstanceSecurityGroup" }],
@@ -146,47 +164,37 @@
                     "yum update -y aws-cfn-bootstrap\n",
                     "yum -y upgrade\n",
                     "\n",
-                    "cfn_configsets='default'\n",
-                    "/opt/aws/bin/cfn-init -v --configsets $cfn_configsets",
-                      " --stack ", {"Ref": "AWS::StackName"},
-                      " --resource WebServerInstance ",
-                      " --role ", {"Ref": "CfnInitRole"},
-                      " --region ", {"Ref": "AWS::Region"},
-                      "\n",
-                    "\n",
-                    "cd /dromedary/cookbooks/dromedary\n",
-                    "export HOME=/root\n",
-                    "berks vendor /userdata/cookbooks\n",
-                    "cat > /userdata/formattedattributes.json <<CHEFJSON\n",
+                    "# Helper functions\n",
+                    "function error_exit\n",
                     "{\n",
-                    "    \"run_list\": [\n",
-                    "        \"recipe[nginx]\",\n",
-                    "        \"recipe[nodejs]\",\n",
-                    "        \"recipe[dromedary::default]\",\n",
-                    "        \"recipe[dromedary::install_dromedary]\"\n",
-                    "    ],\n",
-                    "    \"region\": \"", {"Ref" : "AWS::Region"},"\",\n",
-                    "    \"dromedary\": {\n",
-                    "       \"S3Bucket\": \"", {"Ref": "S3Bucket"},"\",\n",
-                    "       \"ArtifactPath\": \"", {"Ref": "ArtifactPath"},"\"\n",
-                    "    }\n",
-                    "}\n",
-                    "CHEFJSON\n",
-                    "cat > /userdata/solo.rb <<SOLORB\n",
-                    "file_cache_path  '/userdata/'\n",
-                    "cookbook_path ['/userdata/cookbooks/']\n",
-                    "SOLORB\n",
-                    "\n",
-                    "cat /userdata/formattedattributes.json | awk '{printf(\"%s\",$0)}' > /userdata/attributes.json\n",
-                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/attributes.json\n",
-                    "node -v \n",
-                    "npm -v\n",
-                    "\n",
-                    "/opt/aws/bin/cfn-signal -e $? ",
-                      " --stack ", {"Ref": "AWS::StackName"},
+                    "  /opt/aws/bin/cfn-signal -e 1 -r \"$1\"",
+                      " --stack ", { "Ref" : "AWS::StackName" },
                       " --resource WebServerInstance ",
-                      " --region ", {"Ref": "AWS::Region"},
-                      "\n"
+                      " --region ", { "Ref" : "AWS::Region" }, "\n",
+                    "  exit 1\n",
+                    "}\n",
+                    "function cfn_init\n",
+                    "{\n",
+                    "  /opt/aws/bin/cfn-init -v -s ", { "Ref": "AWS::StackId" },
+                      " -r WebServerInstance --region ", { "Ref": "AWS::Region" },
+                      " --role ", {"Ref": "CfnInitRole"},
+                      " \"$@\"\n",
+                    "}\n",
+                    "function cfn_signal_ok\n",
+                    "{\n",
+                    "  /opt/aws/bin/cfn-signal -e 0 ",
+                      " --stack ", { "Ref" : "AWS::StackName" },
+                      " --resource WebServerInstance ",
+                      " --region ", { "Ref" : "AWS::Region" }, " || true\n",
+                    "}\n",
+                    "\n",
+                    "if ! which chef-solo > /dev/null 2>&2; then\n",
+                    "  cfn_init -c chef || error_exit 'Failed to run cfn-init chef'\n",
+                    "fi\n",
+                    "\n",
+                    "cfn_init || error_exit 'Failed to run cfn-init'\n",
+                    "cfn_signal_ok\n",
+                    "\n"
                 ]]}}
             },
             "CreationPolicy": {

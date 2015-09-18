@@ -1,0 +1,7 @@
+{
+    "run_list": [
+        "recipe[nginx]",
+        "recipe[dromedary::default]",
+        "recipe[dromedary::install_dromedary]"
+    ]
+}

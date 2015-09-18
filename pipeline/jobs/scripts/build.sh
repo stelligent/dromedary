@@ -25,9 +25,5 @@ rm -rf node_modules dist
 npm install
 
 # build and upload artifact
-# slight hack because tar likes to give non-zero exit codes when there were warnings.
-tar -zcf /tmp/dromedary.tgz * .* || [[ $? -eq 1 ]]
-aws s3 cp /tmp/dromedary.tgz s3://$dromedary_s3_bucket/full-$dromedary_artifact --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-
 gulp dist
-aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+aws s3 cp dist/archive.tar.gz s3://$dromedary_s3_bucket/$dromedary_artifact

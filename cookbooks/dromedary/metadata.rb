@@ -7,5 +7,3 @@ long_description 'Installs/Configures dromedary'
 version          '0.1.0'
 
 depends  'nginx'
-depends  'nodejs'
-depends  'tarball'
