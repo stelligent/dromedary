@@ -147,10 +147,10 @@
                 "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
                 "Tags": { "Fn::If": [ "InstallCodeDeploy",
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
-                     { "Key": "Name", "Value": "DromedaryApp" },
+                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
                      { "Key": "environment", "Value": { "Ref" : "CodeDeployTag" } }],
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
-                     { "Key": "Name", "Value": "DromedaryApp" }]
+                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }]
                 ]},
                 "NetworkInterfaces": [{
                     "GroupSet": [{ "Ref": "InstanceSecurityGroup" }],

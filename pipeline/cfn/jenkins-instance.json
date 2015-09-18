@@ -124,7 +124,7 @@
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
                 "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
                 "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
-                         { "Key": "Name", "Value": "DromedaryJenkins" }],
+                         { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
                 "NetworkInterfaces": [{
                     "GroupSet": [{ "Ref": "JenkinsSecurityGroup" }],
                     "AssociatePublicIpAddress": "true",
