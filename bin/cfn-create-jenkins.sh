@@ -47,6 +47,7 @@ done
 sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
+sed s/KEY_PLACEHOLDER/$dromedary_ec2_key/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
 sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
