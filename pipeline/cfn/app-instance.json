@@ -30,20 +30,19 @@
         },
         "ArtifactPath": {
             "Type": "String",
-            "Description": "Path to tarabll in Artifact Bucket",
+            "Description": "Path to tarball in Artifact Bucket",
             "Default": ""
         },
         "CodeDeployTag": {
             "Type": "String",
-            "Description": "Resource Tags for Deployment Group",
+            "Description": "Resource Tags for Deployment Group (non-zero enables CodeDeploy agent)",
             "Default": ""
         }
     },
 
     "Conditions": {
         "NoEc2Key": { "Fn::Equals" : [ { "Ref" : "Ec2Key" }, "" ]},
-        "InstallCodeDeploy": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "CodeDeployTag" }, "" ]} ]},
-        "DeployFromS3": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "ArtifactPath" }, "" ]} ]}
+        "InstallCodeDeploy": { "Fn::Not" : [{ "Fn::Equals" : [ { "Ref" : "CodeDeployTag" }, "" ]} ]}
     },
 
     "Mappings": {
@@ -153,7 +152,7 @@
                 "Tags": { "Fn::If": [ "InstallCodeDeploy",
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
                      { "Key": "Name", "Value": "DromedaryApp" },
-                     { "Key": "environment", "Value": "dromedary" }],
+                     { "Key": "environment", "Value": { "Ref" : "CodeDeployTag" } }],
                     [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" }},
                      { "Key": "Name", "Value": "DromedaryApp" }]
                 ]},
