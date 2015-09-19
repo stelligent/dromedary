@@ -72,7 +72,7 @@ aws cloudformation create-stack \
         ParameterKey=JobConfigsTarball,ParameterValue=$config_tar_path \
         ParameterKey=CfnInitRole,ParameterValue=$jenkins_instance_role
 
-jenkins_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_jenkins_stack_name)"
+jenkins_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_jenkins_stack_name)"
 if [ $? -ne 0 ]; then
     echo "Fatal: Jenkins stack $dromedary_jenkins_stack_name ($jenkins_stack_status) failed to create properly" >&2
     exit 1

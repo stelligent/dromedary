@@ -13,7 +13,7 @@ fi
 # NUKE ENI
 aws cloudformation delete-stack --stack-name "$dromedary_eni_stack_name"
 
-eni_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"
+eni_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"
 eni_stack_wait=$?
 echo
 

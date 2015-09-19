@@ -30,7 +30,7 @@ aws cloudformation update-stack \
         ParameterKey=SubnetId,UsePreviousValue=true \
         ParameterKey=SecurityGroupId,ParameterValue=$sec_grp_id
 
-eni_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"
+eni_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"
 if [ $? -ne 0 ]; then
     echo "Fatal: Jenkins stack $dromedary_eni_stack_name ($eni_stack_status) failed to create properly" >&2
     exit 1

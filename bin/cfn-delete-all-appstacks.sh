@@ -20,7 +20,7 @@ for stack in $(echo $app_stacks); do
 done
 
 for stack in $(echo $app_stacks); do
-    stack_status="$($script_dir/cfn-wait-for-stack.sh $stack)"
+    stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $stack)"
     stack_wait_rc=$?
     if [ $stack_wait_rc -ne 0 ]; then
         echo "Fatal: VPC stack $stack_name ($stack_status) failed to delete properly" >&2

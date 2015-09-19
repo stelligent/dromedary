@@ -12,7 +12,7 @@ fi
 
 # NUKE JENKINS
 aws cloudformation delete-stack --stack-name "$dromedary_jenkins_stack_name"
-jenkins_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_jenkins_stack_name)"
+jenkins_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_jenkins_stack_name)"
 jenkins_stack_wait=$?
 
 if [ $jenkins_stack_wait -ne 0 ]; then
@@ -24,10 +24,10 @@ fi
 aws cloudformation delete-stack --stack-name "$dromedary_iam_stack_name"
 aws cloudformation delete-stack --stack-name "$dromedary_vpc_stack_name"
 
-iam_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_iam_stack_name)"
+iam_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_iam_stack_name)"
 iam_stack_wait=$?
 
-vpc_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_vpc_stack_name)"
+vpc_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_vpc_stack_name)"
 vpc_stack_wait=$?
 echo
 

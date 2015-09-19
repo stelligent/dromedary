@@ -39,7 +39,7 @@ aws cloudformation create-stack \
         ParameterKey=ArtifactPath,ParameterValue=$dromedary_artifact \
     --tags Key=BuiltBy,Value=$dromedary_custom_action_provider
 
-app_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_app_stack_name)"
+app_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_app_stack_name)"
 if [ $? -ne 0 ]; then
     echo "Fatal: Jenkins stack $dromedary_app_stack_name ($app_stack_status) failed to create properly" >&2
     exit 1

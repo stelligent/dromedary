@@ -28,9 +28,9 @@ aws cloudformation create-stack \
     --capabilities CAPABILITY_IAM \
     --template-body file://./pipeline/cfn/iam.json
 
-vpc_stack_status="$($script_dir/cfn-wait-for-stack.sh $vpc_stack_name)"
+vpc_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $vpc_stack_name)"
 vpc_stack_wait=$?
-iam_stack_status="$($script_dir/cfn-wait-for-stack.sh $iam_stack_name)"
+iam_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $iam_stack_name)"
 iam_stack_wait=$?
 
 echo
