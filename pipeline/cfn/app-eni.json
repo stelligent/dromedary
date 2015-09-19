@@ -1,0 +1,63 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Dromedary demo - Elastic Network Interfaces for Jenkins and app",
+
+    "Parameters": {
+        "SubnetId": {
+            "Type": "AWS::EC2::Subnet::Id",
+            "Description": "VPC subnet id in which to place ENI"
+        },
+        "SecurityGroupId": {
+            "Type": "String",
+            "Description": "Security Group id with which to associate app ENI",
+            "Default": ""
+        }
+    },
+
+    "Conditions": {
+        "NoSecurityGroup": { "Fn::Equals": [ { "Ref": "SecurityGroupId" }, "" ]}
+    },
+
+    "Resources": {
+
+        "EIP": {
+            "Type" : "AWS::EC2::EIP",
+            "Properties" : {
+                "Domain" : "vpc"
+            }
+        },
+
+        "ENI": {
+            "Type" : "AWS::EC2::NetworkInterface",
+            "Properties" : {
+                "Description": "Dromedary Prod ENI",
+                "SubnetId": { "Ref": "SubnetId" },
+                "GroupSet": { "Fn::If": [ "NoSecurityGroup",
+                    { "Ref": "AWS::NoValue" },
+                    [{ "Ref": "SecurityGroupId" }]
+                ]},
+                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
+                         { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }]
+            }
+        },
+
+        "EipAssocation": {
+            "Type": "AWS::EC2::EIPAssociation",
+            "Properties": {
+                "AllocationId": { "Fn::GetAtt" : [ "EIP", "AllocationId" ] },
+                "NetworkInterfaceId": { "Ref": "ENI" }
+            }
+        }
+    },
+
+    "Outputs": {
+        "PublicIp": {
+            "Description": "Public IP Address of ENI",
+            "Value": { "Ref": "EIP" }
+        },
+        "EniId": {
+            "Description": "Elastic Network Interface Id",
+            "Value": { "Ref": "ENI" }
+        }
+    }
+}

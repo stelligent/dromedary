@@ -18,6 +18,7 @@ fi
 vpc_stack_name="$stack_basename-vpc"
 iam_stack_name="$stack_basename-iam"
 jenkins_stack_name="$stack_basename-jenkins"
+eni_stack_name="$stack_basename-eni"
 aws cloudformation create-stack \
     --stack-name $vpc_stack_name \
     --template-body file://./pipeline/cfn/vpc.json
@@ -69,4 +70,5 @@ jenkins_instance_profile="$(aws cloudformation describe-stacks --stack-name $iam
 echo "export dromedary_vpc_stack_name=$vpc_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_iam_stack_name=$iam_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_jenkins_stack_name=$jenkins_stack_name" >> "$ENVIRONMENT_FILE"
+echo "export dromedary_eni_stack_name=$eni_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_ec2_key=$DROMEDARY_EC2_KEY" >> "$ENVIRONMENT_FILE"

@@ -66,4 +66,5 @@ echo "export dromedary_s3_bucket=$s3_bucket" >> "$ENVIRONMENT_FILE"
 set -ex
 "$script_dir/cfn-bootstrap.sh" "$hostname"
 "$script_dir/cfn-create-jenkins.sh"
+"$script_dir/cfn-create-eni.sh"
 "$script_dir/codepipeline-create.sh"
