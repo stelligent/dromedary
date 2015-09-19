@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 stack_name="$1"
 stack_status='UNKNOWN_IN_PROGRESS'
