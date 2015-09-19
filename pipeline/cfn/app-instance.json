@@ -211,6 +211,10 @@
         "InstanceId": {
             "Description": "Dromedary App instance id",
             "Value": { "Ref": "WebServerInstance" }
+        },
+        "InstanceSecurityGroup": {
+            "Description": "Security group id of app instance",
+            "Value": { "Ref": "InstanceSecurityGroup" }
         }
     }
 }
