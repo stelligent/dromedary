@@ -22,7 +22,7 @@ generate_cli_json() {
     "version": "1",
     "settings": {
         "entityUrlTemplate": "$jenkins_url/job/{Config:ProjectName}",
-        "executionUrlTemplate": "executionUrlTemplate=$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}"
+        "executionUrlTemplate": "$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}"
     },
     "configurationProperties": [
         {
