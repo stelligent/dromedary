@@ -25,7 +25,9 @@ sec_grp_id="$(aws cloudformation describe-stacks --stack-name $app_stack --outpu
 aws cloudformation update-stack \
     --stack-name $dromedary_eni_stack_name \
     --template-body file://$script_dir/../pipeline/cfn/app-eni.json \
-    --parameters ParameterKey=SubnetId,UsePreviousValue=true \
+    --parameters ParameterKey=Hostname,UsePreviousValue=true \
+        ParameterKey=Domain,UsePreviousValue=true \
+        ParameterKey=SubnetId,UsePreviousValue=true \
         ParameterKey=SecurityGroupId,ParameterValue=$sec_grp_id
 
 eni_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"

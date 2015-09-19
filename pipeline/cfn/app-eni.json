@@ -3,6 +3,16 @@
     "Description": "Dromedary demo - Elastic Network Interfaces for Jenkins and app",
 
     "Parameters": {
+        "Hostname": {
+            "Type": "String",
+            "Description": "DNS Hostname for prod IP (but not domainname)",
+            "Default": ""
+        },
+        "Domain": {
+            "Type": "String",
+            "Description": "Route54 Hosted Zone name for prod IP (include trailing .)",
+            "Default": ""
+        },
         "SubnetId": {
             "Type": "AWS::EC2::Subnet::Id",
             "Description": "VPC subnet id in which to place ENI"
@@ -15,7 +25,11 @@
     },
 
     "Conditions": {
-        "NoSecurityGroup": { "Fn::Equals": [ { "Ref": "SecurityGroupId" }, "" ]}
+        "NoSecurityGroup": { "Fn::Equals": [ { "Ref": "SecurityGroupId" }, "" ]},
+        "Route53Update": { "Fn::And": [
+            { "Fn::Not": [{ "Fn::Equals": [ { "Ref": "Hostname" }, "" ] }]},
+            { "Fn::Not": [{ "Fn::Equals": [ { "Ref": "Domain" }, "" ] }]}
+        ]}
     },
 
     "Resources": {
@@ -24,6 +38,19 @@
             "Type" : "AWS::EC2::EIP",
             "Properties" : {
                 "Domain" : "vpc"
+            }
+        },
+
+        "ProdDNSRecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Condition": "Route53Update",
+            "Properties" : {
+                "HostedZoneName" : { "Ref": "Domain" },
+                "Comment" : "DNS name for Dromedary prod.",
+                "Name" : { "Fn::Join" : [ "", [ { "Ref" : "Hostname" }, ".", { "Ref" : "Domain" } ]]},
+                "Type" : "A",
+                "TTL" : "120",
+                "ResourceRecords" : [{ "Ref": "EIP" }]
             }
         },
 

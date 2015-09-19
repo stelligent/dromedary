@@ -12,11 +12,14 @@ fi
 
 eni_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
 
+
 aws cloudformation create-stack \
     --stack-name $dromedary_eni_stack_name \
     --template-body file://./pipeline/cfn/app-eni.json \
     --disable-rollback \
-    --parameters ParameterKey=SubnetId,ParameterValue=$eni_subnet_id \
+    --parameters ParameterKey=Hostname,ParameterValue=$dromedary_hostname \
+        ParameterKey=Domain,ParameterValue=${dromedary_domainname}. \
+        ParameterKey=SubnetId,ParameterValue=$eni_subnet_id \
         ParameterKey=SecurityGroupId,ParameterValue=
 
 eni_stack_status="$($script_dir/cfn-wait-for-stack.sh $dromedary_eni_stack_name)"
