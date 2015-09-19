@@ -207,6 +207,10 @@
         "PublicDns": {
             "Description": "Public DNS of Dromedary App instance",
             "Value": { "Fn::GetAtt": [ "WebServerInstance", "PublicIp" ]}
+        },
+        "InstanceId": {
+            "Description": "Dromedary App instance id",
+            "Value": { "Ref": "WebServerInstance" }
         }
     }
 }
