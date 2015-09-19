@@ -16,6 +16,8 @@ if [ -z "$app_stack" ]; then
     exit 1
 fi
 
+set -x
+
 eni_id="$(aws cloudformation describe-stacks --stack-name $dromedary_eni_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`EniId`].OutputValue')"
 attachment_id="$(aws ec2 describe-network-interfaces --network-interface-ids $eni_id --output text --query 'NetworkInterfaces[0].Attachment.AttachmentId')"
 instance_id="$(aws cloudformation describe-stacks --stack-name $app_stack --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceId`].OutputValue')"
