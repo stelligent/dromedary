@@ -61,6 +61,7 @@
                 ]
             }
         },
+
         "JenkinsInstance": {
             "Type": "AWS::EC2::Instance",
             "Metadata" : {
