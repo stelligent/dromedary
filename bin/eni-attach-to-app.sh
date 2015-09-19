@@ -42,6 +42,11 @@ fi
 if [ -n "$attachment_id" -a "$attachment_id" != 'None' ]; then
     aws ec2 detach-network-interface --attachment-id $attachment_id
 fi
+# wait for detachment
+while [ -n "$attachment_id" -a "$attachment_id" != 'None' ]; do
+    sleep 1
+    attachment_id="$(aws ec2 describe-network-interfaces --network-interface-ids $eni_id --output text --query 'NetworkInterfaces[0].Attachment.AttachmentId')"
+done
 
 # attach to new instance
 aws ec2 attach-network-interface --network-interface-id $eni_id --instance-id $instance_id --device-index 1 --output=json
