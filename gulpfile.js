@@ -105,10 +105,10 @@ gulp.task('default', function(callback) {
 
 gulp.task('serve', function() {
   var server = gls.new('app.js');
-  server.start();
+  return server.start();
 });
 
-// Support for DDB local
+// Support for DDB local - tasks to clean ddb dir, download and untar
 gulp.task('ddb-local:clean', function (cb) {
   del(['ddb-local'], cb);
 });
