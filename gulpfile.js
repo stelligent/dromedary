@@ -4,6 +4,7 @@ var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
 var tar         = require('gulp-tar');
+var gutil       = require('gulp-util');
 var exec        = require('child_process').exec;
 var del         = require('del');
 var runSequence = require('run-sequence');
@@ -55,8 +56,8 @@ gulp.task('copy-to-cookbooks', function(callback) {
 // Copy cookbooks to dist/
 gulp.task('dist:berks-vendor', function (cb) {
   exec('cd cookbooks/dromedary/ && berks vendor ../../dist', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
+    gutil.log(stdout);
+    gutil.log(stderr);
     cb(err);
   });
 });
