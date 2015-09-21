@@ -1,12 +1,16 @@
 var gulp        = require('gulp');
+var download    = require('gulp-download');
 var gzip        = require('gulp-gzip');
+var gunzip      = require('gulp-gunzip');
 var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
 var tar         = require('gulp-tar');
+var untar       = require('gulp-untar');
 var gutil       = require('gulp-util');
 var exec        = require('child_process').exec;
 var del         = require('del');
+var fs          = require('fs');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
 
@@ -102,4 +106,43 @@ gulp.task('default', function(callback) {
 gulp.task('serve', function() {
   var server = gls.new('app.js');
   server.start();
+});
+
+// Support for DDB local
+gulp.task('ddb-local:clean', function (cb) {
+  del(['ddb-local'], cb);
+});
+
+gulp.task('ddb-local:download', function() {
+  return download('http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz')
+                  .pipe(gulp.dest(__dirname + '/ddb-local/'));
+});
+gulp.task('ddb-local:untar', function () {
+  return gulp.src(__dirname + '/ddb-local/dynamodb_local_latest.tar.gz')
+             .pipe(gunzip())
+             .pipe(untar())
+             .pipe(gulp.dest('.'));
+});
+
+// Hacky way to run the ddb-local:download & ddb-local:untar only when we need to
+gulp.task('ddb-local:download-wrapper', function(callback) {
+  fs.stat(__dirname + '/ddb-local/DynamoDBLocal.jar', function(err) {
+    if (err) {
+      runSequence(
+        'ddb-local:download',
+        'ddb-local:untar',
+        callback
+      );
+    } else {
+      gutil.log(__dirname + '/ddb-local/DynamoDBLocal.jar exists. Skipping download.');
+      callback();
+    }
+  });
+});
+
+gulp.task('ddb-local', function(callback) {
+  runSequence(
+    'ddb-local:download-wrapper',
+    callback
+  );
 });
