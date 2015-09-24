@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-remote_file '/etc/nginx/sites-available/dromedary' do
+cookbook_file '/etc/nginx/sites-available/dromedary' do
   source 'nginx/dromedary-site.conf'
   owner 'root'
   group 'root'
