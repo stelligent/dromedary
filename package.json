@@ -38,6 +38,7 @@
     "yargs": "^3.19.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.2.3",
     "express": "^4.13.3"
   }
 }
