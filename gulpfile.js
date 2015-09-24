@@ -13,7 +13,7 @@ var commitId    = require(__dirname + '/lib/sha.js');
 
 // Delete the dist directory
 gulp.task('clean', function (cb) {
-  del(['cookbooks/dromedary/files/*', 'dist'], cb);
+  del(['cookbooks/dromedary/files/app/*', 'dist'], cb);
 });
 
 // Execute unit tests
