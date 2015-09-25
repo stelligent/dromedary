@@ -21,7 +21,7 @@ var ddbLocalPort = 8079;
 
 // Delete the dist directory
 gulp.task('clean', function (cb) {
-  del(['cookbooks/dromedary/files/*', 'dist'], cb);
+  del(['cookbooks/dromedary/files/app/*', 'dist'], cb);
 });
 
 // Execute unit tests
