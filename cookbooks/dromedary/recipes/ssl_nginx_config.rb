@@ -8,7 +8,7 @@
 #
 
 cookbook_file '/etc/nginx/sites-available/dromedary' do
-  source 'nginx/ssl-dromedary-site.conf'
+  source 'nginx/ssl-dromedary-site.cfg'
   owner 'root'
   group 'root'
   mode '0644'
