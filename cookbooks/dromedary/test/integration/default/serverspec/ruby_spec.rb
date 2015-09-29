@@ -11,5 +11,5 @@ describe command('which ruby') do
 end
 
 describe command('ruby -v') do
-  its(:stdout) { should match /2\.0\.0p598/ }
+  its(:stdout) { should match /2\.0/ }
 end
