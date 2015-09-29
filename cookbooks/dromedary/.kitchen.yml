@@ -1,15 +1,25 @@
 ---
 driver:
-  name: vagrant
-  network:
-    - ["forwarded_port", {guest: 80, host: 50080}]
-    - ["forwarded_port", {guest: 443, host: 50443}]
+  name: ec2
+  require_chef_omnibus: true
+
+  security_group_ids: sg-db8bd2b6
+  aws_ssh_key_id: jonny-labs
+  region: us-east-1
+  availability_zone: b
+  instance_type: m3.large
 
 provisioner:
   name: chef_solo
 
+
 platforms:
-  - name: centos-7.1
+  - name: amazon-linux
+    driver:
+      image_id: ami-cf1066aa
+    transport:
+      username: ec2-user
+      ssh_key: "/users/jonny/pem/jonny-labs.pem"
 
 suites:
   - name: default
@@ -19,6 +29,4 @@ suites:
       - recipe[dromedary::install_dromedary]
     attributes:
       region: us-east-1
-      dromedary:
-        S3Bucket: dromedary-114930652771
-        ArtifactPath: dromedary-20150911-161507.tar.gz
+
