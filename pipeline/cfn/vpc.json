@@ -107,6 +107,18 @@
                 "PortRange": { "From": "8080", "To": "8080" }
             }
         },
+        "InboundHTTPSNetworkAclEntry": {
+            "Type": "AWS::EC2::NetworkAclEntry",
+            "Properties": {
+                "NetworkAclId": { "Ref": "NetworkAcl" },
+                "RuleNumber": "110",
+                "Protocol": "6",
+                "RuleAction": "allow",
+                "Egress": "false",
+                "CidrBlock": "0.0.0.0/0",
+                "PortRange": { "From": "443", "To": "443" }
+            }
+        },
 
         "InboundNtpResponseUdpPortNetworkAclEntry": {
             "Type": "AWS::EC2::NetworkAclEntry",
