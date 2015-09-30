@@ -3,11 +3,11 @@ driver:
   name: ec2
   require_chef_omnibus: true
 
-  security_group_ids: sg-db8bd2b6
-  aws_ssh_key_id: jonny-labs
+  security_group_ids: <%= ENV['DROMEDARY_TESTKITCHEN_SG'] %>
+  aws_ssh_key_id: <%= ENV['DROMEDARY_EC2_KEY'] %>
   region: us-east-1
-  availability_zone: b
-  instance_type: m3.large
+  availability_zone: a
+  instance_type: m4.large
 
 provisioner:
   name: chef_solo
@@ -16,17 +16,15 @@ provisioner:
 platforms:
   - name: amazon-linux
     driver:
-      image_id: ami-cf1066aa
+      image_id: ami-e3106686
     transport:
       username: ec2-user
-      ssh_key: "/users/jonny/pem/jonny-labs.pem"
+      # ssh_key: "/users/jonny/pem/jonny-labs.pem"
 
 suites:
   - name: default
     run_list:
-      - recipe[nginx]
-      - recipe[dromedary::default]
-      - recipe[dromedary::install_dromedary]
+      - recipe[dromedary::prereqs]
+      - recipe[dromedary]
     attributes:
       region: us-east-1
-
