@@ -48,7 +48,7 @@
     "Mappings": {
         "RegionConfig": {
             "us-east-1": {
-                "ami": "ami-e3106686"
+                "ami": "ami-cf2661aa"
             }
         }
     },
@@ -82,6 +82,7 @@
                     "configSets" : {
                         "chef" : [ "chef" ],
                         "base" : [ "base" ],
+                        "noprereqs" : [ "noprereqs" ],
                         "default" : [ { "ConfigSet" : "base" }]
                     },
                     "chef": {
@@ -100,11 +101,6 @@
                          }
                     },
                     "base": {
-                        "packages": {
-                            "yum": {
-                                "git": []
-                            }
-                        },
                         "files": {
                             "/tmp/dromedary.tgz": {
                                 "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
@@ -134,7 +130,39 @@
                                     "npm -v\n"
                                 ]]}
                             }
-                         }
+                        }
+                    },
+                    "noprereqs": {
+                        "files": {
+                            "/tmp/dromedary.tgz": {
+                                "source": { "Fn::Join": [ "", [ "https://s3.amazonaws.com/", { "Ref" : "S3Bucket" }, "/", { "Ref": "ArtifactPath" } ]]},
+                                "authentication": "S3AccessCreds",
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        },
+                        "commands": {
+                            "10-extract-dromedary": {
+                                "command": { "Fn::Join" : [ "", [
+                                    "mkdir -p -m755 /userdata\n",
+                                    "cd /userdata\n",
+                                    "tar xzf /tmp/dromedary.tgz\n"
+                                ]]}
+                            },
+                            "20-run-chef": {
+                                "cwd": "/userdata",
+                                "env": { "HOME": "/root" },
+                                "command": { "Fn::Join" : [ "", [
+                                    "cat > /userdata/solo.rb <<SOLORB\n",
+                                    "cookbook_path ['/userdata']\n",
+                                    "SOLORB\n", "\n",
+                                    "chef-solo --config /userdata/solo.rb --log_level auto --force-formatter --json-attributes /userdata/dromedary/attributes-noprereqs.json\n",
+                                    "node -v \n",
+                                    "npm -v\n"
+                                ]]}
+                            }
+                        }
                     }
                 }
             },
@@ -190,7 +218,11 @@
                     "  cfn_init -c chef || error_exit 'Failed to run cfn-init chef'\n",
                     "fi\n",
                     "\n",
-                    "cfn_init || error_exit 'Failed to run cfn-init'\n",
+                    "if [ -e /.dromedary-prereqs-installed' ]; then\n",
+                    "  cfn_init -c noprereqs || error_exit 'Failed to run cfn-init noprereqs'\n",
+                    "else\n",
+                    "  cfn_init || error_exit 'Failed to run cfn-init'\n",
+                    "fi\n",
                     "cfn_signal_ok\n",
                     "\n"
                 ]]}}
