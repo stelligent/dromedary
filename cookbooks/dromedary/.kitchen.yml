@@ -24,8 +24,7 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[nginx]
-      - recipe[dromedary::default]
-      - recipe[dromedary::install_dromedary]
+      - recipe[dromedary::prereqs]
+      - recipe[dromedary]
     attributes:
       region: us-east-1

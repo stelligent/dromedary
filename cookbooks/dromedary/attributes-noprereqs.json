@@ -1,6 +1,5 @@
 {
     "run_list": [
-        "recipe[dromedary::prereqs]",
         "recipe[dromedary::default]"
     ]
 }
