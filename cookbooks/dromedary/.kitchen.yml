@@ -16,7 +16,7 @@ provisioner:
 platforms:
   - name: amazon-linux
     driver:
-      image_id: ami-cf1066aa
+      image_id: ami-e3106686
     transport:
       username: ec2-user
       ssh_key: "/users/jonny/pem/jonny-labs.pem"
