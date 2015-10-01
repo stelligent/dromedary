@@ -1,0 +1,35 @@
+{
+    "variables": {
+        "ami_name": "",
+        "vpc_id": "",
+        "subnet_id": "",
+        "sg_id": "",
+        "dist_dir": ""
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "associate_public_ip_address": true,
+            "ssh_pty": "true",
+            "region": "us-east-1",
+            "source_ami": "ami-e3106686",
+            "instance_type": "m4.large",
+            "ssh_username": "ec2-user",
+            "ami_name": "{{user `ami_name`}}",
+            "subnet_id": "{{user `subnet_id`}}",
+            "vpc_id": "{{user `vpc_id`}}",
+            "security_group_id": "{{user `sg_id`}}"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "chef-solo",
+            "cookbook_paths": [
+                "{{user `dist_dir`}}"
+            ],
+            "run_list": [
+                "dromedary::prereqs"
+            ]
+        }
+    ]
+}
