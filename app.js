@@ -1,12 +1,21 @@
 var express = require('express');
 var app = express();
-var chartData = require(__dirname + '/lib/inMemoryStorage.js');
+var chartStore = require(__dirname + '/lib/inMemoryStorage.js');
 var commitSha = require(__dirname + '/lib/sha.js');
 var reqThrottle = require(__dirname + '/lib/requestThrottle.js');
 var serverPort = 8080;
+var siteChartStore = {};
 
 if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
   serverPort = 0;
+}
+
+function getChartData(site_name) {
+  if (!siteChartStore.hasOwnProperty(site_name)) {
+    siteChartStore[site_name] = new chartStore(site_name);
+  }
+
+  return siteChartStore[site_name];
 }
 
 /* clean up throttle map every minute to keep it tidy */
@@ -25,6 +34,7 @@ app.get('/sha', function (req, res) {
 
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
+  var chartData = getChartData(req.headers.host);
   console.log('Request received from %s for /data', req.ip);
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,6 +48,7 @@ app.get('/data', function (req, res) {
 /* GET requests to /increment to increment counts */
 app.get('/increment', function (req, res) {
   var colorCount = 0;
+  var chartData = getChartData(req.headers.host);
   if (! reqThrottle.checkIp(req.ip) ) {
     console.log('Request throttled from %s for /increment', req.ip);
     res.setHeader('Content-Type', 'application/json');
