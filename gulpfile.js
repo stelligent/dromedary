@@ -156,10 +156,17 @@ gulp.task('ddb-local', function(callback) {
 });
 
 // Default is to serve locally
-gulp.task('default', function(callback) {
+gulp.task('serve', function(callback) {
   runSequence(
     'ddb-local',
     'app:serve',
+    callback
+  );
+});
+
+gulp.task('default', function(callback) {
+  runSequence(
+    'serve',
     callback
   );
 });
