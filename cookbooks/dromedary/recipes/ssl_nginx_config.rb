@@ -56,5 +56,5 @@ link '/etc/nginx/sites-enabled/000-default' do
 end
 
 service 'nginx' do
-  action   :reload
+  action [ :start, :enable ]
 end
