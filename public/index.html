@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,23 +6,47 @@
         <title>Stelligent Demo - Dromedary</title>
         <script src="https://code.jquery.com/jquery-latest.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-        <script src="/charthandler.js"></script>
+        <script src="charthandler.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
     </head>
     <body>
-        <div>
-            <div style="width: 50%; float: left;">
-                <h2 align="center">Pie Chart</h2>
-                <p align="center">Deployed version:<br/><span id="gitCommitSha">&nbsp;</span></p>
+        <div class="container">
+            <div class="col-sm-12 text-center">
+                <img class="logo" src="stelogo.png" width="140" alt="Stelligent Systems">
+            </div>
+            <div class="col-sm-6 text-center">
+                <h2>Vote For Your Favorite Color</h2>
+                <p>Deployed version:<br/><span id="gitCommitSha">&nbsp;</span></p>
                 <canvas id="myChart" width="350" height="350" style="padding: 0; margin: auto; display: block;"></canvas>
             </div>
-            <div style="width: 50%; margin-left: 50%">
-                <h2 align="left">Messages from API</h2>
-                <div id="lastApiResponses"></div>
+            <div class="col-sm-6 text-center fixed-height">
+                <h2>The Latest</h2>
+                <div id="lastApiResponses">
+                    <ul>
+                        <li>&nbnsp;</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="colorCounts" class="col-sm-12 text-center bordered">
+                <div class="col-sm-4 border-right"><p class="totnum">-1</p>
+                    <p>Unknown</p>
+                </div>
+                <div class="col-sm-4 border-right"><p class="totnum">-1</p>
+                    <p>Unknown</p>
+                </div>
+                <div class="col-sm-4"><p class="totnum">-1</p>
+                    <p>Unknown</p>
+                </div>
             </div>
         </div>
-
         <script>
             $(document).ready(chartHandler);
         </script>
+        <script src="https://use.typekit.net/ebe6oww.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
     </body>
 </html>

@@ -1,0 +1,71 @@
+html{
+font-family: "futura-pt",sans-serif;
+}
+
+body{
+margin-top: 40px;
+font-family: "futura-pt",sans-serif;
+}
+
+.logo{
+margin-bottom:40px;
+}
+
+p{
+font-size:20px;
+font-family: "futura-pt",sans-serif;	
+}
+
+h2{
+font-size:40px;
+padding-bottom:12px;
+font-weight: bold;
+font-family: "futura-pt",sans-serif;
+}
+
+h1{
+font-family: "futura-pt",sans-serif;
+}
+
+ul{
+list-style: none;
+}
+
+li{
+font-size: 25px;
+border: 2px solid #666;
+padding: 16px;
+margin-bottom:6px;
+border-radius: 2px;
+font-family: "futura-pt",sans-serif;
+}
+
+.timestamp{
+font-size:13px;
+padding-bottom:12px;
+display:block;
+font-weight: bold;
+color: #666;
+text-transform: uppercase;
+}
+
+.fixed-height{
+max-height: 830px;
+overflow:hidden;
+}
+
+.totnum{
+font-size: 42px;
+}
+
+.border-right{
+border-right:1px solid  #666;
+}
+
+.bordered{
+padding-top: 20px;
+padding-bottom: 20px;
+border-top:1px solid  #666;
+border-bottom: 1px solid #666;
+margin-top: 40px;
+}
