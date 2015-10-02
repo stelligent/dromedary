@@ -9,6 +9,7 @@ font-family: "futura-pt",sans-serif;
 
 .logo{
 margin-bottom:40px;
+margin-top: 60px;
 }
 
 p{
@@ -32,34 +33,39 @@ list-style: none;
 }
 
 li{
-font-size: 25px;
-border: 2px solid #666;
+font-size: 20px;
+display:block;
 padding: 16px;
-margin-bottom:6px;
+margin-bottom:2px;
 border-radius: 2px;
 font-family: "futura-pt",sans-serif;
 }
 
 .timestamp{
 font-size:13px;
-padding-bottom:12px;
 display:block;
 font-weight: bold;
 color: #666;
 text-transform: uppercase;
+padding-top:12px;
 }
 
 .fixed-height{
-max-height: 830px;
+max-height: 590px;
 overflow:hidden;
 }
 
 .totnum{
-font-size: 42px;
+font-size: 52px;
+}
+
+.padtop{
+padding-top: 60px;
+clear:both;
 }
 
 .border-right{
-border-right:1px solid  #666;
+border-right: 1px solid #666;
 }
 
 .bordered{
@@ -69,3 +75,11 @@ border-top:1px solid  #666;
 border-bottom: 1px solid #666;
 margin-top: 40px;
 }
+
+ /* Small Devices, Tablets */
+    @media only screen and (max-width : 768px) {
+.border-right{
+border:none;
+}
+    }
+

@@ -16,30 +16,31 @@
     <body>
         <div class="container">
             <div class="col-sm-12 text-center">
-                <img class="logo" src="stelogo.png" width="140" alt="Stelligent Systems">
+                <img class="logo" src="stelogo.png" width="140" alt="Stelligent Systems" />
             </div>
             <div class="col-sm-6 text-center">
                 <h2>Vote For Your Favorite Color</h2>
                 <p>Deployed version:<br/><span id="gitCommitSha">&nbsp;</span></p>
-                <canvas id="myChart" width="350" height="350" style="padding: 0; margin: auto; display: block;"></canvas>
+                <canvas id="myChart" width="350" height="350" style="padding: 0; margin: auto; display: block;">
+                </canvas>
             </div>
             <div class="col-sm-6 text-center fixed-height">
                 <h2>The Latest</h2>
-                <div id="lastApiResponses">
+                <div id="colorCounts">
+                    <div class="col-sm-4 border-right"><p class="totnum">-1</p>
+                        <p>Unknown</p>
+                    </div>
+                    <div class="col-sm-4 border-right"><p class="totnum">-1</p>
+                        <p>Unknown</p>
+                    </div>
+                    <div class="col-sm-4"><p class="totnum">-1</p>
+                        <p>Unknown</p>
+                    </div>
+                </div>
+                <div class="text-center padtop" id="lastApiResponses">
                     <ul>
                         <li>&nbnsp;</li>
                     </ul>
-                </div>
-            </div>
-            <div id="colorCounts" class="col-sm-12 text-center bordered">
-                <div class="col-sm-4 border-right"><p class="totnum">-1</p>
-                    <p>Unknown</p>
-                </div>
-                <div class="col-sm-4 border-right"><p class="totnum">-1</p>
-                    <p>Unknown</p>
-                </div>
-                <div class="col-sm-4"><p class="totnum">-1</p>
-                    <p>Unknown</p>
                 </div>
             </div>
         </div>
