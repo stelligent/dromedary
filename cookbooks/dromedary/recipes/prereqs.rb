@@ -19,4 +19,8 @@ include_recipe 'nginx'
 include_recipe 'dromedary::nodejs'
 include_recipe 'dromedary::yum_packages'
 
+service 'nginx' do
+  action [ :stop, :disable ]
+end
+
 execute 'touch /.dromedary-prereqs-installed'
