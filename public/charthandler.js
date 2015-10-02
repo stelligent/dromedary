@@ -29,15 +29,43 @@ function chartHandler () {
     var colorCountHtml = '';
     var divClass;
     var i;
+    var color;
     for (i = 0; i < colors.length; i++) {
+      color = colors[i];
       divClass = 'col-sm-' + w + ' border-right';
       if (i === colors.length - 1) {
         divClass = 'col-sm-' + w;
       }
-      colorCountHtml += '<div class="' + divClass + '"><p class="totnum">' + colorCounts[colors[i]].value
-                     + '</p><p>' + colorCounts[colors[i]].label + '</p></div>\n';
+      colorCountHtml += '<div id="' + color + 'CountDiv" class="' + divClass + '"><p id="' + color + 'Count" class="totnum">'
+                     + colorCounts[colors[i]].value + '</p><p id="' + color + 'CountLabel">' + colorCounts[colors[i]].label + '</p></div>\n';
     }
     document.getElementById("colorCounts").innerHTML = colorCountHtml;
+  }
+
+  function incrementColorViaColorCounts(colorToInc) {
+    $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
+      var segment;
+      var segmentColor;
+      var segmentIndex;
+
+      console.log('Color increment GET status: ' + status);
+      updateLastApi("/increment?color=" + colorToInc, xhr);
+      if (data.hasOwnProperty('error')) {
+        console.log('/increment error: ' + data.error);
+        updateLastApiMessage('Error received from backend: ' + data.error);
+      } else if (data.hasOwnProperty('count') && data.count > 0) {
+        colorCounts[colorToInc].value = data.count;
+        for (segmentIndex in myPieChart.segments) {
+          segment = myPieChart.segments[segmentIndex];
+          segmentColor = segment.label.toLowerCase();
+          if (segmentColor === colorToInc) {
+            myPieChart.segments[segmentIndex].value = data.count;
+            updateChart = true;
+            updateLastApiMessage('Incremented ' + colorToInc + ' ... new count is ' + data.count);
+          }
+        }
+      }
+    });
   }
 
   $.getJSON("/sha", {}, function(data, status, xhr) {
@@ -59,6 +87,13 @@ function chartHandler () {
       colorCounts[data[i].label.toLowerCase()] = {label: data[i].label, value: data[i].value};
     }
     refreshColorCount();
+  });
+
+  $("#colorCounts").click(function(evt) {
+    var colorMatch = evt.target.id.match(/^([a-z]+)Count(Div|Label)?$/);
+    if (colorMatch !== null) {
+      incrementColorViaColorCounts(colorMatch[1]);
+    }
   });
 
   $("#myChart").click(function(evt) {
