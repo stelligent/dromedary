@@ -1,0 +1,85 @@
+html{
+font-family: "futura-pt",sans-serif;
+}
+
+body{
+margin-top: 40px;
+font-family: "futura-pt",sans-serif;
+}
+
+.logo{
+margin-bottom:40px;
+margin-top: 60px;
+}
+
+p{
+font-size:20px;
+font-family: "futura-pt",sans-serif;	
+}
+
+h2{
+font-size:40px;
+padding-bottom:12px;
+font-weight: bold;
+font-family: "futura-pt",sans-serif;
+}
+
+h1{
+font-family: "futura-pt",sans-serif;
+}
+
+ul{
+list-style: none;
+}
+
+li{
+font-size: 20px;
+display:block;
+padding: 16px;
+margin-bottom:2px;
+border-radius: 2px;
+font-family: "futura-pt",sans-serif;
+}
+
+.timestamp{
+font-size:13px;
+display:block;
+font-weight: bold;
+color: #666;
+text-transform: uppercase;
+padding-top:12px;
+}
+
+.fixed-height{
+max-height: 590px;
+overflow:hidden;
+}
+
+.totnum{
+font-size: 36px;
+}
+
+.padtop{
+padding-top: 60px;
+clear:both;
+}
+
+.border-right{
+border-right: 1px solid #666;
+}
+
+.bordered{
+padding-top: 20px;
+padding-bottom: 20px;
+border-top:1px solid  #666;
+border-bottom: 1px solid #666;
+margin-top: 40px;
+}
+
+ /* Small Devices, Tablets */
+    @media only screen and (max-width : 768px) {
+.border-right{
+border:none;
+}
+    }
+

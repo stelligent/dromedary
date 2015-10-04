@@ -112,13 +112,13 @@ Once that's done, click "Save".
 #### Troubleshooting:
 
 * I can't get to Jenkins using the IP address of the box!
-** Make sure you're appending :8080 to the URL.
+    * Make sure you're appending :8080 to the URL.
 * The build job failed right away!
-** The first run of the Job will fail due to some funkiness with the Polling of SCM. Since no build has ever been run, it will attempt to run the build, _but_ since there's nothing in the workspace, the build fails. If you wait two minutes, CodePipeline should trigger a build correctly, and populate the workspace.
+    * The first run of the Job will fail due to some funkiness with the Polling of SCM. Since no build has ever been run, it will attempt to run the build, _but_ since there's nothing in the workspace, the build fails. If you wait two minutes, CodePipeline should trigger a build correctly, and populate the workspace.
 * The Build step has been sitting there for several minutes and isn't doing anything!
-** Make sure the provider name you have listed in your Jenkins Job matches _exactly_ to what you called it when you configured CodePipeline (probably `DromedaryJenkins`).
+    * Make sure the provider name you have listed in your Jenkins Job matches _exactly_ to what you called it when you configured CodePipeline (probably `DromedaryJenkins`).
 * I'm just seeing a "Congratulations, you have successfully launched the AWS CloudFormation sample" message, not the application
-** Make sure you're appending :8080 to the URL.
+    * Make sure you're appending :8080 to the URL.
 
 
 ### Running Locally :dromedary_camel:
