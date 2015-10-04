@@ -52,7 +52,7 @@ function chartHandler () {
       updateLastApi("/increment?color=" + colorToInc, xhr);
       if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
-        updateLastApiMessage('Error received from backend: ' + data.error);
+        updateLastApiMessage('Vote for ' + colorToInc + ' failed: ' + data.error);
       } else if (data.hasOwnProperty('count') && data.count > 0) {
         colorCounts[colorToInc].value = data.count;
         for (segmentIndex in myPieChart.segments) {
@@ -104,7 +104,7 @@ function chartHandler () {
       updateLastApi("/increment?color=" + colorToInc, xhr);
       if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
-        updateLastApiMessage('Error received from backend: ' + data.error);
+        updateLastApiMessage('Vote for ' + colorToInc + ' failed: ' + data.error);
       } else if (data.hasOwnProperty('count') && data.count > 0) {
         activePoints[0].value = data.count;
         colorCounts[colorToInc].value = data.count;
