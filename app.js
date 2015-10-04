@@ -66,9 +66,8 @@ app.get('/increment', function (req, res) {
     chartData.incrementCount(req.query.color);
     colorCount = chartData.getCount(req.query.color);
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.send(JSON.stringify({count: colorCount}));
+
+  sendJsonResponse(res, {count: colorCount});
 });
 
 var server = app.listen(serverPort, function () {
