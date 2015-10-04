@@ -1,10 +1,13 @@
 var express = require('express');
 var app = express();
-var chartStore = require(__dirname + '/lib/inMemoryStorage.js');
+var CS = require(__dirname + '/lib/inMemoryStorage.js');
 var commitSha = require(__dirname + '/lib/sha.js');
 var reqThrottle = require(__dirname + '/lib/requestThrottle.js');
+var DDBP = require(__dirname + '/lib/dynamoDbPersist.js');
 var serverPort = 8080;
 var siteChartStore = {};
+
+var ddbPersist = new DDBP();
 
 if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
   serverPort = 0;
@@ -12,7 +15,7 @@ if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
 
 function getChartData(site_name) {
   if (!siteChartStore.hasOwnProperty(site_name)) {
-    siteChartStore[site_name] = new chartStore(site_name);
+    siteChartStore[site_name] = new CS(site_name);
   }
 
   return siteChartStore[site_name];
@@ -70,12 +73,21 @@ app.get('/increment', function (req, res) {
   sendJsonResponse(res, {count: colorCount});
 });
 
-var server = app.listen(serverPort, function () {
-  var host = server.address().address;
-  var port = server.address().port; 
-  console.log('Listening on %s:%s', host, port); 
-  if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
-    require('fs').writeFileSync(__dirname + '/dev-lib/targetPort.js',
-                                'module.exports = ' + port + ';\n');
+ddbPersist.init(function(err) {
+  var server;
+  if (err) {
+    console.log('Failed to init DynamoDB persistence');
+    console.log(err);
+    process.exit(1);
   }
+
+  server = app.listen(serverPort, function () {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Listening on %s:%s', host, port);
+    if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
+      require('fs').writeFileSync(__dirname + '/dev-lib/targetPort.js',
+                                  'module.exports = ' + port + ';\n');
+    }
+  });
 });
