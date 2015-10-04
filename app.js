@@ -18,6 +18,12 @@ function getChartData(site_name) {
   return siteChartStore[site_name];
 }
 
+function sendJsonResponse(res, obj) {
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.send(JSON.stringify(obj));
+}
+
 /* clean up throttle map every minute to keep it tidy */
 setInterval(reqThrottle.gcMap, 1000);
 
@@ -27,21 +33,17 @@ app.use(express.static(__dirname + '/public'));
 /* GET requests to /sha returns git commit sha */
 app.get('/sha', function (req, res) {
   console.log('Request received from %s for /sha', req.ip);
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.send(JSON.stringify({sha: commitSha}));
+  sendJsonResponse(res, {sha: commitSha});
 });
 
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
   var chartData = getChartData(req.headers.host);
   console.log('Request received from %s for /data', req.ip);
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.query.hasOwnProperty('countsOnly')) {
-    res.send(JSON.stringify(chartData.getAllCounts()));
+    sendJsonResponse(res, chartData.getAllCounts());
   } else {
-    res.send(JSON.stringify(chartData.getForChartJs()));
+    sendJsonResponse(res, chartData.getForChartJs());
   }
 });
 
@@ -51,9 +53,7 @@ app.get('/increment', function (req, res) {
   var chartData = getChartData(req.headers.host);
   if (! reqThrottle.checkIp(req.ip) ) {
     console.log('Request throttled from %s for /increment', req.ip);
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.send(JSON.stringify({error: 'Request throttled'}));
+    sendJsonResponse(res, {error: 'Request throttled'});
     return;
   }
 
