@@ -14,29 +14,37 @@ if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
   serverPort = 0;
 }
 
+/* Helper to refresh in memory store w/ data from DDB */
+function updateColorCountsFromDdb(siteName, cb) {
+  var chartData = siteChartStore[siteName];
+
+  ddbPersist.getSiteCounts(siteName, chartData.getAllCounts(), function(err, data) {
+    if (err) {
+      cb(err);
+    } else {
+      chartData.setCounts(data);
+      ddbLastFetch[siteName] = Date.now();
+      cb(null, chartData);
+    }
+  });
+}
+
+/* Returns in memory store (refreshed with DDB data no more often than every second) */
 function getChartData(siteName, cb) {
-  var chartData;
   if (!siteChartStore.hasOwnProperty(siteName)) {
     siteChartStore[siteName] = new CS(siteName);
     ddbLastFetch[siteName] = 0;
   }
-  chartData = siteChartStore[siteName];
 
-  // Fetch from DDB if it's been more than a second since last refresh
-  if (ddbLastFetch[siteName] - Date.now() > 1000) {
-    ddbPersist.getSiteCounts(siteName, chartData.getAllCounts(), function(err, data) {
-      if (err) {
-        cb(err);
-      } else {
-        chartData.setCounts(data);
-        cb(null, chartData);
-      }
-    });
+  if (Date.now() - ddbLastFetch[siteName] > 1000) {
+    // Fetch from DDB if it's been more than a second since last refresh
+    updateColorCountsFromDdb(siteName, cb);
   } else {
-    cb(null, chartData);
+    cb(null, siteChartStore[siteName]);
   }
 }
 
+/* Helper to send responses to frontend */
 function sendJsonResponse(res, obj) {
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -81,9 +89,13 @@ app.get('/increment', function (req, res) {
     return;
   }
 
-  getChartData(req.headers.host, function (err, data) {
-    var chartData = data;
-    var colorCount = 0;
+  if (!req.query.hasOwnProperty('color')) {
+    console.log('No color specified in params');
+    sendJsonResponse(res, {count: 0});
+    return;
+  }
+
+  getChartData(req.headers.host, function (err) {
     console.log('Request received from %s for /increment', req.ip);
     reqThrottle.logIp(req.ip);
     if (err) {
@@ -91,14 +103,24 @@ app.get('/increment', function (req, res) {
       sendJsonResponse(res, {error: err});
       return;
     }
-    if (!req.query.hasOwnProperty('color')) {
-      console.log('No color specified in params');
-    } else {
+
+    ddbPersist.incrementCount(req.headers.host, req.query.color, function (err) {
       console.log('Incrementing count for ' + req.query.color);
-      chartData.incrementCount(req.query.color);
-      colorCount = chartData.getCount(req.query.color);
-    }
-    sendJsonResponse(res, {count: colorCount});
+      if (err) {
+        console.log(err);
+        sendJsonResponse( res, {error: 'Failed to increment color count in DDB'});
+        return;
+      }
+
+      updateColorCountsFromDdb(req.headers.host, function (err, data) {
+        if (err) {
+          console.log(err);
+          sendJsonResponse( res, {error: 'Failed to increment color count in DDB'});
+          return;
+        }
+        sendJsonResponse(res, {count: data.getCount(req.query.color)});
+      });
+    });
   });
 });
 
