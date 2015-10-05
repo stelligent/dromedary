@@ -1,15 +1,23 @@
 var gulp        = require('gulp');
+var bg          = require('gulp-bg');
+var download    = require('gulp-download');
 var gzip        = require('gulp-gzip');
+var gunzip      = require('gulp-gunzip');
 var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
 var tar         = require('gulp-tar');
+var untar       = require('gulp-untar');
+var gutil       = require('gulp-util');
 var exec        = require('child_process').exec;
 var del         = require('del');
+var fs          = require('fs');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
 
 var commitId    = require(__dirname + '/lib/sha.js');
+// default is 8000, which might be common
+var ddbLocalPort = 8079;
 
 // Delete the dist directory
 gulp.task('clean', function (cb) {
@@ -55,8 +63,8 @@ gulp.task('copy-to-cookbooks', function(callback) {
 // Copy cookbooks to dist/
 gulp.task('dist:berks-vendor', function (cb) {
   exec('cd cookbooks/dromedary/ && berks vendor ../../dist', function (err, stdout, stderr) {
-    console.log(stdout);
-    console.log(stderr);
+    gutil.log(stdout);
+    gutil.log(stderr);
     cb(err);
   });
 });
@@ -89,16 +97,76 @@ gulp.task('test-functional', function () {
              .pipe(mocha({reporter: 'spec'}));
 });
 
-// Default is (for now) just test & dist
-gulp.task('default', function(callback) {
+// run the node app
+gulp.task('app:serve', function() {
+  var server = gls.new('app.js');
+  server.start();
+
+  //use gulp.watch to trigger server actions(notify, start or stop)
+  gulp.watch(['public/*'], function (file) {
+    server.notify.apply(server, [file]);
+  });
+  gulp.watch(['app.js', 'lib/*.js'], function() {
+    server.start.apply(server);
+  });
+});
+
+// Support for DDB local - tasks to clean ddb dir, download and untar
+gulp.task('ddb-local:clean', function (cb) {
+  del(['ddb-local'], cb);
+});
+
+gulp.task('ddb-local:download', function() {
+  return download('http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz')
+                  .pipe(gulp.dest(__dirname + '/ddb-local/'));
+});
+gulp.task('ddb-local:untar', function () {
+  return gulp.src(__dirname + '/ddb-local/dynamodb_local_latest.tar.gz')
+             .pipe(gunzip())
+             .pipe(untar())
+             .pipe(gulp.dest('.'));
+});
+
+// Hacky way to run the ddb-local:download & ddb-local:untar only when we need to
+gulp.task('ddb-local:download-wrapper', function(callback) {
+  fs.stat(__dirname + '/ddb-local/DynamoDBLocal.jar', function(err) {
+    if (err) {
+      runSequence(
+        'ddb-local:download',
+        'ddb-local:untar',
+        callback
+      );
+    } else {
+      gutil.log(__dirname + '/ddb-local/DynamoDBLocal.jar exists. Skipping download.');
+      callback();
+    }
+  });
+});
+
+gulp.task('ddb-local:serve', bg(
+  'java', '-Djava.library.path=ddb-local/DynamoDBLocal_lib', '-jar', 'ddb-local/DynamoDBLocal.jar', '-dbPath', 'ddb-local/', '-sharedDb', '-port', ddbLocalPort
+));
+
+gulp.task('ddb-local', function(callback) {
   runSequence(
-    'test',
-    'dist',
+    'ddb-local:download-wrapper',
+    'ddb-local:serve',
     callback
   );
 });
 
-gulp.task('serve', function() {
-  var server = gls.new('app.js');
-  server.start();
+// Default is to serve locally
+gulp.task('serve', function(callback) {
+  runSequence(
+    'ddb-local',
+    'app:serve',
+    callback
+  );
+});
+
+gulp.task('default', function(callback) {
+  runSequence(
+    'serve',
+    callback
+  );
 });

@@ -137,9 +137,9 @@ If gulp is not globally installed, ensure `./node_modules/.bin/` is in your PATH
 
 #### Local Server
 
-The `serve` task will start a node server listening on port 8080:
+The default task will start dynamodb-local on port 8079 and a node server listening on port 8080:
 
-1. Run `gulp serve`
+1. Run `gulp`
 1. Point your webbrowser to [http://localhost:8080](http://localhost:8080)
 
 #### Executing Unit Tests
@@ -151,7 +151,7 @@ and can be executed using the `test` task:
 
 #### Executing Acceptance Tests
 
-Acceptance tests located in `tests-functional/` require Dromedary to be running (eg: `gulp serve`), and can be
+Acceptance tests located in `tests-functional/` require Dromedary to be running (eg: `gulp`), and can be
 executed using the `test-functional` task:
 
 1. Run `gulp test-functional`

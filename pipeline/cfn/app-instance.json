@@ -37,6 +37,12 @@
             "Type": "String",
             "Description": "Resource Tags for Deployment Group (non-zero enables CodeDeploy agent)",
             "Default": ""
+        },
+        "DynamoDbTable": {
+            "Type": "String",
+            "Description": "DynamoDb table name for persistent storage",
+            "MinLength": "1",
+            "MaxLength": "32"
         }
     },
 
@@ -120,7 +126,10 @@
                             },
                             "20-run-chef": {
                                 "cwd": "/userdata",
-                                "env": { "HOME": "/root" },
+                                "env": {
+                                    "HOME": "/root",
+                                    "DROMEDARY_DDB_TABLE_NAME": { "Ref": "DynamoDbTable" }
+                                },
                                 "command": { "Fn::Join" : [ "", [
                                     "cat > /userdata/solo.rb <<SOLORB\n",
                                     "cookbook_path ['/userdata']\n",
@@ -152,7 +161,10 @@
                             },
                             "20-run-chef": {
                                 "cwd": "/userdata",
-                                "env": { "HOME": "/root" },
+                                "env": {
+                                    "HOME": "/root",
+                                    "DROMEDARY_DDB_TABLE_NAME": { "Ref": "DynamoDbTable" }
+                                },
                                 "command": { "Fn::Join" : [ "", [
                                     "cat > /userdata/solo.rb <<SOLORB\n",
                                     "cookbook_path ['/userdata']\n",
