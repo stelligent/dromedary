@@ -8,7 +8,8 @@
             "Type": "AWS::EC2::VPC",
             "Properties": {
                 "CidrBlock": "10.0.0.0/16",
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
             }
         },
 
@@ -17,14 +18,17 @@
             "Properties": {
                 "VpcId": { "Ref": "VPC" },
                 "CidrBlock": "10.0.0.0/24",
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
             }
         },
 
         "InternetGateway": {
             "Type": "AWS::EC2::InternetGateway",
             "Properties": {
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } } ]}
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
         },
 
         "AttachGateway": {
@@ -39,7 +43,8 @@
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
                 "VpcId": { "Ref": "VPC" },
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
             }
         },
 
@@ -65,7 +70,8 @@
             "Type": "AWS::EC2::NetworkAcl",
             "Properties": {
                 "VpcId": { "Ref": "VPC" },
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
             }
         },
 
