@@ -22,6 +22,10 @@ eni_stack_name="$stack_basename-eni"
 ddb_stack_name="$stack_basename-ddb"
 
 aws cloudformation create-stack \
+    --stack-name $ddb_stack_name \
+    --template-body file://./pipeline/cfn/dynamodb.json
+
+aws cloudformation create-stack \
     --stack-name $vpc_stack_name \
     --template-body file://./pipeline/cfn/vpc.json
 
@@ -29,10 +33,6 @@ aws cloudformation create-stack \
     --stack-name $iam_stack_name \
     --capabilities CAPABILITY_IAM \
     --template-body file://./pipeline/cfn/iam.json
-
-aws cloudformation create-stack \
-    --stack-name $ddb_stack_name \
-    --template-body file://./pipeline/cfn/ddb
 
 vpc_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $vpc_stack_name)"
 vpc_stack_wait=$?
