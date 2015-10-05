@@ -20,9 +20,13 @@ if [ $jenkins_stack_wait -ne 0 ]; then
     exit 1
 fi
 
-# NUKE VPC & IAM
+# NUKE DDB VPC & IAM
+aws cloudformation delete-stack --stack-name "$dromedary_ddb_stack_name"
 aws cloudformation delete-stack --stack-name "$dromedary_iam_stack_name"
 aws cloudformation delete-stack --stack-name "$dromedary_vpc_stack_name"
+
+ddb_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_ddb_stack_name)"
+ddb_stack_wait=$?
 
 iam_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_iam_stack_name)"
 iam_stack_wait=$?
@@ -37,6 +41,11 @@ if [ $vpc_stack_wait -ne 0 ]; then
 fi
 
 if [ $iam_stack_wait -ne 0 ]; then
-    echo "Fatal: VPC stack $iam_stack_name ($iam_stack_status) failed to delete properly" >&2
+    echo "Fatal: IAM stack $iam_stack_name ($iam_stack_status) failed to delete properly" >&2
+    exit 1
+fi
+
+if [ $ddb_stack_wait -ne 0 ]; then
+    echo "Fatal: DDB stack $ddb_stack_name ($ddb_stack_status) failed to delete properly" >&2
     exit 1
 fi
