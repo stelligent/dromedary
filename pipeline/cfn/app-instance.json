@@ -41,8 +41,8 @@
         "DynamoDbTable": {
             "Type": "String",
             "Description": "DynamoDb table name for persistent storage",
-            "MinSize": "1",
-            "MaxSize": "32"
+            "MinLength": "1",
+            "MaxLength": "32"
         }
     },
 
