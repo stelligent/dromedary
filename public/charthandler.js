@@ -68,7 +68,12 @@ function chartHandler () {
     });
   }
 
+  $.ajaxSetup({ timeout: 750 });
+
   $.getJSON("/sha", {}, function(data, status, xhr) {
+    if (status !== 'success' || ! data.hasOwnProperty('sha')) {
+      return;
+    }
     commitSha = data.sha;
     document.getElementById("gitCommitSha").innerHTML = commitSha;
     updateLastApi("/sha", xhr);
@@ -77,6 +82,9 @@ function chartHandler () {
 
   $.getJSON("/data", {}, function(data, status, xhr) {
     var i;
+    if (status !== 'success') {
+      return;
+    }
     myPieChart = new Chart(ctx).Pie(data);
     // console.log('Chart data GET status: ' + status);
     updateLastApi("/data", xhr);
@@ -101,6 +109,9 @@ function chartHandler () {
     var colorToInc = activePoints[0].label.toLowerCase();
     $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
       console.log('Color increment GET status: ' + status);
+      if (status !== 'success') {
+        return;
+      }
       updateLastApi("/increment?color=" + colorToInc, xhr);
       if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
@@ -124,10 +135,14 @@ function chartHandler () {
       var color;
       var doUpdate = false;
 
+      if (status !== 'success' || ! data.hasOwnProperty('color')) {
+        return;
+      }
+
       for (segmentIndex in myPieChart.segments) {
         segment = myPieChart.segments[segmentIndex];
         color = segment.label.toLowerCase();
-        if (data.hasOwnProperty(color) && segment.value != data[color]) {
+        if (segment.value !== data[color]) {
           console.log('Updating count for ' + color + ' to ' + data[color]);
           myPieChart.segments[segmentIndex].value = data[color];
           doUpdate = true;
@@ -145,6 +160,9 @@ function chartHandler () {
 
   function pollForNewSha() {
     $.getJSON("/sha", {}, function(data, status, xhr) {
+      if (status !== 'success' || ! data.hasOwnProperty('sha')) {
+        return;
+      }
       if (commitSha != data.sha) {
         reloadPage = true;
         updateLastApiMessage('New commit sha detected!');
