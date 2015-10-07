@@ -48,12 +48,14 @@ function chartHandler () {
       var segmentColor;
       var segmentIndex;
 
-      console.log('Color increment GET status: ' + status);
-      updateLastApi("/increment?color=" + colorToInc, xhr);
-      if (data.hasOwnProperty('error')) {
+      // console.log('Color increment GET status: ' + status);
+      if (status !== 'success') {
+        console.log('Failed to fetch /increment?color=' + colorToInc);
+      } else if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
         updateLastApiMessage('Vote for ' + colorToInc + ' failed: ' + data.error);
       } else if (data.hasOwnProperty('count') && data.count > 0) {
+        updateLastApi("/increment?color=" + colorToInc, xhr);
         colorCounts[colorToInc].value = data.count;
         for (segmentIndex in myPieChart.segments) {
           segment = myPieChart.segments[segmentIndex];
@@ -82,11 +84,13 @@ function chartHandler () {
 
   $.getJSON("/data", {}, function(data, status, xhr) {
     var i;
+    // console.log('Chart data GET status: ' + status);
+    // console.log('Chart data GET: ' + JSON.stringify(data));
     if (status !== 'success') {
+      console.log('Failed to fetch /data');
       return;
     }
     myPieChart = new Chart(ctx).Pie(data);
-    // console.log('Chart data GET status: ' + status);
     updateLastApi("/data", xhr);
     updateLastApiMessage('Initial chart data received');
 
@@ -110,6 +114,7 @@ function chartHandler () {
     $.getJSON("/increment?color=" + colorToInc, {}, function(data, status, xhr) {
       console.log('Color increment GET status: ' + status);
       if (status !== 'success') {
+        console.log('Failed to fetch /increment?color=' + colorToInc);
         return;
       }
       updateLastApi("/increment?color=" + colorToInc, xhr);
@@ -135,7 +140,11 @@ function chartHandler () {
       var color;
       var doUpdate = false;
 
-      if (status !== 'success' || ! data.hasOwnProperty('color')) {
+      // console.log('Chart counts GET status: ' + status);
+      // console.log('Chart counts GET: ' + JSON.stringify(data));
+
+      if (status !== 'success') {
+        console.log('Failed to fetch /data?countsOnly=true');
         return;
       }
 
@@ -160,6 +169,8 @@ function chartHandler () {
 
   function pollForNewSha() {
     $.getJSON("/sha", {}, function(data, status, xhr) {
+      // console.log('Build version GET status: ' + status);
+      // console.log('Build version GET: ' + JSON.stringify(data));
       if (status !== 'success' || ! data.hasOwnProperty('sha')) {
         return;
       }
