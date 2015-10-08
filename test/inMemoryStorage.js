@@ -67,4 +67,29 @@ describe("inMemoryStorage", function() {
       }
     });
   });
+
+  describe(".colorExists()", function() {
+    beforeEach(function() {
+      this.colors = Object.keys(backend.getAllCounts());
+      this.badcolors = ['', 'UKNOWN', null];
+    });
+
+    it("each color exists", function() {
+      var i;
+      var result;
+      for (i=0; i < this.colors.length; i++) {
+        result = backend.colorExists(this.colors[i]);
+        expect(result).to.be.true;
+      }
+    });
+
+    it("bad colors do not exist", function() {
+      var i;
+      var result;
+      for (i=0; i < this.badcolors.length; i++) {
+        result = backend.colorExists(this.badcolors[i]);
+        expect(result).to.be.false;
+      }
+    });
+  });
 });
