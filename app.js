@@ -95,12 +95,17 @@ app.get('/increment', function (req, res) {
     return;
   }
 
-  getChartData(req.headers.host, function (err) {
+  getChartData(req.headers.host, function (err, data) {
     console.log('Request received from %s for /increment', req.ip);
     reqThrottle.logIp(req.ip);
     if (err) {
       console.log(err);
       sendJsonResponse(res, {error: err});
+      return;
+    }
+    if (! data.colorExists(req.query.color)) {
+      console.log('Increment received for unknown color ' + req.query.color);
+      sendJsonResponse(res, {error: 'Unknown color'});
       return;
     }
 
