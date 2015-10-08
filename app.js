@@ -51,6 +51,15 @@ function sendJsonResponse(res, obj) {
   res.send(JSON.stringify(obj));
 }
 
+/* helper to determine client ip */
+function getClientIp(req) {
+  var ip = req.ip;
+  if (req.headers.hasOwnProperty('x-real-ip')) {
+    ip = req.headers['x-real-ip'];
+  }
+  return ip;
+}
+
 /* clean up throttle map every minute to keep it tidy */
 setInterval(reqThrottle.gcMap, 1000);
 
@@ -59,13 +68,13 @@ app.use(express.static(__dirname + '/public'));
 
 /* GET requests to /sha returns git commit sha */
 app.get('/sha', function (req, res) {
-  console.log('Request received from %s for /sha', req.ip);
+  console.log('Request received from %s for /sha', getClientIp(req));
   sendJsonResponse(res, {sha: commitSha});
 });
 
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
-  console.log('Request received from %s for /data', req.ip);
+  console.log('Request received from %s for /data', getClientIp(req));
   getChartData(req.headers.host, function (err, data) {
     var chartData = data;
     if (err) {
@@ -83,8 +92,9 @@ app.get('/data', function (req, res) {
 
 /* GET requests to /increment to increment counts */
 app.get('/increment', function (req, res) {
-  if (! reqThrottle.checkIp(req.ip) ) {
-    console.log('Request throttled from %s for /increment', req.ip);
+  var ip = getClientIp(req);
+  if (! reqThrottle.checkIp(ip) ) {
+    console.log('Request throttled from %s for /increment', ip);
     sendJsonResponse(res, {error: 'Request throttled'});
     return;
   }
@@ -96,8 +106,8 @@ app.get('/increment', function (req, res) {
   }
 
   getChartData(req.headers.host, function (err, data) {
-    console.log('Request received from %s for /increment', req.ip);
-    reqThrottle.logIp(req.ip);
+    console.log('Request received from %s for /increment', ip);
+    reqThrottle.logIp(ip);
     if (err) {
       console.log(err);
       sendJsonResponse(res, {error: err});
