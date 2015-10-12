@@ -1,6 +1,16 @@
 # dromedary :dromedary_camel:
 Sample app to demonstrate a working pipeline using [AWS Code Services](https://aws.amazon.com/awscode/)
 
+## Infrastructure as Code
+
+Dromedary was featured by [Paul Duvall](https://twitter.com/PaulDuvall),
+[Stelligent](http://www.stelligent.com/)'s Chief Technology Officer, during the
+ARC307: Infrastructure as Code breakout session at 2015
+[AWS re:Invent](https://reinvent.awsevents.com/).
+
+You can view the recording of that breakout session at
+[https://www.youtube.com/watch?v=WL2xSMVXy5w](https://www.youtube.com/watch?v=WL2xSMVXy5w).
+
 ## The Demo App :dromedary_camel:
 
 The Dromedary demo app is a simple nodejs application that displays a pie chart to users. The data that
