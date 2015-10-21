@@ -3,7 +3,7 @@ var request   = require('urllib-sync').request;
 
 var targetUrl   = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
 
-var expectedNumberOfItems = 4;
+var expectedNumberOfItems = 3;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("/data", function() {
