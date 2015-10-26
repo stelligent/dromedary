@@ -1,6 +1,6 @@
 'use strict';
 
-function chartHandler () {
+dromedaryChartHandler = function () {
   var ctx = document.getElementById('myChart').getContext('2d');
   var myPieChart;
   var commitSha = 'unknown';
@@ -195,4 +195,4 @@ function chartHandler () {
       location.reload(true);
     }
   }, 100);
-}
+};

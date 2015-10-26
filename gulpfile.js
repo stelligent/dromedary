@@ -40,7 +40,7 @@ gulp.task('lint-app', function() {
 });
 gulp.task('lint-charthandler', function() {
   return gulp.src('public/charthandler.js')
-             .pipe(jshint({ 'globals': { Chart: true }}))
+             .pipe(jshint({ 'globals': { Chart: true, dromedaryChartHandler: true }}))
              .pipe(jshint.reporter('default', { verbose: true }))
              .pipe(jshint.reporter('fail'));
 });

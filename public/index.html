@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script>
+            /* Hack to make jshint quiet when analysizing charthandler.js.
+               Probably a better way to integrate charthandler.js rather than
+               thru this global. */
+            var dromedaryChartHandler;
+        </script>
         <meta charset="UTF-8">
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <title>Stelligent Demo - Dromedary</title>
@@ -45,7 +51,7 @@
             </div>
         </div>
         <script>
-            $(document).ready(chartHandler);
+            $(document).ready(dromedaryChartHandler);
         </script>
         <script src="https://use.typekit.net/ebe6oww.js"></script>
         <script>try{Typekit.load({ async: true });}catch(e){}</script>
