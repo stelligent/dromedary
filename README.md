@@ -45,7 +45,7 @@ After cloning the repo, run the bootstrap script to create the environment in wh
 deployed:
 
 ```
-./bin/bootstrap-all.sh PRODHOST.HOSTED.ZONE`
+./bin/bootstrap-all.sh PRODHOST.HOSTED.ZONE
 ```
 
 The bootstrap script requires a hostname to be passed as argument. This hostname represents the "production"
