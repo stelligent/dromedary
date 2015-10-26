@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var CS = require(__dirname + '/lib/inMemoryStorage.js');
@@ -18,6 +20,7 @@ if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
 function updateColorCountsFromDdb(siteName, cb) {
   var chartData = siteChartStore[siteName];
 
+  /*jshint -W101 */
   ddbPersist.getSiteCounts(siteName, chartData.getAllCounts(), function(err, data) {
     if (err) {
       cb(err);
@@ -27,9 +30,10 @@ function updateColorCountsFromDdb(siteName, cb) {
       cb(null, chartData);
     }
   });
+  /*jshint +W101 */
 }
 
-/* Returns in memory store (refreshed with DDB data no more often than every second) */
+/* Returns in memory store chart data store */
 function getChartData(siteName, cb) {
   if (!siteChartStore.hasOwnProperty(siteName)) {
     siteChartStore[siteName] = new CS(siteName);
@@ -119,6 +123,7 @@ app.get('/increment', function (req, res) {
       return;
     }
 
+    /*jshint -W101 */
     ddbPersist.incrementCount(req.headers.host, req.query.color, function (err) {
       console.log('Incrementing count for ' + req.query.color);
       if (err) {
@@ -136,6 +141,7 @@ app.get('/increment', function (req, res) {
         sendJsonResponse(res, {count: data.getCount(req.query.color)});
       });
     });
+    /*jshint +W101 */
   });
 });
 
