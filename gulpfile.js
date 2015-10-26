@@ -127,7 +127,7 @@ gulp.task('app:serve', function() {
   gulp.watch(['public/*'], function (file) {
     server.notify.apply(server, [file]);
   });
-  gulp.watch(['app.js', 'lib/*.js'], function() {
+  gulp.watch(['app.js', 'lib/*.js', 'dev-lib/sha.js'], function() {
     server.start.apply(server);
   });
 });
