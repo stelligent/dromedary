@@ -120,8 +120,13 @@ function chartHandler () {
 
   $('#myChart').click(function(evt) {
     var activePoints = myPieChart.getSegmentsAtEvent(evt);
-    var colorToInc = activePoints[0].label.toLowerCase();
-    var incUrl = '/increment?color=' + colorToInc;
+    var colorToInc;
+    var incUrl;
+    if (activePoints.length < 1 || ! activePoints[0].hasOwnProperty('label')) {
+      return;
+    }
+    colorToInc = activePoints[0].label.toLowerCase();
+    incUrl = '/increment?color=' + colorToInc;
     $.getJSON(incUrl, {}, function(data, status, xhr) {
       console.log('Color increment GET status: ' + status);
       if (status !== 'success') {
