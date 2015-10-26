@@ -3,6 +3,7 @@ var bg          = require('gulp-bg');
 var download    = require('gulp-download');
 var gzip        = require('gulp-gzip');
 var gunzip      = require('gulp-gunzip');
+var jshint      = require('gulp-jshint');
 var gls         = require('gulp-live-server');
 var install     = require('gulp-install');
 var mocha       = require('gulp-mocha');
@@ -28,6 +29,14 @@ gulp.task('clean', function (cb) {
 gulp.task('test', function () {
   return gulp.src('test/*.js', {read: false})
              .pipe(mocha({reporter: 'spec'}));
+});
+
+// JSHint
+gulp.task('lint', function() {
+  return gulp.src(['./app.js', './lib/*.js'])
+             .pipe(jshint())
+             .pipe(jshint.reporter('default', { verbose: true }))
+             .pipe(jshint.reporter('fail'));
 });
 
 // Copy dromedary app to cookbooks/dromedary/files/default/app
