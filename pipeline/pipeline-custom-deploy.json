@@ -76,6 +76,25 @@
                         "ProjectName": "unit-test"
                     }, 
                     "runOrder": 1
+                },
+                {
+                    "inputArtifacts": [
+                        {
+                            "name": "DromedarySource"
+                        }
+                    ], 
+                    "name": "StaticCodeAnalysis", 
+                    "actionTypeId": {
+                        "category": "Test", 
+                        "owner": "Custom", 
+                        "version": "1", 
+                        "provider": "DromedaryJenkins"
+                    }, 
+                    "outputArtifacts": [], 
+                    "configuration": {
+                        "ProjectName": "static-code-analysis"
+                    }, 
+                    "runOrder": 1
                 } 
             ]
         }, 
