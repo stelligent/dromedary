@@ -10,17 +10,6 @@ function chartHandler () {
   var colorCounts = {};
   var colors = [];
 
-  function updateLastApi(url, xhr) {
-    return;
-    var urlHtml = '<p><strong>' + location.protocol + '//' + location.host +
-      url + '</span></strong></p>\n';
-    var responseHtml = '<pre style="white-space: pre-wrap;">' +
-      xhr.getAllResponseHeaders() + '\n' + xhr.responseText + '</pre>\n';
-
-    lastApiHtml = urlHtml + responseHtml + lastApiHtml;
-    document.getElementById('lastApiResponses').innerHTML = lastApiHtml;
-  }
-
   function updateLastApiMessage(message) {
     var d = new Date();
     lastApiHtml = '<li><span class="timestamp">' + d.toDateString() + ' ' +
@@ -50,7 +39,7 @@ function chartHandler () {
 
   function incrementColorViaColorCounts(colorToInc) {
     var incUrl = '/increment?color=' + colorToInc;
-    $.getJSON(incUrl, {}, function(data, status, xhr) {
+    $.getJSON(incUrl, {}, function(data, status) {
       var segment;
       var segmentColor;
       var segmentIndex;
@@ -63,7 +52,6 @@ function chartHandler () {
         updateLastApiMessage('Vote for ' + colorToInc +
             ' failed: ' + data.error);
       } else if (data.hasOwnProperty('count') && data.count > 0) {
-        updateLastApi('/increment?color=' + colorToInc, xhr);
         colorCounts[colorToInc].value = data.count;
         for (segmentIndex in myPieChart.segments) {
           segment = myPieChart.segments[segmentIndex];
@@ -81,17 +69,16 @@ function chartHandler () {
 
   $.ajaxSetup({ timeout: 750 });
 
-  $.getJSON('/sha', {}, function(data, status, xhr) {
+  $.getJSON('/sha', {}, function(data, status) {
     if (status !== 'success' || ! data.hasOwnProperty('sha')) {
       return;
     }
     commitSha = data.sha;
     document.getElementById('gitCommitSha').innerHTML = commitSha;
-    updateLastApi('/sha', xhr);
     updateLastApiMessage('Build version is ' + commitSha);
   });
 
-  $.getJSON('/data', {}, function(data, status, xhr) {
+  $.getJSON('/data', {}, function(data, status) {
     var i;
     // console.log('Chart data GET status: ' + status);
     // console.log('Chart data GET: ' + JSON.stringify(data));
@@ -100,7 +87,6 @@ function chartHandler () {
       return;
     }
     myPieChart = new Chart(ctx).Pie(data);
-    updateLastApi('/data', xhr);
     updateLastApiMessage('Initial chart data received');
 
     for (i = 0; i < data.length; i++) {
@@ -127,13 +113,12 @@ function chartHandler () {
     }
     colorToInc = activePoints[0].label.toLowerCase();
     incUrl = '/increment?color=' + colorToInc;
-    $.getJSON(incUrl, {}, function(data, status, xhr) {
+    $.getJSON(incUrl, {}, function(data, status) {
       console.log('Color increment GET status: ' + status);
       if (status !== 'success') {
         console.log('Failed to fetch /increment?color=' + colorToInc);
         return;
       }
-      updateLastApi('/increment?color=' + colorToInc, xhr);
       if (data.hasOwnProperty('error')) {
         console.log('/increment error: ' + data.error);
         updateLastApiMessage('Vote for ' + colorToInc +
@@ -152,7 +137,7 @@ function chartHandler () {
     if (!myPieChart.hasOwnProperty('segments')) {
       return;
     }
-    $.getJSON('/data?countsOnly=true', {}, function(data, status, xhr) {
+    $.getJSON('/data?countsOnly=true', {}, function(data, status) {
       var segment;
       var segmentIndex;
       var color;
@@ -177,7 +162,6 @@ function chartHandler () {
         colorCounts[color].value = data[color];
       }
       if (doUpdate) {
-        updateLastApi('/data?countsOnly=true', xhr);
         updateLastApiMessage('New color counts received from backend');
         updateChart = true;
       }
