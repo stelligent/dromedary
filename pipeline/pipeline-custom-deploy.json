@@ -1,61 +1,61 @@
 {
-    "name": "DromedaryPipelineName", 
+    "name": "DromedaryPipelineName",
     "version": 10,
-    "roleArn": "arn:aws:iam::123456789012:role/AWS-CodePipeline-Service", 
+    "roleArn": "arn:aws:iam::123456789012:role/AWS-CodePipeline-Service",
     "artifactStore": {
-        "type": "S3", 
+        "type": "S3",
         "location": "codepipeline-us-east-1-XXXXXXXXXXX"
-    }, 
+    },
     "stages": [
         {
-            "name": "Source", 
+            "name": "Source",
             "actions": [
                 {
-                    "inputArtifacts": [], 
-                    "name": "Source", 
+                    "inputArtifacts": [],
+                    "name": "Source",
                     "actionTypeId": {
-                        "category": "Source", 
-                        "owner": "AWS", 
-                        "version": "1", 
+                        "category": "Source",
+                        "owner": "AWS",
+                        "version": "1",
                         "provider": "S3"
-                    }, 
+                    },
                     "outputArtifacts": [
                         {
                             "name": "DromedarySource"
                         }
-                    ], 
+                    ],
                     "configuration": {
-                        "S3Bucket": "codepipeline-dromedary-test", 
+                        "S3Bucket": "codepipeline-dromedary-test",
                         "S3ObjectKey": "source/object.zip"
-                    }, 
+                    },
                     "runOrder": 1
                 }
             ]
-        }, 
+        },
         {
-            "name": "Commit", 
+            "name": "Commit",
             "actions": [
                 {
                     "inputArtifacts": [
                         {
                             "name": "DromedarySource"
                         }
-                    ], 
-                    "name": "Build", 
+                    ],
+                    "name": "Build",
                     "actionTypeId": {
-                        "category": "Build", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Build",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
+                    },
                     "outputArtifacts": [
                         {
                             "name": "DromedaryBuild"
                         }
-                    ], 
+                    ],
                     "configuration": {
                         "ProjectName": "build"
-                    }, 
+                    },
                     "runOrder": 1
                 },
                 {
@@ -63,18 +63,18 @@
                         {
                             "name": "DromedarySource"
                         }
-                    ], 
-                    "name": "UnitTest", 
+                    ],
+                    "name": "UnitTest",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
-                    "outputArtifacts": [], 
+                    },
+                    "outputArtifacts": [],
                     "configuration": {
                         "ProjectName": "unit-test"
-                    }, 
+                    },
                     "runOrder": 1
                 },
                 {
@@ -82,69 +82,69 @@
                         {
                             "name": "DromedarySource"
                         }
-                    ], 
-                    "name": "StaticCodeAnalysis", 
+                    ],
+                    "name": "StaticCodeAnalysis",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
-                    "outputArtifacts": [], 
+                    },
+                    "outputArtifacts": [],
                     "configuration": {
                         "ProjectName": "static-code-analysis"
-                    }, 
+                    },
                     "runOrder": 1
-                } 
+                }
             ]
-        }, 
+        },
         {
-            "name": "Acceptance", 
+            "name": "Acceptance",
             "actions": [
                 {
                     "inputArtifacts": [
                         {
                             "name": "DromedaryBuild"
                         }
-                    ], 
-                    "name": "CreateEnvironment", 
+                    ],
+                    "name": "CreateEnvironment",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
+                    },
                     "outputArtifacts": [
                         {
                             "name": "DromedaryCreate"
                         }
-                    ], 
+                    ],
                     "configuration": {
                         "ProjectName": "create-environment"
-                    }, 
+                    },
                     "runOrder": 1
-                }, 
+                },
                 {
                     "inputArtifacts": [
                         {
                             "name": "DromedaryCreate"
                         }
-                    ], 
-                    "name": "AcceptanceTest", 
+                    ],
+                    "name": "AcceptanceTest",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
+                    },
                     "outputArtifacts": [
                         {
                             "name": "DromedaryAccepted"
                         }
-                    ], 
+                    ],
                     "configuration": {
                         "ProjectName": "acceptance-test"
-                    }, 
+                    },
                     "runOrder": 2
                 },
                 {
@@ -152,46 +152,46 @@
                         {
                             "name": "DromedaryCreate"
                         }
-                    ], 
-                    "name": "InfrastructureTest", 
+                    ],
+                    "name": "InfrastructureTest",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
+                    },
                     "outputArtifacts": [
                         {
                             "name": "DromedaryInfra"
                         }
-                    ], 
+                    ],
                     "configuration": {
                         "ProjectName": "infra-test"
-                    }, 
+                    },
                     "runOrder": 2
                 }
             ]
-        }, 
+        },
         {
-            "name": "Production", 
+            "name": "Production",
             "actions": [
                 {
                     "inputArtifacts": [
                         {
                             "name": "DromedaryAccepted"
                         }
-                    ], 
-                    "name": "PromoteEnvironment", 
+                    ],
+                    "name": "PromoteEnvironment",
                     "actionTypeId": {
-                        "category": "Test", 
-                        "owner": "Custom", 
-                        "version": "1", 
+                        "category": "Test",
+                        "owner": "Custom",
+                        "version": "1",
                         "provider": "DromedaryJenkins"
-                    }, 
-                    "outputArtifacts": [], 
+                    },
+                    "outputArtifacts": [],
                     "configuration": {
                         "ProjectName": "promote-environment"
-                    }, 
+                    },
                     "runOrder": 1
                 }
             ]
