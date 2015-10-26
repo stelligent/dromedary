@@ -32,11 +32,23 @@ gulp.task('test', function () {
 });
 
 // JSHint
-gulp.task('lint', function() {
+gulp.task('lint-app', function() {
   return gulp.src(['./app.js', './lib/*.js'])
              .pipe(jshint())
              .pipe(jshint.reporter('default', { verbose: true }))
              .pipe(jshint.reporter('fail'));
+});
+gulp.task('lint-charthandler', function() {
+  return gulp.src('public/charthandler.js')
+             .pipe(jshint({ 'globals': { Chart: true }}))
+             .pipe(jshint.reporter('default', { verbose: true }))
+             .pipe(jshint.reporter('fail'));
+});
+gulp.task('lint', function(callback) {
+  runSequence(
+    ['lint-app', 'lint-charthandler'],
+    callback
+  );
 });
 
 // Copy dromedary app to cookbooks/dromedary/files/default/app
