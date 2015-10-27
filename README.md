@@ -36,10 +36,7 @@ details that go against best practices!
 You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) to start.
 
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
-not necessarily need to be publicly available and a registered domain3](https://aws.amazon.com/route53/). This
-hosted zone does not necessarily need to be publicly available and a registered
-domain3](https://aws.amazon.com/route53/). This hosted zone does not necessarily need to be publicly available
-and a registered domain.
+not necessarily need to be publicly available and a registered domain.
 
 After cloning the repo, run the bootstrap script to create the environment in which Dromedary will be
 deployed:
