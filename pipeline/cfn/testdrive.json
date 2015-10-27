@@ -1,0 +1,58 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Dromedary demo - AWS Test Drive deployment",
+
+    "Parameters": {
+        "DromedaryRepo": {
+            "Type": "String",
+            "Description": "The Github https address to the public dromedary repository.",
+            "Default": "https://github.com/stelligent/dromedary.git"
+        },
+        "ProdHostedZone": {
+            "Type": "String",
+            "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
+            "Default": ""
+        },
+        "AliveDuration": {
+            "Type": "String",
+            "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 2h, etc)",
+            "Default": "4h"
+        }
+    },
+
+    "Mappings": {
+        "RegionConfig": {
+            "us-east-1": {
+                "ami": "ami-a3603dc6"
+            }
+        }
+    },
+
+    "Resources": {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+            "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
+            "InstanceType": "t2.micro",
+            "IamInstanceProfile": { "Ref": "InstanceProfile" },
+            "KeyName": { "Ref": "AWS::NoValue" },
+            "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
+                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
+            "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
+                    "#!/bin/bash -xe\n",
+                    "git clone ",
+                        {"Ref": "DromedaryRepo"},
+                    " /opt/dromedary\n",
+                    "/opt/dromedary/bootstrap-all.sh ",
+                      {"Ref": "ProdHostedZone"},
+                    "\n",
+                    "sleep ",
+                      {"Ref": "AliveDuration"},
+                    "\n",
+                    "/opt/dromedary/delete-all.sh\n",
+                    "aws cloudformation delete-stack --stack-name ",
+                        { "Ref": "AWS::StackName" },
+                    "\n"
+                ]]}}
+        }
+    }
+}
