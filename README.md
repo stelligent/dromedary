@@ -57,7 +57,8 @@ You can either use the aws-cli or the web console to launch a new cloudformation
 ```
 aws cloudformation create-stack \
 	--stack-name Dromedary-bootstrap \
-	--template-body https://github.com/stelligent/dromedary/blob/master/pipeline/testdrive.json \
+	--template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json \
+	--capabilities CAPABILITY_IAM \
 	--parameters \
 		ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
 		ParameterKey=AliveDuration,ParameterValue=4h \
