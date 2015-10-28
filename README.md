@@ -59,9 +59,9 @@ aws cloudformation create-stack \
 	--stack-name Dromedary-bootstrap \
 	--template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json \
 	--capabilities CAPABILITY_IAM \
-	--parameters \
-		ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
+	--parameters ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
 		ParameterKey=AliveDuration,ParameterValue=4h \
+		ParameterKey=Ec2SshKeyName,ParameterValue=YOUR.KEYPAIR
 		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
 ```
 
@@ -72,6 +72,7 @@ Parameters | Description
 DromedaryRepo  | The Github https address to the public dromedary repository.
 AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
+Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
 
 **AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. You will need to manually delete the CloudFormation stack after self-termination.
 
