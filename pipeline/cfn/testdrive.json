@@ -8,17 +8,20 @@
             "Description": "The Github https address to the public dromedary repository.",
             "Default": "https://github.com/stelligent/dromedary.git"
         },
+
         "ProdHostedZone": {
             "Type": "String",
             "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
             "AllowedPattern": "^.*?\\..*?\\..*$"
         },
+
         "AliveDuration": {
             "Type": "String",
             "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)",
             "Default": "4h",
             "AllowedPattern": "[0-9]+(m|h)"
         },
+        
         "Ec2SshKeyName": {
             "Type": "AWS::EC2::KeyPair::KeyName",
             "Description": "The ec2 key name to use for ssh access to the bootstrapping instance."
