@@ -3,32 +3,11 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties>
-    <EnvInjectJobProperty plugin="envinject@1.91.4">
-      <info>
-        <propertiesContent>DROMEDARY_S3_BUCKET=S3BUCKET_PLACEHOLDER
-DROMEDARY_VPC_STACK=VPC_PLACEHOLDER
-DROMEDARY_IAM_STACK=IAM_PLACEHOLDER
-DROMEDARY_DDB_STACK=DDB_PLACEHOLDER
-DROMEDARY_ENI_STACK=ENI_PLACEHOLDER
-DROMEDARY_EC2_KEY=KEY_PLACEHOLDER
-DROMEDARY_HOSTNAME=HOSTNAME_PLACEHOLDER
-DROMEDARY_DOMAINNAME=DOMAINNAME_PLACEHOLDER
-DROMEDARY_ZONE_ID=ZONE_ID_PLACEHOLDER
-DROMEDARY_ACTION_PROVIDER=ACTION_PROVIDER_PLACEHOLDER</propertiesContent>
-        <loadFilesFromMaster>false</loadFilesFromMaster>
-      </info>
-      <on>true</on>
-      <keepJenkinsSystemVariables>true</keepJenkinsSystemVariables>
-      <keepBuildVariables>true</keepBuildVariables>
-      <overrideBuildParameters>false</overrideBuildParameters>
-      <contributors/>
-    </EnvInjectJobProperty>
-  </properties>
+  <properties />
   <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.6">
     <clearWorkspace>true</clearWorkspace>
-    <projectName>build</projectName>
-    <actionTypeCategory>Build</actionTypeCategory>
+    <projectName>drom-promote-env</projectName>
+    <actionTypeCategory>Test</actionTypeCategory>
     <actionTypeProvider>DromedaryJenkins</actionTypeProvider>
     <actionTypeVersion>1</actionTypeVersion>
     <region>us-east-1</region>
@@ -51,16 +30,12 @@ DROMEDARY_ACTION_PROVIDER=ACTION_PROVIDER_PLACEHOLDER</propertiesContent>
   <concurrentBuild>true</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bash ./pipeline/jobs/scripts/build.sh</command>
+      <command>bash ./pipeline/jobs/scripts/drom-promote-env.sh</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
     <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher plugin="codepipeline@0.6">
-      <buildOutputs>
-        <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
-          <outputString></outputString>
-        </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
-      </buildOutputs>
+      <buildOutputs />
       <awsClientFactory/>
     </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher>
   </publishers>

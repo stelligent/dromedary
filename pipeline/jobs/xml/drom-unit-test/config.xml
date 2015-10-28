@@ -3,10 +3,10 @@
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties />
+  <properties/>
   <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.6">
     <clearWorkspace>true</clearWorkspace>
-    <projectName>acceptance-test</projectName>
+    <projectName>drom-unit-test</projectName>
     <actionTypeCategory>Test</actionTypeCategory>
     <actionTypeProvider>DromedaryJenkins</actionTypeProvider>
     <actionTypeVersion>1</actionTypeVersion>
@@ -30,16 +30,12 @@
   <concurrentBuild>true</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bash ./pipeline/jobs/scripts/acceptance-test.sh</command>
+      <command>bash ./pipeline/jobs/scripts/drom-unit-test.sh</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
     <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher plugin="codepipeline@0.6">
-      <buildOutputs>
-        <com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
-          <outputString></outputString>
-        </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple>
-      </buildOutputs>
+      <buildOutputs/>
       <awsClientFactory/>
     </com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher>
   </publishers>
