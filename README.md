@@ -72,6 +72,8 @@ DromedaryRepo  | The Github https address to the public dromedary repository.
 AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
 
+**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration.
+
 #### Post-bootstrap steps
 
 After the bootstrap script completes, you'll need to make one manual update to the CodePipeline it created:
