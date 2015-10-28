@@ -74,7 +74,7 @@ AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
 Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
 
-**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. You will need to manually delete the CloudFormation stack after self-termination.
+**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. **IMPORTANT**: You will need to manually delete the CloudFormation stack after self-termination.
 
 #### Post-bootstrap steps
 
