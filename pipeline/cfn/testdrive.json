@@ -21,7 +21,7 @@
             "Default": "4h",
             "AllowedPattern": "[0-9]+(m|h)"
         },
-        
+
         "Ec2SshKeyName": {
             "Type": "AWS::EC2::KeyPair::KeyName",
             "Description": "The ec2 key name to use for ssh access to the bootstrapping instance."
@@ -159,7 +159,7 @@
                          { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
                 "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
                         "#!/bin/bash -xe\n",
-                        "yum install -y git jq\n",
+                        "yum install -y git\n",
                         "git clone ",
                             {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
