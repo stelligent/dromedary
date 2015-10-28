@@ -1,0 +1,183 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Dromedary demo - AWS Test Drive deployment",
+
+    "Parameters": {
+        "DromedaryRepo": {
+            "Type": "String",
+            "Description": "The Github https address to the public dromedary repository.",
+            "Default": "https://github.com/stelligent/dromedary.git"
+        },
+
+        "ProdHostedZone": {
+            "Type": "String",
+            "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
+            "AllowedPattern": "^.*?\\..*?\\..*$"
+        },
+
+        "AliveDuration": {
+            "Type": "String",
+            "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)",
+            "Default": "4h",
+            "AllowedPattern": "[0-9]+(m|h)"
+        },
+
+        "Ec2SshKeyName": {
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "Description": "The ec2 key name to use for ssh access to the bootstrapping instance."
+        }
+    },
+
+    "Mappings": {
+        "RegionConfig": {
+            "us-east-1": {
+                "ami": "ami-e3106686"
+            }
+        }
+    },
+
+    "Resources": {
+        "BootstrapVPC": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/16",
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapSubnet": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "CidrBlock": "10.0.0.0/24",
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapRouteTable" : {
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "VpcId" : { "Ref" : "BootstrapVPC" },
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                             { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapRoute" : {
+            "Type" : "AWS::EC2::Route",
+            "Properties" : {
+                "RouteTableId" : { "Ref" : "BootstrapRouteTable" },
+                "DestinationCidrBlock" : "0.0.0.0/0",
+                "GatewayId" : { "Ref" : "InternetGateway" }
+            }
+        },
+
+        "PublicSubnetRouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "SubnetId" : { "Ref" : "BootstrapSubnet" },
+                "RouteTableId" : { "Ref" : "BootstrapRouteTable" }
+            }
+        },
+
+        "BootstrapInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": { "Service": [ "ec2.amazonaws.com" ]},
+                        "Action": [ "sts:AssumeRole" ]
+                    }]
+                },
+                "Path": "/",
+                "Policies": [{
+                    "PolicyName": "AllowAll",
+                    "PolicyDocument": {
+                        "Statement": [{
+                            "Effect": "Allow",
+                            "Action": "*",
+                            "Resource": "*"
+                        }]
+                    }
+                }]
+            }
+        },
+
+        "BootstrapSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "GroupDescription": "Open SSH port",
+                "SecurityGroupIngress": [
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0" }
+                ]
+            }
+        },
+
+        "BootstrapInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [{ "Ref": "BootstrapInstanceRole" }]
+            }
+        },
+
+        "InternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "AttachGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "InternetGatewayId": { "Ref": "InternetGateway" }
+            }
+        },
+
+        "BootstrapInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
+                "InstanceType": "t2.micro",
+                "IamInstanceProfile": { "Ref": "BootstrapInstanceProfile" },
+                "KeyName": {"Ref" : "Ec2SshKeyName"},
+                "NetworkInterfaces" : [{
+                     "AssociatePublicIpAddress" : "True",
+                     "DeleteOnTermination" : "True",
+                     "SubnetId" : {"Ref" : "BootstrapSubnet"},
+                     "DeviceIndex" : "0",
+                     "GroupSet" : [{ "Ref": "BootstrapSecurityGroup" }]
+                }],
+                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
+                         { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
+                "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
+                        "#!/bin/bash -xe\n",
+                        "yum install -y git\n",
+                        "git clone ",
+                            {"Ref": "DromedaryRepo"},
+                        " /opt/dromedary\n",
+                        "export AWS_DEFAULT_REGION=", 
+                            { "Ref": "AWS::Region" }, 
+                        "\n",
+                        "cd /opt/dromedary\n",
+                        "./bin/bootstrap-all.sh ",
+                          {"Ref": "ProdHostedZone"},
+                        "\n",
+                        "sleep ",
+                          {"Ref": "AliveDuration"},
+                        "\n",
+                        "yes | ./bin/delete-all.sh && aws cloudformation delete-stack --stack-name ",
+                            { "Ref": "AWS::StackName" },
+                        "\n"
+                    ]]}}
+            }
+        }
+    }
+}

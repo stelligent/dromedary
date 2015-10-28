@@ -33,13 +33,12 @@ up Dromedary resources after you are done to minimize charges
 best practices in highly available nor highly secure deployments in AWS.
 details that go against best practices!
 
+#### Manual Bootstrapping
+
 You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) to start.
 
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
-not necessarily need to be publicly available and a registered domain3](https://aws.amazon.com/route53/). This
-hosted zone does not necessarily need to be publicly available and a registered
-domain3](https://aws.amazon.com/route53/). This hosted zone does not necessarily need to be publicly available
-and a registered domain.
+not necessarily need to be publicly available and a registered domain.
 
 After cloning the repo, run the bootstrap script to create the environment in which Dromedary will be
 deployed:
@@ -50,6 +49,34 @@ deployed:
 
 The bootstrap script requires a hostname to be passed as argument. This hostname represents the "production"
 host which will be updated at the last step of the pipeline.
+
+#### CloudFormation Bootstrapping (e.g. for AWS Test Drive)
+
+You can either use the aws-cli or the web console to launch a new cloudformation stack. This example shows how to use the CLI.
+
+```
+aws cloudformation create-stack \
+	--stack-name Dromedary-bootstrap \
+	--template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json \
+	--capabilities CAPABILITY_IAM \
+	--parameters ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
+		ParameterKey=AliveDuration,ParameterValue=4h \
+		ParameterKey=Ec2SshKeyName,ParameterValue=YOUR.KEYPAIR
+		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
+```
+
+In the above example, you'll need to set the PRODHOST.HOSTED.ZONE value to your Route53 hosted zone.
+
+Parameters | Description
+---------- | ------------
+DromedaryRepo  | The Github https address to the public dromedary repository.
+AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
+ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
+Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
+
+**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. You will need to manually delete the CloudFormation stack after self-termination.
+
+#### Post-bootstrap steps
 
 After the bootstrap script completes, you'll need to make one manual update to the CodePipeline it created:
 
@@ -74,13 +101,16 @@ address. The ip address can be queried by viewing the EIP output of the eni Clou
 
 Every time changes are pushed to Github, CodePipeline will test and deploy those changes.
 
-To delete (nearly) all Dromedary resources, execute the delete script:
+#### Manual Cleanup
+For manually bootstrapped builds, to delete (nearly) all Dromedary resources, execute the delete script:
 
 ```
 ./bin/delete-all.sh
 ```
 
 The only resources that remain and require manual deletion is the Dromedary S3 bucket.
+
+Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout. You will need to manually delete the CloudFormation stack.
 
 ### Running Locally :dromedary_camel:
 
