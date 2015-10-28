@@ -73,7 +73,7 @@ DromedaryRepo  | The Github https address to the public dromedary repository.
 AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
 
-**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration.
+**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. You will need to manually delete the CloudFormation stack after self-termination.
 
 #### Post-bootstrap steps
 
@@ -109,7 +109,7 @@ For manually bootstrapped builds, to delete (nearly) all Dromedary resources, ex
 
 The only resources that remain and require manual deletion is the Dromedary S3 bucket.
 
-Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout.
+Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout. You will need to manually delete the CloudFormation stack.
 
 ### Running Locally :dromedary_camel:
 
