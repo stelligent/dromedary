@@ -18,6 +18,10 @@
             "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)",
             "Default": "4h",
             "AllowedPattern": "[0-9]+(m|h)"
+        },
+        "Ec2SshKeyName": {
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "Description": "The ec2 key name to use for ssh access to the bootstrapping instance.",
         }
     },
 
@@ -105,7 +109,7 @@
                 "VpcId": { "Ref": "BootstrapVPC" },
                 "GroupDescription": "Open SSH port",
                 "SecurityGroupIngress": [
-                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "10.0.0.0/16" }
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "0.0.0.0/0" }
                 ]
             }
         },
@@ -140,7 +144,7 @@
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.micro",
                 "IamInstanceProfile": { "Ref": "BootstrapInstanceProfile" },
-                "KeyName": {"Ref" : "AWS::NoValue"},
+                "KeyName": {"Ref" : "Ec2SshKeyName"},
                 "NetworkInterfaces" : [{
                      "AssociatePublicIpAddress" : "True",
                      "DeleteOnTermination" : "True",
@@ -171,8 +175,7 @@
                         "sleep ",
                           {"Ref": "AliveDuration"},
                         "\n",
-                        "yes | ./bin/delete-all.sh\n",
-                        "aws cloudformation delete-stack --stack-name ",
+                        "yes | ./bin/delete-all.sh && aws cloudformation delete-stack --stack-name ",
                             { "Ref": "AWS::StackName" },
                         "\n"
                     ]]}}
