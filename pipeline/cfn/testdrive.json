@@ -11,48 +11,172 @@
         "ProdHostedZone": {
             "Type": "String",
             "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
-            "Default": ""
+            "AllowedPattern": "^.*?\\..*?\\..*$"
         },
         "AliveDuration": {
             "Type": "String",
-            "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 2h, etc)",
-            "Default": "4h"
+            "Description": "Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)",
+            "Default": "4h",
+            "AllowedPattern": "[0-9]+(m|h)"
         }
     },
 
     "Mappings": {
         "RegionConfig": {
             "us-east-1": {
-                "ami": "ami-a3603dc6"
+                "ami": "ami-e3106686"
             }
         }
     },
 
     "Resources": {
-        "Type": "AWS::EC2::Instance",
-        "Properties": {
-            "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
-            "InstanceType": "t2.micro",
-            "IamInstanceProfile": { "Ref": "InstanceProfile" },
-            "KeyName": { "Ref": "AWS::NoValue" },
-            "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
-                     { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
-            "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
-                    "#!/bin/bash -xe\n",
-                    "git clone ",
-                        {"Ref": "DromedaryRepo"},
-                    " /opt/dromedary\n",
-                    "/opt/dromedary/bootstrap-all.sh ",
-                      {"Ref": "ProdHostedZone"},
-                    "\n",
-                    "sleep ",
-                      {"Ref": "AliveDuration"},
-                    "\n",
-                    "/opt/dromedary/delete-all.sh\n",
-                    "aws cloudformation delete-stack --stack-name ",
-                        { "Ref": "AWS::StackName" },
-                    "\n"
-                ]]}}
+        "BootstrapVPC": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/16",
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapSubnet": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "CidrBlock": "10.0.0.0/24",
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapRouteTable" : {
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "VpcId" : { "Ref" : "BootstrapVPC" },
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                             { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "BootstrapRoute" : {
+            "Type" : "AWS::EC2::Route",
+            "Properties" : {
+                "RouteTableId" : { "Ref" : "BootstrapRouteTable" },
+                "DestinationCidrBlock" : "0.0.0.0/0",
+                "GatewayId" : { "Ref" : "InternetGateway" }
+            }
+        },
+
+        "PublicSubnetRouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+                "SubnetId" : { "Ref" : "BootstrapSubnet" },
+                "RouteTableId" : { "Ref" : "BootstrapRouteTable" }
+            }
+        },
+
+        "BootstrapInstanceRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": { "Service": [ "ec2.amazonaws.com" ]},
+                        "Action": [ "sts:AssumeRole" ]
+                    }]
+                },
+                "Path": "/",
+                "Policies": [{
+                    "PolicyName": "AllowAll",
+                    "PolicyDocument": {
+                        "Statement": [{
+                            "Effect": "Allow",
+                            "Action": "*",
+                            "Resource": "*"
+                        }]
+                    }
+                }]
+            }
+        },
+
+        "BootstrapSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "GroupDescription": "Open SSH port",
+                "SecurityGroupIngress": [
+                    { "IpProtocol": "tcp", "FromPort": "22", "ToPort": "22", "CidrIp": "10.0.0.0/16" }
+                ]
+            }
+        },
+
+        "BootstrapInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [{ "Ref": "BootstrapInstanceRole" }]
+            }
+        },
+
+        "InternetGateway": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [{ "Key": "Name", "Value": { "Ref": "AWS::StackName" } },
+                         { "Key": "Application", "Value": { "Ref": "AWS::StackId" } }]
+            }
+        },
+
+        "AttachGateway": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": { "Ref": "BootstrapVPC" },
+                "InternetGatewayId": { "Ref": "InternetGateway" }
+            }
+        },
+
+        "BootstrapInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
+                "InstanceType": "t2.micro",
+                "IamInstanceProfile": { "Ref": "BootstrapInstanceProfile" },
+                "KeyName": {"Ref" : "AWS::NoValue"},
+                "NetworkInterfaces" : [{
+                     "AssociatePublicIpAddress" : "True",
+                     "DeleteOnTermination" : "True",
+                     "SubnetId" : {"Ref" : "BootstrapSubnet"},
+                     "DeviceIndex" : "0",
+                     "GroupSet" : [{ "Ref": "BootstrapSecurityGroup" }]
+                }],
+                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
+                         { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
+                "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
+                        "#!/bin/bash -xe\n",
+                        "yum install -y git jq\n",
+                        "git clone ",
+                            {"Ref": "DromedaryRepo"},
+                        " /opt/dromedary\n",
+                        "aws sts assume-role --role-arn ",
+                            {"Fn::GetAtt": ["BootstrapInstanceRole", "Arn"]},
+                        " --role-session-name bootstrap > creds.json\n",
+                        "export AWS_DEFAULT_REGION=\"us-east-1\"\n",
+                        "export AWS_DEFAULT_OUTPUT=\"json\"\n",
+                        "export AWS_ACCESS_KEY_ID=`jq -r '.Credentials.AccessKeyId' < creds.json`\n",
+                        "export AWS_SECRET_ACCESS_KEY=`jq -r '.Credentials.SecretAccessKey' < creds.json`\n",
+                        "export AWS_SESSION_TOKEN=`jq -r '.Credentials.SessionToken' < creds.json`\n",
+                        "cd /opt/dromedary\n",
+                        "./bin/bootstrap-all.sh ",
+                          {"Ref": "ProdHostedZone"},
+                        "\n",
+                        "sleep ",
+                          {"Ref": "AliveDuration"},
+                        "\n",
+                        "./bin/delete-all.sh\n",
+                        "aws cloudformation delete-stack --stack-name ",
+                            { "Ref": "AWS::StackName" },
+                        "\n"
+                    ]]}}
+            }
         }
     }
 }
