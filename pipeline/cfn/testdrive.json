@@ -161,7 +161,7 @@
                         "#!/bin/bash -xe\n",
                         "yum install -y git\n",
                         "gem install rspec rspec-expectations\n",
-                        "git clone -b test-drive-tests ",
+                        "git clone -b test-drive-tests",
                             {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
                         "export AWS_DEFAULT_REGION=", 
@@ -171,7 +171,7 @@
                         "./bin/bootstrap-all.sh ",
                           {"Ref": "ProdHostedZone"},
                         "\n",
-                        "cd test-infra/bootstrap\n",
+                        "cd /opt/dromedary/test-infra/bootstrap\n",
                         "ACCOUNT_ID=",
                             {"Ref": "AWS::AccountId"},
                         "\n",
@@ -187,7 +187,7 @@
                             " ENVFILE=/opt/dromedary/environment.sh",
                         " --tags @build --format html --out bootstrap-test.html 2>&1 > /dev/null\n",
                         "echo 'Not run yet.' >> teardown-test.html\n",
-                        "aws s3 cp *.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/\n",
+                        "aws s3 cp *.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
                         "sleep ",
                           {"Ref": "AliveDuration"},
                         "\n",
@@ -203,7 +203,7 @@
                                     { "Ref": "AWS::Region" },
                                 " ENVFILE=/opt/dromedary/environment.sh",
                             " --tags @teardown --format html --out teardown-test.html 2>&1 > /dev/null\n",
-                            "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/\n",
+                            "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
                             "aws cloudformation delete-stack --stack-name ",
                                 { "Ref": "AWS::StackName" },
                             "\n"
@@ -217,7 +217,7 @@
         "BootstrapTestResult": {
             "Description": "The infrastructure test results / logs for the bootstrapping action.",
             "Value": { "Fn::Join": ["", [
-                "s3://dromedary-",
+                "https://s3.amazonaws.com/dromedary-",
                 {"Ref": "AWS::AccountId"},
                 "/tests/bootstrap/bootstrap-test.html"
             ]] }
@@ -226,7 +226,7 @@
         "TeardownTestResult": {
             "Description": "The infrastructure test results / logs for the automated bootstrap teardown action.",
             "Value": { "Fn::Join": ["", [
-                "s3://dromedary-",
+                "https://s3.amazonaws.com/dromedary-",
                 {"Ref": "AWS::AccountId"},
                 "/tests/bootstrap/teardown-test.html"
             ]] }
