@@ -160,8 +160,8 @@
                 "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
                         "#!/bin/bash -xe\n",
                         "yum install -y git\n",
-                        "gem install rspec rspec-expectations\n",
-                        "git clone -b test-drive-tests",
+                        "gem install cucumber aws-sdk rspec rspec-expectations\n",
+                        "git clone -b test-drive-tests ",
                             {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
                         "export AWS_DEFAULT_REGION=", 
@@ -175,7 +175,7 @@
                         "ACCOUNT_ID=",
                             {"Ref": "AWS::AccountId"},
                         "\n",
-                        "cucumber",
+                        "/usr/local/bin/cucumber",
                             " ACCTID=",
                                 "$ACCOUNT_ID",
                             " PROD=",
@@ -194,7 +194,7 @@
                         "cd /opt/dromedary\n",
                         "yes | ./bin/delete-all.sh\n",
                         "if [ $? -eq 0 ]; then\n",
-                            "cucumber",
+                            "/usr/local/bin/cucumber",
                                 " PROD=",
                                     "$(echo \"",
                                         {"Ref": "ProdHostedZone"},
@@ -206,7 +206,7 @@
                             "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
                             "aws cloudformation delete-stack --stack-name ",
                                 { "Ref": "AWS::StackName" },
-                            "\n"
+                            "\n",
                         "fi\n"
                     ]]}}
             }

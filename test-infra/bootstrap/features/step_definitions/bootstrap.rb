@@ -4,7 +4,7 @@ require 'aws-sdk'
 
 cfn = Aws::CloudFormation::Client.new
 s3 = Aws::S3::Client.new
-environment_file = "#{ENV["ENVFILE"]}/environment.sh"
+environment_file = "#{ENV["ENVFILE"]}"
 
 Given(/^I am the bootstrapping instance$/) do
   bootstrapper = %x[ec2-metadata | grep bootstrapper]
