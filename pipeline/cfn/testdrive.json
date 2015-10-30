@@ -143,6 +143,36 @@
 
         "BootstrapInstance": {
             "Type": "AWS::EC2::Instance",
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "configSets": {
+                        "validation": ["validate_prodhost"]
+                    },
+                    "validate_prodhost": {
+                        "files": {
+                            "/etc/validation": {
+                                "content": {"Fn::Join": ["", [
+                                    "#!/bin/bash -xe\n",
+                                    "aws route53 list-hosted-zones-by-name",
+                                    " | grep $(echo \"",
+                                        {"Ref": "ProdHostedZone"},
+                                    "\" | cut -d '.' --fields=2,3)\n",
+                                    "exit $?\n"
+                                ]]},
+                                "mode" : "000500",
+                                "owner" : "root",
+                                "group" : "root"
+                            }
+                        },
+                        "commands": {
+                            "01_validate_prodhost": {
+                                "command": "/etc/validation",
+                                "cwd": "/etc"
+                            }
+                        }
+                    }
+                }
+            },
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.micro",
@@ -159,6 +189,15 @@
                          { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
                 "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
                         "#!/bin/bash -xe\n",
+                        "/opt/aws/bin/cfn-init --stack ", 
+                            { "Ref" : "AWS::StackName" },
+                            " --resource BootstrapInstance ",
+                            "--configsets validation",
+                        "\n",
+                        "/opt/aws/bin/cfn-signal --resource BootstrapInstance --exit-code $? --stack ",
+                                {"Ref": "AWS::StackName"},
+                            " --reason \"Invalid Route53 hosted zone provided.\"",
+                        "\n",
                         "yum install -y git\n",
                         "gem install cucumber aws-sdk rspec rspec-expectations\n",
                         "git clone -b test-drive-tests ",
@@ -187,7 +226,8 @@
                             " ENVFILE=/opt/dromedary/environment.sh",
                         " --tags @build --format html --out bootstrap-test.html 2>&1 > /dev/null\n",
                         "echo 'Not run yet.' >> teardown-test.html\n",
-                        "aws s3 cp *.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
+                        "aws s3 cp bootstrap-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
+                        "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
                         "sleep ",
                           {"Ref": "AliveDuration"},
                         "\n",
@@ -209,6 +249,12 @@
                             "\n",
                         "fi\n"
                     ]]}}
+            },
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": 1,
+                    "Timeout": "PT5M"
+                }
             }
         }
     },
