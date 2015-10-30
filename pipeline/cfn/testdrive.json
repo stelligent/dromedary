@@ -9,6 +9,12 @@
             "Default": "https://github.com/stelligent/dromedary.git"
         },
 
+        "Branch": {
+            "Type": "String",
+            "Description": "The Github branch the public dromedary repository.",
+            "Default": "master"
+        },
+
         "ProdHostedZone": {
             "Type": "String",
             "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
@@ -200,8 +206,7 @@
                         "\n",
                         "yum install -y git\n",
                         "gem install cucumber aws-sdk rspec rspec-expectations\n",
-                        "git clone ",
-                            {"Ref": "DromedaryRepo"},
+                        "git clone -b ", { "Ref" : "Branch" }, " ", {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
                         "export AWS_DEFAULT_REGION=", 
                             { "Ref": "AWS::Region" }, 
