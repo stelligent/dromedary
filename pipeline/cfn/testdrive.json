@@ -200,7 +200,7 @@
                         "\n",
                         "yum install -y git\n",
                         "gem install cucumber aws-sdk rspec rspec-expectations\n",
-                        "git clone -b test-drive-tests ",
+                        "git clone ",
                             {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
                         "export AWS_DEFAULT_REGION=", 
