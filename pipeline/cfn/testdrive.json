@@ -9,6 +9,12 @@
             "Default": "https://github.com/stelligent/dromedary.git"
         },
 
+        "Branch": {
+            "Type": "String",
+            "Description": "The Github branch the public dromedary repository.",
+            "Default": "master"
+        },
+
         "ProdHostedZone": {
             "Type": "String",
             "Description": "Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
@@ -143,6 +149,36 @@
 
         "BootstrapInstance": {
             "Type": "AWS::EC2::Instance",
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "configSets": {
+                        "validation": ["validate_prodhost"]
+                    },
+                    "validate_prodhost": {
+                        "files": {
+                            "/etc/validation": {
+                                "content": {"Fn::Join": ["", [
+                                    "#!/bin/bash -xe\n",
+                                    "aws route53 list-hosted-zones-by-name",
+                                    " | grep $(echo \"",
+                                        {"Ref": "ProdHostedZone"},
+                                    "\" | cut -d '.' --fields=2,3)\n",
+                                    "exit $?\n"
+                                ]]},
+                                "mode" : "000500",
+                                "owner" : "root",
+                                "group" : "root"
+                            }
+                        },
+                        "commands": {
+                            "01_validate_prodhost": {
+                                "command": "/etc/validation",
+                                "cwd": "/etc"
+                            }
+                        }
+                    }
+                }
+            },
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
                 "InstanceType": "t2.micro",
@@ -158,10 +194,19 @@
                 "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
                          { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }],
                 "UserData": { "Fn::Base64": { "Fn::Join": [ "", [
-                        "#!/bin/bash -xe\n",
+                        "#!/bin/bash -x\n",
+                        "/opt/aws/bin/cfn-init --stack ", 
+                            { "Ref" : "AWS::StackName" },
+                            " --resource BootstrapInstance ",
+                            "--configsets validation",
+                        "\n",
+                        "/opt/aws/bin/cfn-signal --resource BootstrapInstance --exit-code $? --stack ",
+                                {"Ref": "AWS::StackName"},
+                            " --reason \"Invalid Route53 hosted zone provided.\"",
+                        "\n",
                         "yum install -y git\n",
-                        "git clone ",
-                            {"Ref": "DromedaryRepo"},
+                        "gem install cucumber aws-sdk rspec rspec-expectations\n",
+                        "git clone -b ", { "Ref" : "Branch" }, " ", {"Ref": "DromedaryRepo"},
                         " /opt/dromedary\n",
                         "export AWS_DEFAULT_REGION=", 
                             { "Ref": "AWS::Region" }, 
@@ -170,14 +215,73 @@
                         "./bin/bootstrap-all.sh ",
                           {"Ref": "ProdHostedZone"},
                         "\n",
+                        "cd /opt/dromedary/test-infra/bootstrap\n",
+                        "ACCOUNT_ID=",
+                            {"Ref": "AWS::AccountId"},
+                        "\n",
+                        "/usr/local/bin/cucumber",
+                            " ACCTID=",
+                                "$ACCOUNT_ID",
+                            " PROD=",
+                                "$(echo \"",
+                                    {"Ref": "ProdHostedZone"},
+                                "\" | cut -d '.' -f1)",
+                            " AWS_REGION=",
+                                { "Ref": "AWS::Region" },
+                            " ENVFILE=/opt/dromedary/environment.sh",
+                        " --tags @build --format html --out bootstrap-test.html\n",
+                        "echo 'Not run yet.' >> teardown-test.html\n",
+                        "aws s3 cp bootstrap-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
+                        "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
                         "sleep ",
                           {"Ref": "AliveDuration"},
                         "\n",
-                        "yes | ./bin/delete-all.sh && aws cloudformation delete-stack --stack-name ",
-                            { "Ref": "AWS::StackName" },
-                        "\n"
+                        "cd /opt/dromedary\n",
+                        "yes | ./bin/delete-all.sh\n",
+                        "if [ $? -eq 0 ]; then\n",
+                            "cd /opt/dromedary/test-infra/bootstrap\n",
+                            "/usr/local/bin/cucumber",
+                                " PROD=",
+                                    "$(echo \"",
+                                        {"Ref": "ProdHostedZone"},
+                                    "\" | cut -d '.' -f1)",
+                                " AWS_REGION=",
+                                    { "Ref": "AWS::Region" },
+                                " ENVFILE=/opt/dromedary/environment.sh",
+                            " --tags @teardown --format html --out teardown-test.html\n",
+                            "aws s3 cp teardown-test.html s3://dromedary-$ACCOUNT_ID/tests/bootstrap/ --acl public-read\n",
+                            "aws cloudformation delete-stack --stack-name ",
+                                { "Ref": "AWS::StackName" },
+                            "\n",
+                        "fi\n"
                     ]]}}
+            },
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": 1,
+                    "Timeout": "PT5M"
+                }
             }
+        }
+    },
+
+    "Outputs": {
+        "BootstrapTestResult": {
+            "Description": "The infrastructure test results / logs for the bootstrapping action.",
+            "Value": { "Fn::Join": ["", [
+                "https://s3.amazonaws.com/dromedary-",
+                {"Ref": "AWS::AccountId"},
+                "/tests/bootstrap/bootstrap-test.html"
+            ]] }
+        },
+
+        "TeardownTestResult": {
+            "Description": "The infrastructure test results / logs for the automated bootstrap teardown action.",
+            "Value": { "Fn::Join": ["", [
+                "https://s3.amazonaws.com/dromedary-",
+                {"Ref": "AWS::AccountId"},
+                "/tests/bootstrap/teardown-test.html"
+            ]] }
         }
     }
 }
