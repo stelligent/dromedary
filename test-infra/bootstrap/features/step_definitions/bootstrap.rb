@@ -20,6 +20,10 @@ Then(/^I should see a "([^"]*)" cloudformation stack with status "([^"]*)"$/) do
   expect(stack_status).to eq(arg2)
 end
 
+Then(/^I should not see a "([^"]*)" cloudformation stack$/) do |arg1|
+  expect{cfn.describe_stacks(:stack_name => "#{ENV["PROD"]}-#{arg1}")}.to raise_error(Aws::CloudFormation::Errors::ValidationError)
+end
+
 Then(/^I should no longer have an environment file from the bootstrapper$/) do
   expect(File.file?(environment_file)).to be false
 end
