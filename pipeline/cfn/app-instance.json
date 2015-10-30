@@ -180,7 +180,7 @@
             },
             "Properties": {
                 "ImageId": { "Fn::FindInMap": [ "RegionConfig", { "Ref": "AWS::Region" }, "ami" ]},
-                "InstanceType": "m3.medium",
+                "InstanceType": "m4.large",
                 "IamInstanceProfile": { "Ref": "InstanceProfile" },
                 "KeyName": { "Fn::If": [ "NoEc2Key", { "Ref": "AWS::NoValue" }, { "Ref": "Ec2Key" } ]},
                 "Tags": { "Fn::If": [ "InstallCodeDeploy",
