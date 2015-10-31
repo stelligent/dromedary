@@ -61,6 +61,7 @@ aws cloudformation create-stack \
 	--capabilities CAPABILITY_IAM \
 	--parameters ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
 		ParameterKey=AliveDuration,ParameterValue=4h \
+		ParameterKey=Branch,ParameterValue=master \
 		ParameterKey=Ec2SshKeyName,ParameterValue=YOUR.KEYPAIR
 		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
 ```
