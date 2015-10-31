@@ -70,6 +70,7 @@ In the above example, you'll need to set the PRODHOST.HOSTED.ZONE value to your 
 Parameters | Description
 ---------- | ------------
 DromedaryRepo  | The Github https address to the public dromedary repository.
+Branch | The name of the Github branch.
 AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
 Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
