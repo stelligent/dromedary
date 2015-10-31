@@ -54,7 +54,7 @@
                         }
                     ],
                     "configuration": {
-                        "ProjectName": "build"
+                        "ProjectName": "drom-build"
                     },
                     "runOrder": 1
                 },
@@ -73,7 +73,7 @@
                     },
                     "outputArtifacts": [],
                     "configuration": {
-                        "ProjectName": "unit-test"
+                        "ProjectName": "drom-unit-test"
                     },
                     "runOrder": 1
                 },
@@ -92,7 +92,7 @@
                     },
                     "outputArtifacts": [],
                     "configuration": {
-                        "ProjectName": "static-code-analysis"
+                        "ProjectName": "drom-staticcode-anal"
                     },
                     "runOrder": 1
                 }
@@ -120,7 +120,7 @@
                         }
                     ],
                     "configuration": {
-                        "ProjectName": "create-environment"
+                        "ProjectName": "drom-create-env"
                     },
                     "runOrder": 1
                 },
@@ -143,7 +143,7 @@
                         }
                     ],
                     "configuration": {
-                        "ProjectName": "acceptance-test"
+                        "ProjectName": "drom-acceptance-test"
                     },
                     "runOrder": 2
                 },
@@ -166,7 +166,7 @@
                         }
                     ],
                     "configuration": {
-                        "ProjectName": "infra-test"
+                        "ProjectName": "drom-infra-test"
                     },
                     "runOrder": 2
                 }
@@ -190,7 +190,7 @@
                     },
                     "outputArtifacts": [],
                     "configuration": {
-                        "ProjectName": "promote-environment"
+                        "ProjectName": "drom-promote-env"
                     },
                     "runOrder": 1
                 }

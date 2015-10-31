@@ -26,16 +26,16 @@ pushd $temp_dir > /dev/null
 for f in */config.xml; do
     sed s/DromedaryJenkins/$jenkins_custom_action_provider_name/ $f > $f.new && mv $f.new $f
 done
-sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/DDB_PLACEHOLDER/$dromedary_ddb_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/ENI_PLACEHOLDER/$dromedary_eni_stack_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/KEY_PLACEHOLDER/$dromedary_ec2_key/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
-sed s/ACTION_PROVIDER_PLACEHOLDER/$jenkins_custom_action_provider_name/ build/config.xml > build/config.xml.new && mv build/config.xml.new build/config.xml
+sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/DDB_PLACEHOLDER/$dromedary_ddb_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/ENI_PLACEHOLDER/$dromedary_eni_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/KEY_PLACEHOLDER/$dromedary_ec2_key/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/ACTION_PROVIDER_PLACEHOLDER/$jenkins_custom_action_provider_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 
 tar czf job-configs.tgz *
 aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/$config_tar_path

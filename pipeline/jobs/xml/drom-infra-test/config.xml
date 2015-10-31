@@ -6,7 +6,7 @@
   <properties />
   <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.6">
     <clearWorkspace>true</clearWorkspace>
-    <projectName>infra-test</projectName>
+    <projectName>drom-infra-test</projectName>
     <actionTypeCategory>Test</actionTypeCategory>
     <actionTypeProvider>DromedaryJenkins</actionTypeProvider>
     <actionTypeVersion>1</actionTypeVersion>
@@ -30,7 +30,7 @@
   <concurrentBuild>true</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bash ./pipeline/jobs/scripts/infra-test.sh</command>
+      <command>bash ./pipeline/jobs/scripts/drom-infra-test.sh</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
