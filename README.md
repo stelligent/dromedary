@@ -81,6 +81,22 @@ Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping inst
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
 
+#### Configure Jenkins Security
+
+1. Manage `Jenkins` > `Configure Global Security`
+1. Check `Enable Security`
+1. Click `Jenkins’ own user database`
+1. Check `Allow users to sign up`
+1. Check `Logged in users can do anything`
+1. Click the `Save` button
+1. Click `Sign Up` in the top right to create an account
+1. Save and login as that user
+1. Manage `Jenkins` > `Configure Global Security`
+1. Check `Matrix Based Security`
+1. Add a line for the user you just created 
+1. Check the `Administer` box
+1. Click the `Save` button
+
 #### Post-bootstrap steps
 
 After the bootstrap script completes, you'll need to make one manual update to the CodePipeline it created:
