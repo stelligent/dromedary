@@ -108,6 +108,8 @@ Every time changes are pushed to Github, CodePipeline will test and deploy those
 
 #### Configure Jenkins Security
 
+**IMPORTANT**: It's very important that you enable Jenkins security.
+
 From CodePipeline, click on any of the Actions to launch Jenkins. From Jenkins, perform the following steps to configure security:
 
 1. Manage `Jenkins` > `Configure Global Security`
