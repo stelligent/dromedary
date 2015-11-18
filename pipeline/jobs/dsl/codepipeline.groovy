@@ -20,17 +20,17 @@ jobs.each { currentJob ->
 
         // do we need a blank <awsClientFactory/>?
 
-        (scm).@'class' = 'com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM'
-        (scm).@plugin = 'codepipeline@0.8'
+        //(scm).@'class' = 'com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM'
+        //(scm).@plugin = 'codepipeline@0.8'
        }
      }
     publishers {
-      configure { pub ->
+      configure { job ->
         pub = (job / publishers / "com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher")
-        (pub).@plugin = 'codepipeline@0.8'
+        // (pub).@plugin = 'codepipeline@0.8'
         
         (pub / buildOutputs / "com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelinePublisher_-OutputTuple" / "outputString").setValue("")
-        (pub / model).@reference = "../../../scm/model"
+        // (pub / model).@reference = "../../../scm/model"
         // do we need a blank <awsClientFactory/>?
 
 
