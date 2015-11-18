@@ -3,7 +3,7 @@ job('example') {
     scm("* * * * *")
   }
   steps {
-    shell("hello world")
+    shell("echo hello world")
   }
 
 configure { project ->
