@@ -33,6 +33,10 @@ up Dromedary resources after you are done to minimize charges
 best practices in highly available nor highly secure deployments in AWS.
 details that go against best practices!
 
+## Feature Backlog :dromedary_camel:
+
+We plan to add additional features in the coming months. Check the [issues](https://github.com/stelligent/dromedary/issues) and [Feature Backlog](https://github.com/stelligent/dromedary/wiki/Feature-Backlog) for more information.
+
 #### Manual Bootstrapping
 
 You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) to start.
