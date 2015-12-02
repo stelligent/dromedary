@@ -24,6 +24,10 @@ appropriately. If it detects that a new version of the app has been deployed, it
 
 Directions are provided to run this demo in AWS and locally. 
 
+## Feature Backlog :dromedary_camel:
+
+We plan to add additional features in the coming months. Check the [issues](https://github.com/stelligent/dromedary/issues) and [Feature Backlog](https://github.com/stelligent/dromedary/wiki/Feature-Backlog) for more information.
+
 ### Running in AWS :dromedary_camel:
 
 **DISCLAIMER**: Executing the following will create billable AWS resources in your account. Be sure to clean
@@ -32,10 +36,6 @@ up Dromedary resources after you are done to minimize charges
 **PLEASE NOTE**: This demo is an exercise in _Infrastructure as Code_, and is meant to demonstrate neither
 best practices in highly available nor highly secure deployments in AWS.
 details that go against best practices!
-
-## Feature Backlog :dromedary_camel:
-
-We plan to add additional features in the coming months. Check the [issues](https://github.com/stelligent/dromedary/issues) and [Feature Backlog](https://github.com/stelligent/dromedary/wiki/Feature-Backlog) for more information.
 
 #### Manual Bootstrapping
 
