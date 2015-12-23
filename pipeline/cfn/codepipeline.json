@@ -25,7 +25,8 @@
       },
       "Branch":{
          "Type":"String",
-         "Description":"Branch to use from Repo. Only the Name. not the URL"
+         "Description":"Branch to use from Repo. Only the Name. not the URL",
+         "Default":"master"
       },
       "MyInputArtifacts":{
          "Type":"String",
