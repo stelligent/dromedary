@@ -93,7 +93,7 @@ View the outputs in CloudFormation for links to test reports uploaded to your Dr
 
 #### Post-bootstrap steps
 
-Upon completion of a successful pipeline execution, Dromedary will be available at the hostname you specified
+Upon completion of a successful pipeline execution, Dromedary will be available at the hostname (i.e. the value of your `ProdHostedZone` parameter) you specified
 to the bootstrap script. If that hosted zone is not a publicly registered domain, you access Dromedary via IP
 address. The ip address can be queried by viewing the EIP output of the eni CloudFormation stack.
 
