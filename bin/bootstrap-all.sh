@@ -14,6 +14,18 @@ if [ -z "$prod_dns" ]; then
     exit 1
 fi
 
+githubtoken="$(echo $2)"
+if [ -z "$githubtoken" ]; then
+    echo "githubtoken Usage: $(basename $0) githubtoken" >&2
+    exit 1
+fi
+
+githubuser="$(echo $3)"
+if [ -z "$githubuser" ]; then
+    echo "githubuser Usage: $(basename $0) githubuser" >&2
+    exit 1
+fi
+
 hostname=$(echo $prod_dns | cut -f 1 -d . -s)
 domainname=$(echo $prod_dns | sed s/^$hostname[.]//)
 
@@ -67,4 +79,4 @@ set -ex
 "$script_dir/cfn-bootstrap.sh" "$hostname"
 "$script_dir/cfn-create-jenkins.sh"
 "$script_dir/cfn-create-eni.sh"
-"$script_dir/codepipeline-create.sh"
+"$script_dir/codepipeline-create.sh" "$githubtoken" "$githubuser"

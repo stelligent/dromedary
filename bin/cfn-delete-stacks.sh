@@ -10,6 +10,10 @@ fi
 
 . "$ENVIRONMENT_FILE"
 
+
+# NUKE CODEPIPELINE
+aws cloudformation delete-stack --stack-name "$dromedary_codepipeline"
+
 # NUKE JENKINS
 aws cloudformation delete-stack --stack-name "$dromedary_jenkins_stack_name"
 jenkins_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_jenkins_stack_name)"

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+
+echo The value of arg 1 = $1
+echo The value of arg 2 = $2 
+
 script_dir="$(dirname "$0")"
 ENVIRONMENT_FILE="$script_dir/../environment.sh"
 if [ ! -f "$ENVIRONMENT_FILE" ]; then
@@ -51,14 +55,21 @@ aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
 pipeline_name="Dromedary$(echo $dromedary_hostname | tr '[[:lower:]]' '[[:upper:]]')"
 
-cp "$script_dir/../pipeline/pipeline-custom-deploy.json" $pipelinejson
+cp "$script_dir/../pipeline/cfn/codepipeline.json" $pipelinejson
+
 
 sed s/DromedaryJenkins/$dromedary_custom_action_provider/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s/DromedaryPipelineName/$pipeline_name/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s,arn:aws:iam::123456789012:role/AWS-CodePipeline-Service,$codepipeline_role_arn,g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s/codepipeline-us-east-1-XXXXXXXXXXX/$dromedary_s3_bucket/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 
-aws codepipeline create-pipeline --pipeline file://$pipelinejson || exit $?
+mygithubtoken=$1
+mygithubuser=$2
+
+echo The value of variable mygithubtoken = $mygithubtoken 
+echo The value of variable mygithubuser = $mygithubuser 
+
+aws cloudformation create-stack --stack-name $pipeline_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue="2015.12.07.demo.pmd"
 
 echo "export dromedary_codepipeline=$pipeline_name" >> "$ENVIRONMENT_FILE"
 rm -f $pipelinejson

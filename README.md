@@ -48,7 +48,7 @@ After cloning the repo, run the bootstrap script to create the environment in wh
 deployed:
 
 ```
-./bin/bootstrap-all.sh PRODHOST.HOSTED.ZONE
+./bin/bootstrap-all.sh PRODHOST.HOSTED.ZONE GitHubToken GitHubUser
 ```
 
 The bootstrap script requires a hostname to be passed as argument. This hostname represents the "production"
@@ -66,43 +66,32 @@ aws cloudformation create-stack \
 	--parameters ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
 		ParameterKey=AliveDuration,ParameterValue=4h \
 		ParameterKey=Branch,ParameterValue=master \
-		ParameterKey=Ec2SshKeyName,ParameterValue=YOUR.KEYPAIR
+		ParameterKey=GitHubToken,ParameterValue=9v189a1654655922f31f7b3egv69a1531a9877af \
+		ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
+		ParameterKey=Ec2SshKeyName,ParameterValue=YOURKEYPAIR
 		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
 ```
 
-In the above example, you'll need to set the PRODHOST.HOSTED.ZONE value to your Route53 hosted zone.
+In the above example, you'll need to set the PRODHOST.HOSTED.ZONE value to your Route53 hosted zone. The GitHubToken example is invalid. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
 
 Parameters | Description
 ---------- | ------------
 DromedaryRepo  | The Github https address to the public dromedary repository.
 Branch | The name of the Github branch.
-AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc)
-ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)
+AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc.).
+ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
+GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
+GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
 
 **AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. **IMPORTANT**: You will need to manually delete the CloudFormation stack after self-termination.
+
+You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the `testdrive.json` stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
 
 #### Post-bootstrap steps
-
-After the bootstrap script completes, you'll need to make one manual update to the CodePipeline it created:
-
-1. Go to the [CodePipeline console](https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/dashboard)
-1. Click on the new pipeline just created - it should be named `DromedaryPRODHOST`
-1. Click the `Edit` button
-1. Edit the `Source` step that is initialized as `Amazon S3`
-1. Change the Source Provider to `Github`
-1. Click the `Connect to Github` button
-1. Enter:
-        1. `stelligent/dromedary` in the Repository text box (or, if you fork it: `USERNAME/dromedary`)
-        1. `master` in the Branch text box
-        1. `DromedarySource` in the Output artifact #1 text box
-1. Click the `Update` button
-1. Click the `Save pipeline changes` button
-
-Shortly after you confirm the pipeline changes, CodePipeline will kick off an execution of the pipeline.
 
 Upon completion of a successful pipeline execution, Dromedary will be available at the hostname you specified
 to the bootstrap script. If that hosted zone is not a publicly registered domain, you access Dromedary via IP
