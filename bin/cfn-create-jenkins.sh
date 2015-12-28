@@ -10,6 +10,10 @@ fi
 
 . $ENVIRONMENT_FILE
 
+echo The value of arg 0 = $0
+echo The value of arg 1 = $1 
+echo The value of arg 2 = $2 
+
 jenkins_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
 jenkins_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
 vpc="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`VPC`].OutputValue')"
