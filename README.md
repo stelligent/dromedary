@@ -68,7 +68,7 @@ aws cloudformation create-stack \
 		ParameterKey=Branch,ParameterValue=master \
 		ParameterKey=GitHubToken,ParameterValue=9v189a1654655922f31f7b3egv69a1531a9877af \
 		ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
-		ParameterKey=Ec2SshKeyName,ParameterValue=YOURKEYPAIR
+		ParameterKey=Ec2SshKeyName,ParameterValue=YOURKEYPAIR \
 		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
 ```
 
