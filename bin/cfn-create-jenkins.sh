@@ -10,6 +10,14 @@ fi
 
 . $ENVIRONMENT_FILE
 
+echo In cfn-create-jenkins.sh
+
+echo The value of arg 0 = $0
+echo The value of arg 1 = $1 
+echo The value of arg 2 = $2 
+
+dromedary_branch=$1
+
 jenkins_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
 jenkins_secgrp_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`JenkinsSecurityGroup`].OutputValue')"
 vpc="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`VPC`].OutputValue')"
@@ -27,6 +35,7 @@ for f in */config.xml; do
     sed s/DromedaryJenkins/$jenkins_custom_action_provider_name/ $f > $f.new && mv $f.new $f
 done
 sed s/S3BUCKET_PLACEHOLDER/$dromedary_s3_bucket/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/BRANCH_PLACEHOLDER/$dromedary_branch/ job-seed/config.xml > job-seed/config.xml.new && mv job-seed/config.xml.new job-seed/config.xml
 sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/DDB_PLACEHOLDER/$dromedary_ddb_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
