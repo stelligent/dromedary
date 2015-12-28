@@ -363,6 +363,10 @@
                         {
                            "Ref":"GitHubUser"
                         },
+                        " ",
+                        {
+                           "Ref":"Branch"
+                        },
                         "\n",
                         "cd /opt/dromedary/test-infra/bootstrap\n",
                         "ACCOUNT_ID=",

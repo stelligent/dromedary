@@ -26,6 +26,12 @@ if [ -z "$githubuser" ]; then
     exit 1
 fi
 
+branch="$(echo $4)"
+if [ -z "$branch" ]; then
+    echo "branch Usage: $(basename $0) branch" >&2
+    exit 1
+fi
+
 hostname=$(echo $prod_dns | cut -f 1 -d . -s)
 domainname=$(echo $prod_dns | sed s/^$hostname[.]//)
 
@@ -79,4 +85,4 @@ set -ex
 "$script_dir/cfn-bootstrap.sh" "$hostname"
 "$script_dir/cfn-create-jenkins.sh"
 "$script_dir/cfn-create-eni.sh"
-"$script_dir/codepipeline-create.sh" "$githubtoken" "$githubuser"
+"$script_dir/codepipeline-create.sh" "$githubtoken" "$githubuser" "$branch"
