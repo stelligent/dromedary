@@ -26,7 +26,7 @@
       "GitHubToken":{
          "NoEcho":"true",
          "Type":"String",
-         "Description":"Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens",
+         "Description":"Secret. OAuthToken with access to Repo. The default is invalid and used for example purposes. Go to https://github.com/settings/tokens",
          "Default":"4a189a34546435225614563ebd44a1531a4657af"
       },
       "GitHubUser":{
