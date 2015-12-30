@@ -73,7 +73,7 @@ echo The value of variable mygithubtoken = $mygithubtoken
 echo The value of variable mygithubuser = $mygithubuser 
 echo The value of variable mybranch = $mybranch 
 
-aws cloudformation create-stack --stack-name $pipeline_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
+aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
 
-echo "export dromedary_codepipeline=$pipeline_name" >> "$ENVIRONMENT_FILE"
+echo "export dromedary_codepipeline=$dromedary_pipeline_stack_name" >> "$ENVIRONMENT_FILE"
 rm -f $pipelinejson
