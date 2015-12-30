@@ -34,6 +34,10 @@
          "Description":"GitHub UserName. This username must have access to the GitHubToken.",
          "Default":"stelligent"
       },
+      "RandomParam":{
+         "Type":"String",
+         "Description":"Ensure this random param shows up in Service Catalog."
+      },
       "Ec2SshKeyName":{
          "Type":"AWS::EC2::KeyPair::KeyName",
          "Description":"The ec2 key name to use for ssh access to the bootstrapping instance."
