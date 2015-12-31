@@ -16,6 +16,8 @@ fi
 
 . $ENVIRONMENT_FILE
 
+echo The value of ENVIRONMENT_FILE = $ENVIRONMENT_FILE
+
 jenkins_ip="$(aws cloudformation describe-stacks --stack-name $dromedary_jenkins_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`PublicDns`].OutputValue')"
 codepipeline_role_arn="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`CodePipelineTrustRoleARN`].OutputValue')"
 jenkins_url="http://$jenkins_ip:8080"
