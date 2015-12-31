@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-
+echo The value of arg 0 = $0
 echo The value of arg 1 = $1
 echo The value of arg 2 = $2 
 echo The value of arg 3 = $3
@@ -71,7 +71,9 @@ mybranch=$3
 
 echo The value of variable mygithubtoken = $mygithubtoken 
 echo The value of variable mygithubuser = $mygithubuser 
-echo The value of variable mybranch = $mybranch 
+echo The value of variable mybranch = $mybranch
+echo The value of variable dromedary_pipeline_stack_name = $dromedary_pipeline_stack_name 
+
 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
 
