@@ -32,6 +32,10 @@
          "Type":"String",
          "Default":"DromedarySource"
       },
+      "MyApplicationName":{
+         "Type":"String",
+         "Default":"DromedaryCodeDeployApp"
+      },
       "MyBuildProvider":{
          "Type":"String",
          "Default":"DromedaryJenkins"
@@ -43,6 +47,14 @@
       }
    },
    "Resources":{
+      "AppPipeline":{
+         "Type":"AWS::CodeDeploy::Application",
+         "Properties":{
+            "ApplicationName":{
+               "Ref":"MyApplicationName"
+            }
+         }
+      },
       "AppPipeline":{
          "Type":"AWS::CodePipeline::Pipeline",
          "Properties":{
