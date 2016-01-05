@@ -36,7 +36,7 @@
         "CodeDeployTag": {
             "Type": "String",
             "Description": "Resource Tags for Deployment Group (non-zero enables CodeDeploy agent)",
-            "Default": ""
+            "Default": "1"
         },
         "DynamoDbTable": {
             "Type": "String",

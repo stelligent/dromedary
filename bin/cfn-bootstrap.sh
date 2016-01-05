@@ -21,8 +21,12 @@ jenkins_stack_name="$stack_basename-jenkins"
 eni_stack_name="$stack_basename-eni"
 ddb_stack_name="$stack_basename-ddb"
 pipeline_stack_name="$stack_basename-pipeline"
+pipeline_deploy_stack_name="$stack_basename-pipeline-deploy"
+
 
 echo The value of arg pipeline_stack_name = $pipeline_stack_name
+echo The value of arg pipeline_deploy_stack_name = $pipeline_deploy_stack_name
+
 
 aws cloudformation create-stack \
     --stack-name $ddb_stack_name \
@@ -72,4 +76,4 @@ echo "export dromedary_jenkins_stack_name=$jenkins_stack_name" >> "$ENVIRONMENT_
 echo "export dromedary_eni_stack_name=$eni_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_ec2_key=$DROMEDARY_EC2_KEY" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_pipeline_stack_name=$pipeline_stack_name" >> "$ENVIRONMENT_FILE"
-
+echo "export dromedary_pipeline_codedeploy_stack_name=$pipeline_deploy_stack_name" >> "$ENVIRONMENT_FILE"
