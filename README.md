@@ -86,7 +86,7 @@ Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping inst
 
 **AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. **IMPORTANT**: You will need to manually delete the CloudFormation stack after self-termination.
 
-You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the `[testdrive.json](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json)` stack.
+You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`testdrive.json`](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json) stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
