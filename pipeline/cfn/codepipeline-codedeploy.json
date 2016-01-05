@@ -36,6 +36,10 @@
          "Type":"String",
          "Default":"DromedaryCodeDeployApp"
       },
+      "MyDeploymentConfigName":{
+         "Type":"String",
+         "Default":"DromedaryeploymentConfig"
+      },
       "MyBuildProvider":{
          "Type":"String",
          "Default":"DromedaryJenkins"
@@ -47,12 +51,21 @@
       }
    },
    "Resources":{
-      "AppPipeline":{
+      "CodeDeployApp":{
          "Type":"AWS::CodeDeploy::Application",
          "Properties":{
             "ApplicationName":{
                "Ref":"MyApplicationName"
             }
+         }
+      },
+      "CodeDeployConfig":{
+         "Type":"AWS::CodeDeploy::DeploymentConfig",
+         "Properties":{
+            "DeploymentConfigName":{
+               "Ref":"MyDeploymentConfigName"
+            },
+            "MinimumHealthyHosts":1
          }
       },
       "AppPipeline":{
