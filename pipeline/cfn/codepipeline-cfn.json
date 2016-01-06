@@ -70,9 +70,7 @@
                "MinimumCount":"1"
             },
             "OutputArtifactDetails":{
-               "MaximumCount":{
-                  "Ref":"MaximumCountForOutputArtifactDetails"
-               },
+               "MaximumCount":"1",
                "MinimumCount":"0"
             },
             "Settings":{
