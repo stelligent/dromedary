@@ -53,9 +53,7 @@
             "Provider":{
                "Ref":"MyBuildProvider"
             },
-            "Version":{
-               "Ref":"Version"
-            },
+            "Version":"1",
             "ConfigurationProperties":[
                {
                   "Description":"The name of the build project must be provided when this action is added to the pipeline.",
