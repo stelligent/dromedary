@@ -84,9 +84,10 @@ echo The value of variable dromedary_pipeline_stack_name = $dromedary_pipeline_s
 echo The value of variable dromedary_pipeline_codedeploy_stack_name = $dromedary_pipeline_codedeploy_stack_name 
 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
-aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
-
+aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
 
 echo "export dromedary_codepipeline=$dromedary_pipeline_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_codepipeline_codedeploy=$dromedary_pipeline_codedeploy_stack_name" >> "$ENVIRONMENT_FILE"
 rm -f $pipelinejson
+rm -f $pipelinedeployjson
+
