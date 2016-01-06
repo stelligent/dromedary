@@ -66,12 +66,14 @@
                }
             ],
             "InputArtifactDetails":{
-               "MaximumCount":"0",
-               "MinimumCount":"5"
+               "MaximumCount":"1",
+               "MinimumCount":"1"
             },
             "OutputArtifactDetails":{
-               "MaximumCount":"0",
-               "MinimumCount":"5"
+               "MaximumCount":{
+                  "Ref":"MaximumCountForOutputArtifactDetails"
+               },
+               "MinimumCount":"0"
             },
             "Settings":{
                "EntityUrlTemplate":{
