@@ -36,6 +36,9 @@
          "Type":"String",
          "Default":"DromedaryJenkins"
       },
+      "MyJenkinsURL":{
+         "Type":"String"
+      },
       "CodePipelineServiceRole":{
          "Type":"String",
          "Default":"arn:aws:iam::123456789012:role/AWS-CodePipeline-Service",
@@ -43,6 +46,61 @@
       }
    },
    "Resources":{
+      "MyCustomActionType":{
+         "Type":"AWS::CodePipeline::CustomActionType",
+         "Properties":{
+            "Category":"Build",
+            "Provider":{
+               "Ref":"MyBuildProvider"
+            },
+            "Version":{
+               "Ref":"Version"
+            },
+            "ConfigurationProperties":[
+               {
+                  "Description":"The name of the build project must be provided when this action is added to the pipeline.",
+                  "Key":"true",
+                  "Name":"ProjectName",
+                  "Queryable":"true",
+                  "Required":"true",
+                  "Secret":"false",
+                  "Type":"String"
+               }
+            ],
+            "InputArtifactDetails":{
+               "MaximumCount":"0",
+               "MinimumCount":"5"
+            },
+            "OutputArtifactDetails":{
+               "MaximumCount":"0",
+               "MinimumCount":"5"
+            },
+            "Settings":{
+               "EntityUrlTemplate":{
+                  "Fn::Join":[
+                     "https://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "/job/{Config:ProjectName}/"
+                     ]
+                  ]
+               },
+               "ExecutionUrlTemplate":{
+                  "Fn::Join":[
+                     "https://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
+                     ]
+                  ]
+               }
+            }
+         }
+      },
       "AppPipeline":{
          "Type":"AWS::CodePipeline::Pipeline",
          "Properties":{

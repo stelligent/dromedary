@@ -53,7 +53,7 @@ generate_cli_json() {
 _END_
 }
 
-aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Build)"
+# aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Build)"
 aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
 
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
@@ -85,7 +85,7 @@ echo The value of variable dromedary_pipeline_codedeploy_stack_name = $dromedary
 echo The value of variable dromedary_codedeploy_config_name = $dromedary_codedeploy_config_name 
 echo The value of variable dromedary_codedeploy_app_name = $dromedary_codedeploy_app_name 
 
-aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch
+aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyDeploymentConfigName,ParameterValue=$dromedary_codedeploy_config_name ParameterKey=MyApplicationName,ParameterValue=$dromedary_codedeploy_app_name
 
 echo "export dromedary_codepipeline=$dromedary_pipeline_stack_name" >> "$ENVIRONMENT_FILE"
