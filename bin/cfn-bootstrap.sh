@@ -22,6 +22,7 @@ eni_stack_name="$stack_basename-eni"
 ddb_stack_name="$stack_basename-ddb"
 pipeline_stack_name="$stack_basename-pipeline"
 pipeline_deploy_stack_name="$stack_basename-pipeline-deploy"
+codedeploy_config_name="$stack_basename-deploymentconfig"
 
 
 echo The value of arg pipeline_stack_name = $pipeline_stack_name
@@ -77,3 +78,4 @@ echo "export dromedary_eni_stack_name=$eni_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_ec2_key=$DROMEDARY_EC2_KEY" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_pipeline_stack_name=$pipeline_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_pipeline_codedeploy_stack_name=$pipeline_deploy_stack_name" >> "$ENVIRONMENT_FILE"
+echo "export dromedary_codedeploy_config_name=$codedeploy_config_name" >> "$ENVIRONMENT_FILE"
