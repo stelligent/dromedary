@@ -23,7 +23,7 @@ ddb_stack_name="$stack_basename-ddb"
 pipeline_stack_name="$stack_basename-pipeline"
 pipeline_deploy_stack_name="$stack_basename-pipeline-deploy"
 codedeploy_config_name="$stack_basename-deploymentconfig"
-codedeploy_app_name="$stack_basename-appname"
+codedeploy_app_name="$stack_basename-app"
 
 echo The value of arg pipeline_stack_name = $pipeline_stack_name
 echo The value of arg pipeline_deploy_stack_name = $pipeline_deploy_stack_name
