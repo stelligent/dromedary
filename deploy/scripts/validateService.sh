@@ -1,1 +1,1 @@
-wget localhost:8080
+wget localhost:80

@@ -10,8 +10,15 @@ fi
 
 . "$ENVIRONMENT_FILE"
 
-# NUKE PIPELINE
+echo In the codepipeline-delete.sh script
+echo The value of variable dromedary_codepipeline = $dromedary_codepipeline 
+echo The value of variable dromedary_codepipeline_codedeploy = $dromedary_codepipeline_codedeploy 
+
+
+# NUKE PIPELINES
 aws codepipeline delete-pipeline --name $dromedary_codepipeline
+aws codepipeline delete-pipeline --name $dromedary_codepipeline_codedeploy
+
 aws codepipeline delete-custom-action-type \
     --action-version 1 --category Build --provider $dromedary_custom_action_provider
 aws codepipeline delete-custom-action-type \
