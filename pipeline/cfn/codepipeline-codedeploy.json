@@ -64,8 +64,7 @@
          "Properties":{
             "DeploymentConfigName":{
                "Ref":"MyDeploymentConfigName"
-            },
-            "MinimumHealthyHosts": "100"
+            }
          }
       },
       "AppPipeline":{
