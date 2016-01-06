@@ -10,8 +10,10 @@ fi
 
 . "$ENVIRONMENT_FILE"
 
-# NUKE PIPELINE
+# NUKE PIPELINES
 aws codepipeline delete-pipeline --name $dromedary_codepipeline
+aws codepipeline delete-pipeline --name $dromedary_codepipeline_codedeploy
+
 aws codepipeline delete-custom-action-type \
     --action-version 1 --category Build --provider $dromedary_custom_action_provider
 aws codepipeline delete-custom-action-type \
