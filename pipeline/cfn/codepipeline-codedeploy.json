@@ -64,6 +64,10 @@
          "Properties":{
             "DeploymentConfigName":{
                "Ref":"MyDeploymentConfigName"
+            },
+            "MinimumHealthyHosts":{
+               "Type":"HOST_COUNT",
+               "Value":"1"
             }
          }
       },
