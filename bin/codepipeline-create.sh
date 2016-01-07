@@ -73,17 +73,8 @@ sed s/DromedaryPipelineName/$pipeline_name/g $pipelinedeployjson > $pipelinedepl
 sed s,arn:aws:iam::123456789012:role/AWS-CodePipeline-Service,$codepipeline_role_arn,g $pipelinedeployjson > $pipelinedeployjson.new && mv $pipelinedeployjson.new $pipelinedeployjson
 sed s/codepipeline-us-east-1-XXXXXXXXXXX/$dromedary_s3_bucket/g $pipelinedeployjson > $pipelinedeployjson.new && mv $pipelinedeployjson.new $pipelinedeployjson
 
-mygithubtoken=$1
-mygithubuser=$2
-mybranch=$3
-
-echo The value of variable mygithubtoken = $mygithubtoken 
-echo The value of variable mygithubuser = $mygithubuser 
-echo The value of variable mybranch = $mybranch
-echo The value of variable dromedary_pipeline_stack_name = $dromedary_pipeline_stack_name 
-echo The value of variable dromedary_pipeline_codedeploy_stack_name = $dromedary_pipeline_codedeploy_stack_name 
-echo The value of variable dromedary_codedeploy_config_name = $dromedary_codedeploy_config_name 
-echo The value of variable dromedary_codedeploy_app_name = $dromedary_codedeploy_app_name 
+echo The value of variable dromedary_custom_action_provider = $dromedary_custom_action_provider
+echo The value of variable jenkins_url = $jenkins_url
 
 # Create Custom Actions
 aws cloudformation create-stack \
