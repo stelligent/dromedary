@@ -89,7 +89,7 @@ aws cloudformation create-stack \
     --stack-name $dromedary_pipeline_customactions_stack_name \
     --capabilities CAPABILITY_IAM \
     --template-body file://./pipeline/cfn/codepipeline-custom-actions.json \
-    --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url  
+    --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyEntityUrlTemplate,ParameterValue=$myEntityUrlTemplate ParameterKey=MyExecutionUrlTemplate,ParameterValue=$myExecutionUrlTemplate 
 
 customactions_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_pipeline_customactions_stack_name)"
 customactions_stack_wait=$?
