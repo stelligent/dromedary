@@ -54,7 +54,7 @@ _END_
 }
 
 # aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Build)"
-# aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
+aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
 
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
 pipelinedeployjson=$(mktemp /tmp/dromedary-pipeline-deploy.json.XXXX)
