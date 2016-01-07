@@ -134,5 +134,12 @@
             "Ref":"MyCustomTestActionType"
          }
       }
+      ,
+      "MyExecutionUrlTemplate":{
+         "Description":"CodePipeline ExecutionUrlTemplate",
+         "Value":{
+            "Ref":"ExecutionUrlTemplate"
+         }
+      }
    }
 }
