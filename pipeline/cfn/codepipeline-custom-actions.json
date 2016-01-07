@@ -34,11 +34,11 @@
                }
             ],
             "InputArtifactDetails":{
-               "MaximumCount":"1",
+               "MaximumCount":"5",
                "MinimumCount":"1"
             },
             "OutputArtifactDetails":{
-               "MaximumCount":"1",
+               "MaximumCount":"5",
                "MinimumCount":"0"
             },
             "Settings":{
@@ -87,11 +87,11 @@
                }
             ],
             "InputArtifactDetails":{
-               "MaximumCount":"1",
+               "MaximumCount":"5",
                "MinimumCount":"1"
             },
             "OutputArtifactDetails":{
-               "MaximumCount":"1",
+               "MaximumCount":"5",
                "MinimumCount":"0"
             },
             "Settings":{
