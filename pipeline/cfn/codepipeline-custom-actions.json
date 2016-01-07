@@ -9,7 +9,10 @@
       "MyBuildProvider":{
          "Type":"String"
       },
-      "MyJenkinsURL":{
+      "MyEntityUrlTemplate":{
+         "Type":"String"
+      },
+      "MyExecutionUrlTemplate":{
          "Type":"String"
       }
    },
@@ -43,26 +46,10 @@
             },
             "Settings":{
                "EntityUrlTemplate":{
-                  "Fn::Join":[
-                     "http://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "/job/{Config:ProjectName}/"
-                     ]
-                  ]
+                  "Ref":"MyEntityUrlTemplate"
                },
                "ExecutionUrlTemplate":{
-                  "Fn::Join":[
-                     "http://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
-                     ]
-                  ]
+                  "Ref":"MyExecutionUrlTemplate"
                }
             }
          }
@@ -96,26 +83,10 @@
             },
             "Settings":{
                "EntityUrlTemplate":{
-                  "Fn::Join":[
-                     "http://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "/job/{Config:ProjectName}/"
-                     ]
-                  ]
+                  "Ref":"MyEntityUrlTemplate"
                },
                "ExecutionUrlTemplate":{
-                  "Fn::Join":[
-                     "http://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
-                     ]
-                  ]
+                  "Ref":"MyExecutionUrlTemplate"
                }
             }
          }
