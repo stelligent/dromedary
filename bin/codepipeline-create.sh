@@ -54,7 +54,7 @@ _END_
 }
 
 # aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Build)"
-aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
+# aws codepipeline create-custom-action-type --cli-input-json "$(generate_cli_json Test)"
 
 pipelinejson=$(mktemp /tmp/dromedary-pipeline.json.XXXX)
 pipelinedeployjson=$(mktemp /tmp/dromedary-pipeline-deploy.json.XXXX)
@@ -86,7 +86,7 @@ echo The value of variable dromedary_codedeploy_config_name = $dromedary_codedep
 echo The value of variable dromedary_codedeploy_app_name = $dromedary_codedeploy_app_name 
 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider 
-aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyDeploymentConfigName,ParameterValue=$dromedary_codedeploy_config_name ParameterKey=MyApplicationName,ParameterValue=$dromedary_codedeploy_app_name
+aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyDeploymentConfigName,ParameterValue=$dromedary_codedeploy_config_name ParameterKey=MyApplicationName,ParameterValue=$dromedary_codedeploy_app_name ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider
 
 echo "export dromedary_codepipeline=$dromedary_pipeline_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_codepipeline_codedeploy=$dromedary_pipeline_codedeploy_stack_name" >> "$ENVIRONMENT_FILE"

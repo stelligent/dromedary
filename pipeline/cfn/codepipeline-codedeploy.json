@@ -41,8 +41,7 @@
          "Default":"DromedaryeploymentConfig"
       },
       "MyBuildProvider":{
-         "Type":"String",
-         "Default":"DromedaryJenkins"
+         "Type":"String"
       },
       "CodePipelineServiceRole":{
          "Type":"String",
