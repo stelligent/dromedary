@@ -85,6 +85,13 @@ echo The value of variable dromedary_pipeline_codedeploy_stack_name = $dromedary
 echo The value of variable dromedary_codedeploy_config_name = $dromedary_codedeploy_config_name 
 echo The value of variable dromedary_codedeploy_app_name = $dromedary_codedeploy_app_name 
 
+# Create Custom Actions
+aws cloudformation create-stack \
+    --stack-name $dromedary_pipeline_customactions_stack_name \
+    --capabilities CAPABILITY_IAM \
+    --template-body file://./pipeline/cfn/codepipeline-custom-actions.json \
+    --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url  
+
 aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyDeploymentConfigName,ParameterValue=$dromedary_codedeploy_config_name ParameterKey=MyApplicationName,ParameterValue=$dromedary_codedeploy_app_name ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider
 

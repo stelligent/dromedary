@@ -170,7 +170,7 @@
             "Value": { "Fn::GetAtt": [ "JenkinsInstance", "PublicIp" ]}
         },
         "SecurityGroup" : {
-            "Description": "Jenkins Security Grou",
+            "Description": "Jenkins Security Group",
             "Value": { "Fn::GetAtt": [ "JenkinsSecurityGroup", "GroupId" ]}
         }
     }
