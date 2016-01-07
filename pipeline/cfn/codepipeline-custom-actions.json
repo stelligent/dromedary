@@ -44,7 +44,7 @@
             "Settings":{
                "EntityUrlTemplate":{
                   "Fn::Join":[
-                     "https://",
+                     "http://",
                      [
                         {
                            "Ref":"MyJenkinsURL"
@@ -55,7 +55,7 @@
                },
                "ExecutionUrlTemplate":{
                   "Fn::Join":[
-                     "https://",
+                     "http://",
                      [
                         {
                            "Ref":"MyJenkinsURL"
@@ -97,7 +97,7 @@
             "Settings":{
                "EntityUrlTemplate":{
                   "Fn::Join":[
-                     "https://",
+                     "http://",
                      [
                         {
                            "Ref":"MyJenkinsURL"
@@ -108,7 +108,7 @@
                },
                "ExecutionUrlTemplate":{
                   "Fn::Join":[
-                     "https://",
+                     "http://",
                      [
                         {
                            "Ref":"MyJenkinsURL"
@@ -132,13 +132,6 @@
          "Description":"CodePipeline Test Custom action name",
          "Value":{
             "Ref":"MyCustomTestActionType"
-         }
-      }
-      ,
-      "MyExecutionUrlTemplate":{
-         "Description":"CodePipeline ExecutionUrlTemplate",
-         "Value":{
-            "Ref":"ExecutionUrlTemplate"
          }
       }
    }
