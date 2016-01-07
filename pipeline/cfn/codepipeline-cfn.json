@@ -45,59 +45,6 @@
       }
    },
    "Resources":{
-      "MyCustomBuildActionType":{
-         "Type":"AWS::CodePipeline::CustomActionType",
-         "Properties":{
-            "Category":"Build",
-            "Provider":{
-               "Ref":"MyBuildProvider"
-            },
-            "Version":"1",
-            "ConfigurationProperties":[
-               {
-                  "Description":"The name of the build project must be provided when this action is added to the pipeline.",
-                  "Key":"true",
-                  "Name":"ProjectName",
-                  "Queryable":"true",
-                  "Required":"true",
-                  "Secret":"false",
-                  "Type":"String"
-               }
-            ],
-            "InputArtifactDetails":{
-               "MaximumCount":"1",
-               "MinimumCount":"1"
-            },
-            "OutputArtifactDetails":{
-               "MaximumCount":"1",
-               "MinimumCount":"0"
-            },
-            "Settings":{
-               "EntityUrlTemplate":{
-                  "Fn::Join":[
-                     "https://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "/job/{Config:ProjectName}/"
-                     ]
-                  ]
-               },
-               "ExecutionUrlTemplate":{
-                  "Fn::Join":[
-                     "https://",
-                     [
-                        {
-                           "Ref":"MyJenkinsURL"
-                        },
-                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
-                     ]
-                  ]
-               }
-            }
-         }
-      },
       "AppPipeline":{
          "Type":"AWS::CodePipeline::Pipeline",
          "Properties":{
