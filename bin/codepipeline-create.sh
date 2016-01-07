@@ -92,6 +92,16 @@ aws cloudformation create-stack \
     --template-body file://./pipeline/cfn/codepipeline-custom-actions.json \
     --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url  
 
+customactions_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_pipeline_customactions_stack_name)"
+customactions_stack_wait=$?
+
+echo
+
+if [ $customactions_stack_wait -ne 0 ]; then
+    echo "Fatal: Custom Actions stack $dromedary_pipeline_customactions_stack_name ($customactions_stack_status) failed to create properly" >&2
+    exit 1
+fi
+
 aws cloudformation create-stack --stack-name $dromedary_pipeline_stack_name --template-body file://$pipelinejson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyJenkinsURL,ParameterValue=$jenkins_url ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider 
 aws cloudformation create-stack --stack-name $dromedary_pipeline_codedeploy_stack_name --template-body file://$pipelinedeployjson --region us-east-1 --disable-rollback --capabilities="CAPABILITY_IAM" --parameters ParameterKey=GitHubToken,ParameterValue=$mygithubtoken ParameterKey=GitHubUser,ParameterValue=$mygithubuser ParameterKey=Branch,ParameterValue=$mybranch ParameterKey=MyDeploymentConfigName,ParameterValue=$dromedary_codedeploy_config_name ParameterKey=MyApplicationName,ParameterValue=$dromedary_codedeploy_app_name ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider
 
