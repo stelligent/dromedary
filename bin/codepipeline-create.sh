@@ -21,8 +21,8 @@ echo The value of ENVIRONMENT_FILE = $ENVIRONMENT_FILE
 jenkins_ip="$(aws cloudformation describe-stacks --stack-name $dromedary_jenkins_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`PublicDns`].OutputValue')"
 codepipeline_role_arn="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`CodePipelineTrustRoleARN`].OutputValue')"
 jenkins_url="http://$jenkins_ip:8080"
-myEntityUrlTemplate="$jenkins_url/job/{Config:ProjectName}"
-myExecutionUrlTemplate="$jenkins_url/job/{Config:ProjectName}/{ExternalExecutionId}"
+myEntityUrlTemplate="${jenkins_url}/job/{Config:ProjectName}"
+myExecutionUrlTemplate="${jenkins_url}/job/{Config:ProjectName}/{ExternalExecutionId}"
 
 generate_cli_json() {
     cat << _END_
@@ -89,7 +89,7 @@ aws cloudformation create-stack \
     --stack-name $dromedary_pipeline_customactions_stack_name \
     --capabilities CAPABILITY_IAM \
     --template-body file://./pipeline/cfn/codepipeline-custom-actions.json \
-    --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyEntityUrlTemplate,ParameterValue=$myEntityUrlTemplate ParameterKey=MyExecutionUrlTemplate,ParameterValue=$myExecutionUrlTemplate 
+    --parameters ParameterKey=MyBuildProvider,ParameterValue=$dromedary_custom_action_provider ParameterKey=MyEntityUrlTemplate,ParameterValue=${myEntityUrlTemplate} ParameterKey=MyExecutionUrlTemplate,ParameterValue=${myExecutionUrlTemplate}
 
 customactions_stack_status="$(bash $script_dir/cfn-wait-for-stack.sh $dromedary_pipeline_customactions_stack_name)"
 customactions_stack_wait=$?
