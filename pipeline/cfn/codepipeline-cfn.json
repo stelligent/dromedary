@@ -33,8 +33,10 @@
          "Default":"DromedarySource"
       },
       "MyBuildProvider":{
-         "Type":"String",
-         "Default":"DromedaryJenkins"
+         "Type":"String"
+      },
+      "MyJenkinsURL":{
+         "Type":"String"
       },
       "CodePipelineServiceRole":{
          "Type":"String",

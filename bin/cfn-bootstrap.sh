@@ -22,6 +22,7 @@ eni_stack_name="$stack_basename-eni"
 ddb_stack_name="$stack_basename-ddb"
 pipeline_stack_name="$stack_basename-pipeline"
 pipeline_deploy_stack_name="$stack_basename-pipeline-deploy"
+pipeline_customactions_stack_name="$stack_basename-customactions"
 codedeploy_config_name="$stack_basename-deploymentconfig"
 codedeploy_app_name="$stack_basename-app"
 
@@ -80,3 +81,4 @@ echo "export dromedary_pipeline_stack_name=$pipeline_stack_name" >> "$ENVIRONMEN
 echo "export dromedary_pipeline_codedeploy_stack_name=$pipeline_deploy_stack_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_codedeploy_config_name=$codedeploy_config_name" >> "$ENVIRONMENT_FILE"
 echo "export dromedary_codedeploy_app_name=$codedeploy_app_name" >> "$ENVIRONMENT_FILE"
+echo "export dromedary_pipeline_customactions_stack_name=$pipeline_customactions_stack_name" >> "$ENVIRONMENT_FILE"
