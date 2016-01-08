@@ -9,10 +9,7 @@
       "MyBuildProvider":{
          "Type":"String"
       },
-      "MyEntityUrlTemplate":{
-         "Type":"String"
-      },
-      "MyExecutionUrlTemplate":{
+      "MyJenkinsURL":{
          "Type":"String"
       }
    },
@@ -46,10 +43,26 @@
             },
             "Settings":{
                "EntityUrlTemplate":{
-                  "Ref":"MyEntityUrlTemplate"
+                  "Fn::Join":[
+                     "http://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "/job/{Config:ProjectName}/"
+                     ]
+                  ]
                },
                "ExecutionUrlTemplate":{
-                  "Ref":"MyExecutionUrlTemplate"
+                  "Fn::Join":[
+                     "http://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
+                     ]
+                  ]
                }
             }
          }
@@ -83,10 +96,26 @@
             },
             "Settings":{
                "EntityUrlTemplate":{
-                  "Ref":"MyEntityUrlTemplate"
+                  "Fn::Join":[
+                     "http://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "/job/{Config:ProjectName}/"
+                     ]
+                  ]
                },
                "ExecutionUrlTemplate":{
-                  "Ref":"MyExecutionUrlTemplate"
+                  "Fn::Join":[
+                     "http://",
+                     [
+                        {
+                           "Ref":"MyJenkinsURL"
+                        },
+                        "job/{Config:ProjectName}/lastSuccessfulBuild/{ExternalExecutionId}/"
+                     ]
+                  ]
                }
             }
          }
