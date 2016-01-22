@@ -10,8 +10,7 @@
       "GitHubToken":{
          "NoEcho":"true",
          "Type":"String",
-         "Description":"Secret. The default value is incorrect. OAuthToken with access to Repo. Go to https://github.com/settings/tokens",
-         "Default":"9b189a1654643522561f7b3ebd44a1531a4287af"
+         "Description":"Secret. It might look something like 9b189a1654643522561f7b3ebd44a1531a4287af OAuthToken with access to Repo. Go to https://github.com/settings/tokens"
       },
       "GitHubUser":{
          "Type":"String",
