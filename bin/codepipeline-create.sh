@@ -61,7 +61,6 @@ pipelinedeployjson=$(mktemp /tmp/dromedary-pipeline-deploy.json.XXXX)
 pipeline_name="Dromedary$(echo $dromedary_hostname | tr '[[:lower:]]' '[[:upper:]]')"
 
 cp "$script_dir/../pipeline/cfn/codepipeline-cfn.json" $pipelinejson
-cp "$script_dir/../pipeline/cfn/codepipeline-codedeploy.json" $pipelinedeployjson
 
 sed s/DromedaryJenkins/$dromedary_custom_action_provider/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
 sed s/DromedaryPipelineName/$pipeline_name/g $pipelinejson > $pipelinejson.new && mv $pipelinejson.new $pipelinejson
