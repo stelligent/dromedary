@@ -60,33 +60,30 @@ You can either use the aws-cli or the web console to launch a new cloudformation
 
 ```
 aws cloudformation create-stack \
-	--stack-name Dromedary-bootstrap \
-	--template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json \
-	--capabilities CAPABILITY_IAM \
-	--parameters ParameterKey=DromedaryRepo,ParameterValue=https://github.com/stelligent/dromedary.git \
-		ParameterKey=AliveDuration,ParameterValue=4h \
-		ParameterKey=Branch,ParameterValue=master \
-		ParameterKey=GitHubToken,ParameterValue=9v189a1654655922f31f7b3egv69a1531a9877af \
-		ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
-		ParameterKey=Ec2SshKeyName,ParameterValue=YOURKEYPAIR \
-		ParameterKey=ProdHostedZone,ParameterValue=PRODHOST.HOSTED.ZONE
+—stack-name DromedaryStack  \ 
+--template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json \ 
+--region us-east-1 \
+--disable-rollback --capabilities="CAPABILITY_IAM" \
+--parameters ParameterKey=KeyName,ParameterValue=YOURKEYPAIR \
+	ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
+	ParameterKey=GitHubToken,ParameterValue=YOURGITHUBTOKEN \ 
+	ParameterKey=DDBTableName,ParameterValue=YOURUNIQUEDDBTABLENAME \
+	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
 ```
 
-In the above example, you'll need to set the PRODHOST.HOSTED.ZONE value to your Route53 hosted zone. The GitHubToken example is invalid. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
+In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
 
 Parameters | Description
 ---------- | ------------
-DromedaryRepo  | The Github https address to the public dromedary repository.
-Branch | The name of the Github branch.
-AliveDuration | Duration to keep demo deployment active. (e.g. 4h, 3h, 30m, etc.).
-ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
-GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
+KeyName | The ec2 key name to use for ssh access to the bootstrapping instance.
 GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
-Ec2SshKeyPair | The ec2 key name to use for ssh access to the bootstrapping instance.
+GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
+DDBTableName | Unique TableName for the Dromedary DynamoDB database.
+ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
-**AliveDuration:** The CloudFormation stack and all of the resources related to Dromedary will self-terminate after this duration. **IMPORTANT**: You will need to manually delete the CloudFormation stack after self-termination.
+ **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
-You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`testdrive.json`](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/testdrive.json) stack.
+You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json) stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
