@@ -37,14 +37,12 @@ up Dromedary resources after you are done to minimize charges
 best practices in highly available nor highly secure deployments in AWS.
 details that go against best practices!
 
-#### Manual Bootstrapping
+#### CloudFormation Bootstrapping (e.g. for AWS Test Drive)
 
 You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [configured](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) to start.
 
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
 not necessarily need to be publicly available and a registered domain.
-
-#### CloudFormation Bootstrapping (e.g. for AWS Test Drive)
 
 You can either use the aws-cli or the web console to launch a new cloudformation stack. This example shows how to use the CLI.
 
