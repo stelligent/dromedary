@@ -2,6 +2,11 @@
   "AWSTemplateFormatVersion":"2010-09-09",
   "Description":"Master dromedary stack that calls nested stacks",
   "Parameters":{
+    "KeyName":{
+      "Description":"Name of an existing EC2 KeyPair to enable SSH access to the instances",
+      "Type":"String",
+      "ConstraintDescription":"must be the name of an existing EC2 KeyPair."
+    },
     "Repo":{
       "Type":"String",
       "Description":"The Github https address to the public dromedary repository, not the URL",
@@ -17,45 +22,50 @@
       "Description":"GitHub UserName. This username must have access to the GitHubToken.",
       "Default":"stelligent"
     },
+    "BaseTemplateURL":{
+      "Type":"String",
+      "Description":"TemplateURL",
+      "Default":"https://s3.amazonaws.com/stelligent-training-public/pmd.2016.02.02/"
+    },
     "VPCTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL. TODO: Change this to bucket or prefix",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/vpc.json"
+      "Default":"vpc.json"
     },
     "CodePipelineTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline-cfn.json"
+      "Default":"codepipeline-cfn.json"
     },
     "CodePipelineActionsTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline-custom-actions.json"
+      "Default":"codepipeline-custom-actions.json"
     },
     "ENITemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/app-eni.json"
+      "Default":"app-eni.json"
     },
     "JenkinsTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/jenkins-instance.json"
+      "Default":"jenkins-instance.json"
     },
     "PipelineStoreTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/pipeline-store.json"
+      "Default":"pipeline-store.json"
     },
     "IAMTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/iam.json"
+      "Default":"iam.json"
     },
     "DDBTemplateURL":{
       "Type":"String",
       "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/public/dynamodb.json"
+      "Default":"dynamodb.json"
     },
     "DDBTableName":{
       "Type":"String",
@@ -80,11 +90,6 @@
       "Type":"String",
       "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
       "Default":"oneclickdeployment.com."
-    },
-    "SecurityGroupId":{
-      "Type":"String",
-      "Description":"Security Group id with which to associate app ENI",
-      "Default":""
     },
     "ProdHostedZone":{
       "Type":"String",
@@ -152,11 +157,6 @@
         "cg1.4xlarge"
       ],
       "ConstraintDescription":"must be a valid EC2 instance type."
-    },
-    "KeyName":{
-      "Description":"Name of an existing EC2 KeyPair to enable SSH access to the instances",
-      "Type":"String",
-      "ConstraintDescription":"must be the name of an existing EC2 KeyPair."
     },
     "SSHLocation":{
       "Description":"The IP address range that can be used to SSH to the EC2 instances",
@@ -1107,7 +1107,17 @@
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
         "TemplateURL":{
-          "Ref":"DDBTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"DDBTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
@@ -1121,7 +1131,17 @@
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
         "TemplateURL":{
-          "Ref":"VPCTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"VPCTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60"
       }
@@ -1130,7 +1150,17 @@
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
         "TemplateURL":{
-          "Ref":"IAMTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"IAMTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60"
       }
@@ -1142,7 +1172,17 @@
       ],
       "Properties":{
         "TemplateURL":{
-          "Ref":"ENITemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"ENITemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
@@ -1170,7 +1210,17 @@
       ],
       "Properties":{
         "TemplateURL":{
-          "Ref":"PipelineStoreTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"PipelineStoreTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
@@ -1233,7 +1283,17 @@
       ],
       "Properties":{
         "TemplateURL":{
-          "Ref":"JenkinsTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"JenkinsTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
@@ -1283,7 +1343,17 @@
       ],
       "Properties":{
         "TemplateURL":{
-          "Ref":"CodePipelineActionsTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"CodePipelineActionsTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
@@ -1309,7 +1379,17 @@
       ],
       "Properties":{
         "TemplateURL":{
-          "Ref":"CodePipelineTemplateURL"
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"CodePipelineTemplateURL"
+              }
+            ]
+          ]
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
