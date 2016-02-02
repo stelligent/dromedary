@@ -1,0 +1,184 @@
+{
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Description":"Store CFN Outputs to consume in downstream CFN stacks",
+  "Parameters":{
+    "UUID":{
+      "Type":"String",
+      "Description":"Unique identifier to uniquely name Resources",
+      "Default":"EMPTY"
+    },
+    "MasterStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"Name of the master.json CFN stack"
+    },
+    "DromedaryS3Bucket":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"Name of S3 bucket used to store Jenkins config"
+    },
+    "Branch":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"Name of Dromedary Github branch"
+    },
+    "KeyName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"EC2 KeyPair"
+    },
+    "MyBuildProvider":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"Jenkins Build Provider Name"
+    },
+    "JobConfigsTarball":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"S3 key for DromedaryS3Bucket"
+    },
+    "Hostname":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"subdomain name"
+    },
+    "Domain":{
+      "Type":"String",
+      "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
+      "Default":"oneclickdeployment.com."
+    },
+    "ProdHostedZone":{
+      "Type":"String",
+      "Description":"Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
+      "AllowedPattern":"^.*?\\..*?\\..*$"
+    },
+    "VPCStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"VPCStackName"
+    },
+    "IAMStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"IAMStackName"
+    },
+    "DDBStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"DDBStackName"
+    },
+    "ENIStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"ENIStackName"
+    }
+  },
+  "Resources":{
+    "MyQueue":{
+      "Type":"AWS::SQS::Queue",
+      "Properties":{
+        "QueueName":{
+          "Fn::Join":[
+            "",
+            [
+              "PipelineStoreQueue-",
+              {
+                "Ref":"UUID"
+              }
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "StackName":{
+      "Value":{
+        "Ref":"AWS::StackName"
+      }
+    },
+    "UUID":{
+      "Value":{
+        "Ref":"UUID"
+      }
+    },
+    "MasterStackName":{
+      "Description":"Name of the Master CFN Stack",
+      "Value":{
+        "Ref":"MasterStackName"
+      }
+    },
+    "DromedaryS3Bucket":{
+      "Description":"Name of S3 bucket used to store Jenkins config",
+      "Value":{
+        "Ref":"DromedaryS3Bucket"
+      }
+    },
+    "Branch":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"Branch"
+      }
+    },
+    "KeyName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"KeyName"
+      }
+    },
+    "MyBuildProvider":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"MyBuildProvider"
+      }
+    },
+    "JobConfigsTarball":{
+      "Description":"S3 key for DromedaryS3Bucket",
+      "Value":{
+        "Ref":"JobConfigsTarball"
+      }
+    },
+    "Hostname":{
+      "Description":"subdomain name",
+      "Value":{
+        "Ref":"Hostname"
+      }
+    },
+    "Domain":{
+      "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
+      "Value":{
+        "Ref":"Domain"
+      }
+    },
+    "ProdHostedZone":{
+      "Description":"Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
+      "Value":{
+        "Ref":"ProdHostedZone"
+      }
+    },
+    "VPCStackName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"VPCStackName"
+      }
+    },
+    "IAMStackName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"IAMStackName"
+      }
+    },
+    "DDBStackName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"DDBStackName"
+      }
+    },
+    "ENIStackName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"ENIStackName"
+      }
+    }
+  }
+}

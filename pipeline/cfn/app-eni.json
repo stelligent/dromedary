@@ -1,90 +1,172 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Dromedary demo - Elastic Network Interfaces for Jenkins and app",
-
-    "Parameters": {
-        "Hostname": {
-            "Type": "String",
-            "Description": "DNS Hostname for prod IP (but not domainname)",
-            "Default": ""
-        },
-        "Domain": {
-            "Type": "String",
-            "Description": "Route54 Hosted Zone name for prod IP (include trailing .)",
-            "Default": ""
-        },
-        "SubnetId": {
-            "Type": "AWS::EC2::Subnet::Id",
-            "Description": "VPC subnet id in which to place ENI"
-        },
-        "SecurityGroupId": {
-            "Type": "String",
-            "Description": "Security Group id with which to associate app ENI",
-            "Default": ""
-        }
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Description":"Stelligent CloudFormation Sample Template ** This template creates one or more Amazon resources. You will be billed for the AWS resources used if you create a stack from this template.",
+  "Parameters":{
+    "Hostname":{
+      "Type":"String",
+      "Description":"DNS Hostname for prod IP (but not domainname)",
+      "Default":""
     },
-
-    "Conditions": {
-        "NoSecurityGroup": { "Fn::Equals": [ { "Ref": "SecurityGroupId" }, "" ]},
-        "Route53Update": { "Fn::And": [
-            { "Fn::Not": [{ "Fn::Equals": [ { "Ref": "Hostname" }, "" ] }]},
-            { "Fn::Not": [{ "Fn::Equals": [ { "Ref": "Domain" }, "" ] }]}
-        ]}
+    "Domain":{
+      "Type":"String",
+      "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
+      "Default":""
     },
-
-    "Resources": {
-
-        "EIP": {
-            "Type" : "AWS::EC2::EIP",
-            "Properties" : {
-                "Domain" : "vpc"
-            }
-        },
-
-        "ProdDNSRecord" : {
-            "Type" : "AWS::Route53::RecordSet",
-            "Condition": "Route53Update",
-            "Properties" : {
-                "HostedZoneName" : { "Ref": "Domain" },
-                "Comment" : "DNS name for Dromedary prod.",
-                "Name" : { "Fn::Join" : [ "", [ { "Ref" : "Hostname" }, ".", { "Ref" : "Domain" } ]]},
-                "Type" : "A",
-                "TTL" : "120",
-                "ResourceRecords" : [{ "Ref": "EIP" }]
-            }
-        },
-
-        "ENI": {
-            "Type" : "AWS::EC2::NetworkInterface",
-            "Properties" : {
-                "Description": "Dromedary Prod ENI",
-                "SubnetId": { "Ref": "SubnetId" },
-                "GroupSet": { "Fn::If": [ "NoSecurityGroup",
-                    { "Ref": "AWS::NoValue" },
-                    [{ "Ref": "SecurityGroupId" }]
-                ]},
-                "Tags": [{ "Key": "Application", "Value": { "Ref": "AWS::StackId" } },
-                         { "Key": "Name", "Value": { "Ref": "AWS::StackName" } }]
-            }
-        },
-
-        "EipAssocation": {
-            "Type": "AWS::EC2::EIPAssociation",
-            "Properties": {
-                "AllocationId": { "Fn::GetAtt" : [ "EIP", "AllocationId" ] },
-                "NetworkInterfaceId": { "Ref": "ENI" }
-            }
-        }
+    "SubnetId":{
+      "Type":"String",
+      "Default":"",
+      "Description":"TODO: Modify this later. VPC subnet id in which to place ENI"
     },
-
-    "Outputs": {
-        "PublicIp": {
-            "Description": "Public IP Address of ENI",
-            "Value": { "Ref": "EIP" }
-        },
-        "EniId": {
-            "Description": "Elastic Network Interface Id",
-            "Value": { "Ref": "ENI" }
-        }
+    "SecurityGroupId":{
+      "Type":"String",
+      "Description":"Security Group id with which to associate app ENI",
+      "Default":""
     }
+  },
+  "Conditions":{
+    "NoSecurityGroup":{
+      "Fn::Equals":[
+        {
+          "Ref":"SecurityGroupId"
+        },
+        ""
+      ]
+    },
+    "Route53Update":{
+      "Fn::And":[
+        {
+          "Fn::Not":[
+            {
+              "Fn::Equals":[
+                {
+                  "Ref":"Hostname"
+                },
+                ""
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Not":[
+            {
+              "Fn::Equals":[
+                {
+                  "Ref":"Domain"
+                },
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Resources":{
+    "EIP":{
+      "Type":"AWS::EC2::EIP",
+      "Properties":{
+        "Domain":"vpc"
+      }
+    },
+    "ProdDNSRecord":{
+      "Type":"AWS::Route53::RecordSet",
+      "Condition":"Route53Update",
+      "Properties":{
+        "HostedZoneName":{
+          "Ref":"Domain"
+        },
+        "Comment":"DNS name for Dromedary prod.",
+        "Name":{
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"Hostname"
+              },
+              ".",
+              {
+                "Ref":"Domain"
+              }
+            ]
+          ]
+        },
+        "Type":"A",
+        "TTL":"120",
+        "ResourceRecords":[
+          {
+            "Ref":"EIP"
+          }
+        ]
+      }
+    },
+    "ENI":{
+      "Type":"AWS::EC2::NetworkInterface",
+      "Properties":{
+        "Description":"Dromedary Prod ENI",
+        "SubnetId":{
+          "Ref":"SubnetId"
+        },
+        "GroupSet":{
+          "Fn::If":[
+            "NoSecurityGroup",
+            {
+              "Ref":"AWS::NoValue"
+            },
+            [
+              {
+                "Ref":"SecurityGroupId"
+              }
+            ]
+          ]
+        },
+        "Tags":[
+          {
+            "Key":"Application",
+            "Value":{
+              "Ref":"AWS::StackId"
+            }
+          },
+          {
+            "Key":"Name",
+            "Value":{
+              "Ref":"AWS::StackName"
+            }
+          }
+        ]
+      }
+    },
+    "EipAssocation":{
+      "Type":"AWS::EC2::EIPAssociation",
+      "Properties":{
+        "AllocationId":{
+          "Fn::GetAtt":[
+            "EIP",
+            "AllocationId"
+          ]
+        },
+        "NetworkInterfaceId":{
+          "Ref":"ENI"
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "StackName":{
+      "Value":{
+        "Ref":"AWS::StackName"
+      }
+    },
+    "PublicIp":{
+      "Description":"Public IP Address of ENI",
+      "Value":{
+        "Ref":"EIP"
+      }
+    },
+    "EniId":{
+      "Description":"Elastic Network Interface Id",
+      "Value":{
+        "Ref":"ENI"
+      }
+    }
+  }
 }

@@ -1,45 +1,71 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Dromedary demo - DynamoDB Table",
-
-    "Parameters": {
-        "ReadCapacityUnits": {
-            "Type": "Number",
-            "Description": "Provisioned Read Capacity Units",
-            "Default": "5"
-        },
-        "WriteCapacityUnits": {
-            "Type": "Number",
-            "Description": "Provisioned Write Capacity Units",
-            "Default": "5"
-        }
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Description":"Dromedary demo - DynamoDB Table",
+  "Parameters":{
+    "ReadCapacityUnits":{
+      "Type":"Number",
+      "Description":"Provisioned Read Capacity Units",
+      "Default":"5"
     },
-
-    "Resources": {
-
-        "Table" : {
-            "Type" : "AWS::DynamoDB::Table",
-            "Properties" : {
-                "AttributeDefinitions" : [
-                    { "AttributeName" : "site_name", "AttributeType" : "S" },
-                    { "AttributeName" : "color_name", "AttributeType" : "S" }
-                ],
-                "KeySchema" : [
-                    { "AttributeName" : "site_name", "KeyType" : "HASH" },
-                    { "AttributeName" : "color_name", "KeyType" : "RANGE" }
-                ],
-                "ProvisionedThroughput" : {
-                    "ReadCapacityUnits" : { "Ref": "ReadCapacityUnits" },
-                    "WriteCapacityUnits" : { "Ref": "WriteCapacityUnits" }
-                }
-            }
-        }
+    "WriteCapacityUnits":{
+      "Type":"Number",
+      "Description":"Provisioned Write Capacity Units",
+      "Default":"5"
     },
-
-    "Outputs": {
-        "TableName": {
-            "Description": "Name of DynamoDB Table",
-            "Value": { "Ref": "Table" }
-        }
+    "DDBTableName":{
+      "Type":"String",
+      "Description":"Unique name for the Dromedary Dynamo DB table"
     }
+  },
+  "Resources":{
+    "Table":{
+      "Type":"AWS::DynamoDB::Table",
+      "Properties":{
+        "TableName":{
+          "Ref":"DDBTableName"
+        },
+        "AttributeDefinitions":[
+          {
+            "AttributeName":"site_name",
+            "AttributeType":"S"
+          },
+          {
+            "AttributeName":"color_name",
+            "AttributeType":"S"
+          }
+        ],
+        "KeySchema":[
+          {
+            "AttributeName":"site_name",
+            "KeyType":"HASH"
+          },
+          {
+            "AttributeName":"color_name",
+            "KeyType":"RANGE"
+          }
+        ],
+        "ProvisionedThroughput":{
+          "ReadCapacityUnits":{
+            "Ref":"ReadCapacityUnits"
+          },
+          "WriteCapacityUnits":{
+            "Ref":"WriteCapacityUnits"
+          }
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "StackName":{
+      "Value":{
+        "Ref":"AWS::StackName"
+      }
+    },
+    "TableName":{
+      "Description":"Name of DynamoDB Table",
+      "Value":{
+        "Ref":"Table"
+      }
+    }
+  }
 }
