@@ -44,16 +44,6 @@ You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [conf
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
 not necessarily need to be publicly available and a registered domain.
 
-After cloning the repo, run the bootstrap script to create the environment in which Dromedary will be
-deployed:
-
-```
-./bin/bootstrap-all.sh PRODHOST.HOSTED.ZONE GitHubToken GitHubUser
-```
-
-The bootstrap script requires a hostname to be passed as argument. This hostname represents the "production"
-host which will be updated at the last step of the pipeline.
-
 #### CloudFormation Bootstrapping (e.g. for AWS Test Drive)
 
 You can either use the aws-cli or the web console to launch a new cloudformation stack. This example shows how to use the CLI.
