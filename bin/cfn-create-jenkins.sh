@@ -25,9 +25,33 @@ jenkins_instance_profile="$(aws cloudformation describe-stacks --stack-name $dro
 jenkins_instance_role="$(aws cloudformation describe-stacks --stack-name $dromedary_iam_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`InstanceRole`].OutputValue')"
 jenkins_custom_action_provider_name="Jenkins$(echo $dromedary_hostname | tr '[[:lower:]]' '[[:upper:]]')$(printf "%x" $(date +%s))"
 
+
+
 temp_dir=$(mktemp -d /tmp/dromedary.XXXX)
 config_dir="$(dirname $0)/../pipeline/jobs/xml"
 config_tar_path="$dromedary_jenkins_stack_name/jenkins-job-configs-$(date +%s).tgz"
+
+echo =======IN CFN-CREATE-JENKINS.SH==========
+
+echo The value of variable jenkins_subnet_id = $jenkins_subnet_id
+echo The value of variable jenkins_secgrp_id = $jenkins_secgrp_id
+echo The value of variable vpc = $vpc
+echo The value of variable jenkins_instance_profile = $jenkins_instance_profile
+echo The value of variable jenkins_instance_role = $jenkins_instance_role
+echo The value of variable jenkins_custom_action_provider_name = $jenkins_custom_action_provider_name
+echo The value of variable temp_dir = $temp_dir
+echo The value of variable config_dir = $config_dir
+echo The value of variable config_tar_path = $config_tar_path
+echo The value of variable dromedary_s3_bucket = $dromedary_s3_bucket
+echo The value of variable dromedary_branch = $dromedary_branch
+echo The value of variable dromedary_vpc_stack_name = $dromedary_vpc_stack_name
+echo The value of variable dromedary_iam_stack_name = $dromedary_iam_stack_name
+echo The value of variable dromedary_ddb_stack_name = $dromedary_ddb_stack_name
+echo The value of variable dromedary_eni_stack_name = $dromedary_eni_stack_name
+echo The value of variable dromedary_ec2_key = $dromedary_ec2_key
+echo The value of variable dromedary_hostname = $dromedary_hostname
+echo The value of variable dromedary_domainname = $dromedary_domainname
+echo The value of variable dromedary_zone_id = $dromedary_zone_id
 
 cp -r $config_dir/* $temp_dir/
 pushd $temp_dir > /dev/null
