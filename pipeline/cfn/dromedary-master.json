@@ -88,8 +88,7 @@
     },
     "ProdHostedZone":{
       "Type":"String",
-      "Description":"Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)",
-      "Default":"EMPTY"
+      "Description":"Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)"
     },
     "InstanceType":{
       "Description":"WebServer EC2 instance type",
