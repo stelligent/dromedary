@@ -53,8 +53,9 @@ aws cloudformation create-stack \
 --region us-east-1 \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
 --parameters ParameterKey=KeyName,ParameterValue=YOURKEYPAIR \
+    	ParameterKey=Branch,ParameterValue=master \
+    	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
 	ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
-	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
 	ParameterKey=GitHubToken,ParameterValue=YOURGITHUBTOKEN \ 
 	ParameterKey=DDBTableName,ParameterValue=YOURUNIQUEDDBTABLENAME \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
