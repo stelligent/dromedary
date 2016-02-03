@@ -1438,6 +1438,14 @@
       "Value":{
         "Ref":"AWS::StackName"
       }
+    },
+    "DromedaryAppURL":{
+      "Value":{
+        "Fn::GetAtt":[
+          "PipelineStoreStack",
+          "Outputs.DromedaryAppURL"
+        ]
+      }
     }
   }
 }
