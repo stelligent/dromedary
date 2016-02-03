@@ -48,12 +48,13 @@ You can either use the aws-cli or the web console to launch a new cloudformation
 
 ```
 aws cloudformation create-stack \
-—stack-name DromedaryStack  \ 
+--stack-name DromedaryStack  \ 
 --template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json \ 
 --region us-east-1 \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
 --parameters ParameterKey=KeyName,ParameterValue=YOURKEYPAIR \
 	ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
+	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
 	ParameterKey=GitHubToken,ParameterValue=YOURGITHUBTOKEN \ 
 	ParameterKey=DDBTableName,ParameterValue=YOURUNIQUEDDBTABLENAME \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
@@ -66,6 +67,7 @@ Parameters | Description
 KeyName | The ec2 key name to use for ssh access to the bootstrapping instance.
 GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
+BaseTemplateURL | S3 URL for CloudFormation templates used by Dromedary
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
