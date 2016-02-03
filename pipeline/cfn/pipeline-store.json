@@ -71,6 +71,11 @@
       "Type":"String",
       "Default":"EMPTY",
       "Description":"ENIStackName"
+    },
+    "DromedaryAppURL":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"The URL users use to launch the Dromedary application"
     }
   },
   "Resources":{
@@ -178,6 +183,12 @@
       "Description":"TBD",
       "Value":{
         "Ref":"ENIStackName"
+      }
+    },
+    "DromedaryAppURL":{
+      "Description":"The URL users use to launch the Dromedary application",
+      "Value":{
+        "Ref":"DromedaryAppURL"
       }
     }
   }
