@@ -57,8 +57,8 @@ aws cloudformation create-stack \
 --region us-east-1 \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
 --parameters ParameterKey=KeyName,ParameterValue=YOURKEYPAIR \
-    	ParameterKey=Branch,ParameterValue=master \
-    	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
+	ParameterKey=Branch,ParameterValue=master \
+	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
 	ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
 	ParameterKey=GitHubToken,ParameterValue=YOURGITHUBTOKEN \ 
 	ParameterKey=DDBTableName,ParameterValue=YOURUNIQUEDDBTABLENAME \
@@ -69,12 +69,12 @@ In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Rout
 
 Parameters | Description
 ---------- | ------------
-KeyName | The ec2 key name to use for ssh access to the bootstrapping instance.
+KeyName | The EC2 keypair name to use for ssh access to the bootstrapping instance.
 GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
 BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
-ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
+ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `.`. 
 
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
