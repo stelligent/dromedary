@@ -4,12 +4,12 @@
   "Parameters":{
     "KeyName":{
       "Description":"Name of an existing EC2 KeyPair to enable SSH access to the instances",
-      "Type":"String",
+      "Type":"AWS::EC2::KeyPair::KeyName",
       "ConstraintDescription":"must be the name of an existing EC2 KeyPair."
     },
     "Repo":{
       "Type":"String",
-      "Description":"The Github https address to the public dromedary repository, not the URL",
+      "Description":"The name of the dromedary repository, not the URL",
       "Default":"dromedary"
     },
     "GitHubToken":{
@@ -24,47 +24,47 @@
     },
     "BaseTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/pmd.2016.02.02/"
+      "Description":"S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)",
+      "Default":"https://s3.amazonaws.com/stelligent-training-public/master/"
     },
     "VPCTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL. TODO: Change this to bucket or prefix",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"vpc.json"
     },
     "CodePipelineTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"codepipeline-cfn.json"
     },
     "CodePipelineActionsTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"codepipeline-custom-actions.json"
     },
     "ENITemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"app-eni.json"
     },
     "JenkinsTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"jenkins-instance.json"
     },
     "PipelineStoreTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"pipeline-store.json"
     },
     "IAMTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"iam.json"
     },
     "DDBTemplateURL":{
       "Type":"String",
-      "Description":"TemplateURL",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"dynamodb.json"
     },
     "DDBTableName":{
@@ -80,11 +80,6 @@
       "Type":"String",
       "Description":"The Github branch the public dromedary repository.",
       "Default":"master"
-    },
-    "Hostname":{
-      "Type":"String",
-      "Description":"Hostname for Domain",
-      "Default":""
     },
     "Domain":{
       "Type":"String",
