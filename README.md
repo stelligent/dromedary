@@ -48,11 +48,13 @@ You can either use the aws-cli or the web console to launch a new cloudformation
 
 ```
 aws cloudformation create-stack \
-—stack-name DromedaryStack  \ 
+--stack-name DromedaryStack  \ 
 --template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json \ 
 --region us-east-1 \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
 --parameters ParameterKey=KeyName,ParameterValue=YOURKEYPAIR \
+    	ParameterKey=Branch,ParameterValue=master \
+    	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
 	ParameterKey=GitHubUser,ParameterValue=YOURGITHUBUSER \
 	ParameterKey=GitHubToken,ParameterValue=YOURGITHUBTOKEN \ 
 	ParameterKey=DDBTableName,ParameterValue=YOURUNIQUEDDBTABLENAME \
@@ -66,12 +68,13 @@ Parameters | Description
 KeyName | The ec2 key name to use for ssh access to the bootstrapping instance.
 GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
+BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
-You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json) stack.
+You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json) stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
