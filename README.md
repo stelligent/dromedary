@@ -35,7 +35,6 @@ up Dromedary resources after you are done to minimize charges
 
 **PLEASE NOTE**: This demo is an exercise in _Infrastructure as Code_, and is meant to demonstrate neither
 best practices in highly available nor highly secure deployments in AWS.
-details that go against best practices!
 
 #### CloudFormation Bootstrapping (e.g. for AWS Test Drive)
 
