@@ -128,6 +128,7 @@ aws cloudformation update-stack \
         ParameterKey=IAMStackName,ParameterValue=$IAMStackName \
         ParameterKey=DDBStackName,ParameterValue=$DDBStackName \
         ParameterKey=ENIStackName,ParameterValue=$dromedary_eni_stack_name \
+        ParameterKey=DromedaryAppURL,ParameterValue=$prod_dns_param \
         ParameterKey=KeyName,ParameterValue=$dromedary_ec2_key
  
 sleep 60
