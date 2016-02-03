@@ -44,7 +44,11 @@ You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [conf
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
 not necessarily need to be publicly available and a registered domain.
 
-You can either use the aws-cli or the web console to launch a new cloudformation stack. This example shows how to use the CLI.
+You can either use the AWS CLI or the AWS web console to launch a new CloudFormation stack. To launch from the console, click the button below.
+
+[![Launch CFN stack](https://s3.amazonaws.com/stelligent-training-public/public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json)
+
+To launch from the CLI, see this example:
 
 ```
 aws cloudformation create-stack \
@@ -73,8 +77,6 @@ DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
-
-You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json) stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
