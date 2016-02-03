@@ -68,7 +68,7 @@ Parameters | Description
 KeyName | The ec2 key name to use for ssh access to the bootstrapping instance.
 GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
-BaseTemplateURL | S3 URL for CloudFormation templates used by Dromedary
+BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
