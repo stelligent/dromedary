@@ -1441,9 +1441,18 @@
     },
     "DromedaryAppURL":{
       "Value":{
-        "Fn::GetAtt":[
-          "PipelineStoreStack",
-          "Outputs.DromedaryAppURL"
+        "Fn::Join":[
+          "",
+          [
+            "http://",
+            {
+              "Fn::GetAtt":[
+                "PipelineStoreStack",
+                "Outputs.DromedaryAppURL"
+              ]
+            },
+            "/"
+          ]
         ]
       }
     }
