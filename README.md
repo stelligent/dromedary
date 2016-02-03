@@ -73,7 +73,7 @@ ProdHostedZone | Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE).
 
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
-You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json) stack.
+You can also choose to use the [CloudFormation console](https://console.aws.amazon.com/cloudformation/) to launch the [`dromedary-master.json`](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json) stack.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
