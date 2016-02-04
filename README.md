@@ -14,7 +14,7 @@ You can view the recording of that breakout session at
 ## The Demo App :dromedary_camel:
 
 The Dromedary demo app is a simple nodejs application that displays a pie chart to users. The data that
-describes the pie chart (eg: the colors and their values) is served by the application.
+describes the pie chart (i.e. the colors and their values) is served by the application.
 
 If a user clicks on a particular color segment in the chart, the frontend will send a request to the
 backend to increment the value for that color and update the chart with the new value.
@@ -43,7 +43,7 @@ You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [conf
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
 not necessarily need to be publicly available and a registered domain.
 
-You can either use the AWS CLI or the AWS web console to launch a new CloudFormation stack. To launch from the console, click the button below.
+You can either use the AWS CLI or the AWS web console to launch a new CloudFormation stack. To launch from the console, click the button below (you'll need to login to your AWS account if you have not already done so).
 
 [![Launch CFN stack](https://s3.amazonaws.com/stelligent-training-public/public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json)
 
