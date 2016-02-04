@@ -75,6 +75,8 @@ BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromed
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `.`. 
 
+As part of the bootstrapping process, it will automatically launch the Dromedary application stack via CodePipeline. 
+
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
 **Bootstrapping Tests**
@@ -82,11 +84,9 @@ View the outputs in CloudFormation for links to test reports uploaded to your Dr
 
 #### Post-bootstrap steps
 
-Upon completion of a successful pipeline execution, Dromedary will be available at the hostname (i.e. the value of your `ProdHostedZone` parameter) you specified
-to the bootstrap script. If that hosted zone is not a publicly registered domain, you access Dromedary via IP
-address. The ip address can be queried by viewing the EIP output of the eni CloudFormation stack.
+Upon completion of a successful pipeline execution, Dromedary will be available by going to the Outputs tab on the master CloudFormation stack and clicking on the value for the `DromedaryAppURL` Output. If that hosted zone is not a publicly registered domain, you can access Dromedary via IP address. The IP address can be queried by viewing the EIP output of the ENI CloudFormation stack.
 
-Every time changes are pushed to Github, CodePipeline will test and deploy those changes.
+Every time changes are pushed to Github, CodePipeline will build, test, deploy and release those changes.
 
 #### Configure Jenkins Security
 
