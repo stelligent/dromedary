@@ -69,7 +69,7 @@ dromedaryChartHandler = function () {
 
   $.ajaxSetup({ timeout: 750 });
 
-  $.getJSON('/sha', {}, function(data, status) {
+  $.getJSON('sha', {}, function(data, status) {
     if (status !== 'success' || ! data.hasOwnProperty('sha')) {
       return;
     }
@@ -78,7 +78,7 @@ dromedaryChartHandler = function () {
     updateLastApiMessage('Build version is ' + commitSha);
   });
 
-  $.getJSON('/data', {}, function(data, status) {
+  $.getJSON('data', {}, function(data, status) {
     var i;
     // console.log('Chart data GET status: ' + status);
     // console.log('Chart data GET: ' + JSON.stringify(data));
@@ -112,7 +112,7 @@ dromedaryChartHandler = function () {
       return;
     }
     colorToInc = activePoints[0].label.toLowerCase();
-    incUrl = '/increment?color=' + colorToInc;
+    incUrl = 'increment?color=' + colorToInc;
     $.getJSON(incUrl, {}, function(data, status) {
       console.log('Color increment GET status: ' + status);
       if (status !== 'success') {
@@ -137,7 +137,7 @@ dromedaryChartHandler = function () {
     if (!myPieChart.hasOwnProperty('segments')) {
       return;
     }
-    $.getJSON('/data?countsOnly=true', {}, function(data, status) {
+    $.getJSON('data?countsOnly=true', {}, function(data, status) {
       var segment;
       var segmentIndex;
       var color;
@@ -170,7 +170,7 @@ dromedaryChartHandler = function () {
   setInterval(pollForUpdates, 5000);
 
   function pollForNewSha() {
-    $.getJSON('/sha', {}, function(data, status) {
+    $.getJSON('sha', {}, function(data, status) {
       // console.log('Build version GET status: ' + status);
       // console.log('Build version GET: ' + JSON.stringify(data));
       if (status !== 'success' || ! data.hasOwnProperty('sha')) {
