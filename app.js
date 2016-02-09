@@ -3,7 +3,7 @@
 var express = require('express');
 var app = express();
 var CS = require(__dirname + '/lib/inMemoryStorage.js');
-var commitSha = require(__dirname + '/lib/sha.js');
+var commitSha = require(__dirname + '/sha.js');
 var reqThrottle = require(__dirname + '/lib/requestThrottle.js');
 var DDBP = require(__dirname + '/lib/dynamoDbPersist.js');
 var serverPort = 8080;
