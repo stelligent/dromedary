@@ -10,6 +10,9 @@ var serverPort = 8080;
 var siteChartStore = {};
 var ddbLastFetch = {};
 
+module.exports = app;
+
+
 var ddbPersist = new DDBP();
 
 if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
