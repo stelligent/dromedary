@@ -16,6 +16,8 @@ var fs          = require('fs');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
 var git         = require('git-rev')
+var moment      = require('moment');
+
 
 // default is 8000, which might be common
 var ddbLocalPort = 8079;
@@ -29,8 +31,15 @@ gulp.task('clean', function (cb) {
 gulp.task('sha', function(cb) {
   git.long(function (sha) {
     if(sha == "") {
-      sha = 'build:'+(process.env.BUILD_NUMBER||'?');
+      if(process.env.BUILD_NUMBER) {
+        // try loading jenkins build number
+        sha = 'build:'+process.env.BUILD_NUMBER;
+      } else {
+        // default to a timestamp
+        sha = moment().format('YYYYMMDD-HHmmss');
+      }
     }
+
     fs.writeFile('sha.js', "module.exports = '" + sha + "';\n", cb);
   })
 });
