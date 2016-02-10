@@ -27,42 +27,42 @@
       "Description":"S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)",
       "Default":"https://s3.amazonaws.com/stelligent-training-public/master/"
     },
-    "VPCTemplateURL":{
+    "VPCCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"vpc.json"
     },
-    "CodePipelineTemplateURL":{
+    "CodePipelineCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"codepipeline-cfn.json"
     },
-    "CodePipelineActionsTemplateURL":{
+    "CodePipelineActionsCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"codepipeline-custom-actions.json"
     },
-    "ENITemplateURL":{
+    "ENICFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"app-eni.json"
     },
-    "JenkinsTemplateURL":{
+    "JenkinsCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"jenkins-instance.json"
     },
-    "PipelineStoreTemplateURL":{
+    "PipelineStoreCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"pipeline-store.json"
     },
-    "IAMTemplateURL":{
+    "IAMCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"iam.json"
     },
-    "DDBTemplateURL":{
+    "DDBCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"dynamodb.json"
@@ -88,7 +88,7 @@
     },
     "ProdHostedZone":{
       "Type":"String",
-      "Description":"Route53 Hosted Zone (e.g. PRODHOST.HOSTED.ZONE)"
+      "Description":"Route53 Hosted Zone (e.g. .HOSTEDZONE or .oneclickdeployment.com)"
     },
     "InstanceType":{
       "Description":"WebServer EC2 instance type",
@@ -1108,7 +1108,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"DDBTemplateURL"
+                "Ref":"DDBCFNTemplateFile"
               }
             ]
           ]
@@ -1132,7 +1132,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"VPCTemplateURL"
+                "Ref":"VPCCFNTemplateFile"
               }
             ]
           ]
@@ -1151,7 +1151,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"IAMTemplateURL"
+                "Ref":"IAMCFNTemplateFile"
               }
             ]
           ]
@@ -1173,7 +1173,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"ENITemplateURL"
+                "Ref":"ENICFNTemplateFile"
               }
             ]
           ]
@@ -1211,7 +1211,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"PipelineStoreTemplateURL"
+                "Ref":"PipelineStoreCFNTemplateFile"
               }
             ]
           ]
@@ -1284,7 +1284,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"JenkinsTemplateURL"
+                "Ref":"JenkinsCFNTemplateFile"
               }
             ]
           ]
@@ -1344,7 +1344,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"CodePipelineActionsTemplateURL"
+                "Ref":"CodePipelineActionsCFNTemplateFile"
               }
             ]
           ]
@@ -1380,7 +1380,7 @@
                 "Ref":"BaseTemplateURL"
               },
               {
-                "Ref":"CodePipelineTemplateURL"
+                "Ref":"CodePipelineCFNTemplateFile"
               }
             ]
           ]
