@@ -14,7 +14,7 @@ You can view the recording of that breakout session at
 ## The Demo App :dromedary_camel:
 
 The Dromedary demo app is a simple nodejs application that displays a pie chart to users. The data that
-describes the pie chart (eg: the colors and their values) is served by the application.
+describes the pie chart (i.e. the colors and their values) is served by the application.
 
 If a user clicks on a particular color segment in the chart, the frontend will send a request to the
 backend to increment the value for that color and update the chart with the new value.
@@ -43,7 +43,7 @@ You'll need the AWS CLI tools [installed](https://aws.amazon.com/cli/) and [conf
 You'll also need to create a hosted zone in [Route53](https://aws.amazon.com/route53/). This hosted zone does
 not necessarily need to be publicly available and a registered domain.
 
-You can either use the AWS CLI or the AWS web console to launch a new CloudFormation stack. To launch from the console, click the button below.
+You can either use the AWS CLI or the AWS web console to launch a new CloudFormation stack. To launch from the console, click the button below (you'll need to login to your AWS account if you have not already done so).
 
 [![Launch CFN stack](https://s3.amazonaws.com/stelligent-training-public/public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~DromedaryStack|turl~https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json)
 
@@ -75,6 +75,8 @@ BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromed
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
 ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `.`. 
 
+As part of the bootstrapping process, it will automatically launch the Dromedary application stack via CodePipeline. 
+
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
 **Bootstrapping Tests**
@@ -82,11 +84,9 @@ View the outputs in CloudFormation for links to test reports uploaded to your Dr
 
 #### Post-bootstrap steps
 
-Upon completion of a successful pipeline execution, Dromedary will be available at the hostname (i.e. the value of your `ProdHostedZone` parameter) you specified
-to the bootstrap script. If that hosted zone is not a publicly registered domain, you access Dromedary via IP
-address. The ip address can be queried by viewing the EIP output of the eni CloudFormation stack.
+Upon completion of a successful pipeline execution, Dromedary will be available by going to the Outputs tab on the master CloudFormation stack and clicking on the value for the `DromedaryAppURL` Output. If that hosted zone is not a publicly registered domain, you can access Dromedary via IP address. The IP address can be queried by viewing the EIP output of the ENI CloudFormation stack.
 
-Every time changes are pushed to Github, CodePipeline will test and deploy those changes.
+Every time changes are pushed to Github, CodePipeline will build, test, deploy and release those changes.
 
 #### Configure Jenkins Security
 
