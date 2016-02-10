@@ -28,6 +28,9 @@ gulp.task('clean', function (cb) {
 // Generate the sha.json
 gulp.task('sha', function(cb) {
   git.long(function (sha) {
+    if(sha == "") {
+      sha = 'build:'+(process.env.BUILD_NUMBER||'?');
+    }
     fs.writeFile('sha.js', "module.exports = '" + sha + "';\n", cb);
   })
 });
