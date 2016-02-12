@@ -76,11 +76,10 @@ app.use(express.static(__dirname + '/public'));
 /* GET requests to /config.json means the site is being served from /public */
 app.get('/config.json', function (req, res) {
   console.log('Request received from %s for /config.json', getClientIp(req));
-  sendJsonResponse(res,
-      {
-        apiBaseurl: '',
-        version: sha()
-      });
+
+  sha(function(version) {
+    sendJsonResponse(res, { apiBaseurl: '', version: version });
+  });
 });
 
 
