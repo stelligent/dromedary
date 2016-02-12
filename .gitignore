@@ -27,7 +27,6 @@ build/Release
 node_modules
 
 # Project ignores
-sha.js
 dist/
 environment.sh
 .kitchen/
