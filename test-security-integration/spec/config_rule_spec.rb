@@ -17,7 +17,7 @@ describe('config_rule') do
         compliance_types: [],
         next_token: "",
       })
-      expect(comp.compliance_by_config_rules[0].compliance_type).to eq "COMPLIANT"
+      expect(comp.compliance_by_config_rules[0].compliance.compliance_type).to eq "COMPLIANT"
     end
   end
 end
