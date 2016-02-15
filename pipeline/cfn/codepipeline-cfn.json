@@ -250,6 +250,31 @@
                   "ProjectName":"drom-infra-test"
                 },
                 "RunOrder":2
+              },
+              {
+                "InputArtifacts":[
+                  {
+                    "Name":"DromedaryCreate"
+                  }
+                ],
+                "Name":"SecurityIntegrationTest",
+                "ActionTypeId":{
+                  "Category":"Test",
+                  "Owner":"Custom",
+                  "Version":"1",
+                  "Provider":{
+                    "Ref":"MyBuildProvider"
+                  }
+                },
+                "OutputArtifacts":[
+                  {
+                    "Name":"DromedarySecure"
+                  }
+                ],
+                "Configuration":{
+                  "ProjectName":"drom-sec-int-test"
+                },
+                "RunOrder":2
               }
             ]
           },

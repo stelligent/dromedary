@@ -67,6 +67,11 @@
       "Default":"EMPTY",
       "Description":"DDBStackName"
     },
+    "LambdaConfigStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"LambdaConfigStackName"
+    },
     "ENIStackName":{
       "Type":"String",
       "Default":"EMPTY",

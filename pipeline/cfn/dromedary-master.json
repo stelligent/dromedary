@@ -25,7 +25,7 @@
     "BaseTemplateURL":{
       "Type":"String",
       "Description":"S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/master/"
+      "Default":"https://s3.amazonaws.com/bettinger/dromedary/consec/"
     },
     "VPCCFNTemplateFile":{
       "Type":"String",
@@ -66,6 +66,11 @@
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"dynamodb.json"
+    },
+    "LambdaConfigCFNTemplateFile":{
+      "Type":"String",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
+      "Default":"lambda-config.json"
     },
     "DDBTableName":{
       "Type":"String",
@@ -1262,6 +1267,12 @@
               "ENIStack",
               "Outputs.StackName"
             ]
+          },
+          "LambdaConfigStackName":{
+            "Fn::GetAtt":[
+              "LambdaConfigStack",
+              "Outputs.StackName"
+            ]
           }
         }
       }
@@ -1273,7 +1284,8 @@
         "VPCStack",
         "IAMStack",
         "PipelineStoreStack",
-        "WebServerInstance"
+        "WebServerInstance",
+        "LambdaConfigStack"
       ],
       "Properties":{
         "TemplateURL":{
@@ -1423,6 +1435,30 @@
               "Outputs.CodePipelineTrustRoleARN"
             ]
           }
+        }
+      }
+    },
+    "LambdaConfigStack": {
+      "Type":"AWS::CloudFormation::Stack",
+      "DependsOn":[
+      ],
+      "Properties":{
+        "TemplateURL":{
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"LambdaConfigCFNTemplateFile"
+              }
+            ]
+          ]
+        },
+        "TimeoutInMinutes":"60",
+        "Parameters":{
+          
         }
       }
     }
