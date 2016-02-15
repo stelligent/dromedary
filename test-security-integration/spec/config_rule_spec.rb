@@ -11,13 +11,13 @@ describe('config_rule') do
     })
 
     #Get compliance status for each rule
-    rules.each do |rule|
+    rules.config_rules.each do |rule|
       comp = client.describe_compliance_by_config_rule({
         config_rule_names: [rule.config_rule_name],
         compliance_types: [],
         next_token: "",
       })
-      expect(comp.compliance_type).to eq "COMPLIANT"
+      expect(comp.compliance_by_config_rules[0].compliance_type).to eq "COMPLIANT"
     end
   end
 end
