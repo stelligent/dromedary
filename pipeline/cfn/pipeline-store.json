@@ -190,6 +190,12 @@
         "Ref":"ENIStackName"
       }
     },
+    "LambdaConfigStackName":{
+      "Description":"TBD",
+      "Value":{
+        "Ref":"LambdaConfigStackName"
+      }
+    },
     "DromedaryAppURL":{
       "Description":"The URL users use to launch the Dromedary application",
       "Value":{
