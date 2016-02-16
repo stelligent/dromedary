@@ -15,8 +15,6 @@ var del         = require('del');
 var fs          = require('fs');
 var runSequence = require('run-sequence');
 var argv        = require('yargs').argv;
-var git         = require('git-rev')
-var moment      = require('moment');
 
 
 // default is 8000, which might be common
@@ -25,23 +23,6 @@ var ddbLocalPort = 8079;
 // Delete the dist directory
 gulp.task('clean', function (cb) {
   del(['cookbooks/dromedary/files/app/*', 'dist'], cb);
-});
-
-// Generate the sha.json
-gulp.task('sha', function(cb) {
-  git.long(function (sha) {
-    if(sha == "") {
-      if(process.env.BUILD_NUMBER) {
-        // try loading jenkins build number
-        sha = 'build:'+process.env.BUILD_NUMBER;
-      } else {
-        // default to a timestamp
-        sha = moment().format('YYYYMMDD-HHmmss');
-      }
-    }
-
-    fs.writeFile('sha.js', "module.exports = '" + sha + "';\n", cb);
-  })
 });
 
 // Execute unit tests
@@ -72,7 +53,7 @@ gulp.task('lint', function(callback) {
 
 // Copy dromedary app to cookbooks/dromedary/files/default/app
 gulp.task('cookbookfiles:app', function () {
-  return gulp.src(['app.js', 'appspec.yml', 'sha.js'] )
+  return gulp.src(['app.js', 'appspec.yml'] )
              .pipe(gulp.dest('cookbooks/dromedary/files/default/app'));
 });
 gulp.task('cookbookfiles:lib', function () {
@@ -121,7 +102,6 @@ gulp.task('dist:tar', function () {
 gulp.task('dist', function(callback) {
   runSequence(
     'clean',
-    'sha',
     'copy-to-cookbooks',
     'dist:berks-vendor',
     'dist:tar',
@@ -147,7 +127,7 @@ gulp.task('app:serve', function() {
   gulp.watch(['public/*'], function (file) {
     server.notify.apply(server, [file]);
   });
-  gulp.watch(['app.js', 'sha.js', 'lib/*.js'], function() {
+  gulp.watch(['app.js', 'lib/*.js'], function() {
     server.start.apply(server);
   });
 });
@@ -200,7 +180,6 @@ gulp.task('ddb-local', function(callback) {
 gulp.task('serve', function(callback) {
   runSequence(
     'ddb-local',
-    'sha',
     'app:serve',
     callback
   );

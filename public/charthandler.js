@@ -9,6 +9,7 @@ dromedaryChartHandler = function () {
   var lastApiHtml = '\n';
   var colorCounts = {};
   var colors = [];
+  var apiBaseurl = '';
 
   function updateLastApiMessage(message) {
     var d = new Date();
@@ -38,7 +39,7 @@ dromedaryChartHandler = function () {
   }
 
   function incrementColorViaColorCounts(colorToInc) {
-    var incUrl = '/increment?color=' + colorToInc;
+    var incUrl = apiBaseurl+'increment?color=' + colorToInc;
     $.getJSON(incUrl, {}, function(data, status) {
       var segment;
       var segmentColor;
@@ -67,77 +68,11 @@ dromedaryChartHandler = function () {
     });
   }
 
-  $.ajaxSetup({ timeout: 750 });
-
-  $.getJSON('sha', {}, function(data, status) {
-    if (status !== 'success' || ! data.hasOwnProperty('sha')) {
-      return;
-    }
-    commitSha = data.sha;
-    document.getElementById('gitCommitSha').innerHTML = commitSha;
-    updateLastApiMessage('Build version is ' + commitSha);
-  });
-
-  $.getJSON('data', {}, function(data, status) {
-    var i;
-    // console.log('Chart data GET status: ' + status);
-    // console.log('Chart data GET: ' + JSON.stringify(data));
-    if (status !== 'success') {
-      console.log('Failed to fetch /data');
-      return;
-    }
-    myPieChart = new Chart(ctx).Pie(data);
-    updateLastApiMessage('Initial chart data received');
-
-    for (i = 0; i < data.length; i++) {
-      colors.push(data[i].label.toLowerCase());
-      colorCounts[data[i].label.toLowerCase()] =
-        {label: data[i].label, value: data[i].value};
-    }
-    refreshColorCount();
-  });
-
-  $('#colorCounts').click(function(evt) {
-    var colorMatch = evt.target.id.match(/^([a-z]+)Count(Div|Label)?$/);
-    if (colorMatch !== null) {
-      incrementColorViaColorCounts(colorMatch[1]);
-    }
-  });
-
-  $('#myChart').click(function(evt) {
-    var activePoints = myPieChart.getSegmentsAtEvent(evt);
-    var colorToInc;
-    var incUrl;
-    if (activePoints.length < 1 || ! activePoints[0].hasOwnProperty('label')) {
-      return;
-    }
-    colorToInc = activePoints[0].label.toLowerCase();
-    incUrl = 'increment?color=' + colorToInc;
-    $.getJSON(incUrl, {}, function(data, status) {
-      console.log('Color increment GET status: ' + status);
-      if (status !== 'success') {
-        console.log('Failed to fetch /increment?color=' + colorToInc);
-        return;
-      }
-      if (data.hasOwnProperty('error')) {
-        console.log('/increment error: ' + data.error);
-        updateLastApiMessage('Vote for ' + colorToInc +
-          ' failed: ' + data.error);
-      } else if (data.hasOwnProperty('count') && data.count > 0) {
-        activePoints[0].value = data.count;
-        colorCounts[colorToInc].value = data.count;
-        updateChart = true;
-        updateLastApiMessage('Incremented ' + colorToInc +
-          ' ... new count is ' + data.count);
-      }
-    });
-  });
-
   function pollForUpdates() {
     if (!myPieChart.hasOwnProperty('segments')) {
       return;
     }
-    $.getJSON('data?countsOnly=true', {}, function(data, status) {
+    $.getJSON(apiBaseurl+'data?countsOnly=true', {}, function(data, status) {
       var segment;
       var segmentIndex;
       var color;
@@ -167,22 +102,92 @@ dromedaryChartHandler = function () {
       }
     });
   }
-  setInterval(pollForUpdates, 5000);
 
-  function pollForNewSha() {
-    $.getJSON('sha', {}, function(data, status) {
-      // console.log('Build version GET status: ' + status);
-      // console.log('Build version GET: ' + JSON.stringify(data));
-      if (status !== 'success' || ! data.hasOwnProperty('sha')) {
+  function pollForNewConfig() {
+    $.getJSON('config.json', {}, function(data, status) {
+      if (status !== 'success' || ! data.hasOwnProperty('version')) {
         return;
       }
-      if (commitSha !== data.sha) {
+      if (commitSha !== data.version) {
         reloadPage = true;
         updateLastApiMessage('New commit sha detected!');
       }
     });
   }
-  setInterval(pollForNewSha, 1000);
+
+  $.ajaxSetup({ timeout: 750 });
+
+  $.getJSON('config.json', {}, function(data, status) {
+    if (status !== 'success' || ! data.hasOwnProperty('version')) {
+      return;
+    }
+    commitSha = data.version;
+    apiBaseurl = data.apiBaseurl;
+    document.getElementById('gitCommitSha').innerHTML = commitSha;
+    updateLastApiMessage('Build version is ' + commitSha);
+
+    // load data now that we have our config info
+    $.getJSON(apiBaseurl+'data', {}, function(data, status) {
+      var i;
+      // console.log('Chart data GET status: ' + status);
+      // console.log('Chart data GET: ' + JSON.stringify(data));
+      if (status !== 'success') {
+        console.log('Failed to fetch /data');
+        return;
+      }
+      myPieChart = new Chart(ctx).Pie(data);
+      updateLastApiMessage('Initial chart data received');
+
+      for (i = 0; i < data.length; i++) {
+        colors.push(data[i].label.toLowerCase());
+        colorCounts[data[i].label.toLowerCase()] =
+        {label: data[i].label, value: data[i].value};
+      }
+      refreshColorCount();
+    });
+
+    // check for updates occasionally
+    setInterval(pollForUpdates, 5000);
+    setInterval(pollForNewConfig, 1000);
+  });
+
+
+  $('#colorCounts').click(function(evt) {
+    var colorMatch = evt.target.id.match(/^([a-z]+)Count(Div|Label)?$/);
+    if (colorMatch !== null) {
+      incrementColorViaColorCounts(colorMatch[1]);
+    }
+  });
+
+  $('#myChart').click(function(evt) {
+    var activePoints = myPieChart.getSegmentsAtEvent(evt);
+    var colorToInc;
+    var incUrl;
+    if (activePoints.length < 1 || ! activePoints[0].hasOwnProperty('label')) {
+      return;
+    }
+    colorToInc = activePoints[0].label.toLowerCase();
+    incUrl = apiBaseurl+'increment?color=' + colorToInc;
+    $.getJSON(incUrl, {}, function(data, status) {
+      console.log('Color increment GET status: ' + status);
+      if (status !== 'success') {
+        console.log('Failed to fetch /increment?color=' + colorToInc);
+        return;
+      }
+      if (data.hasOwnProperty('error')) {
+        console.log('/increment error: ' + data.error);
+        updateLastApiMessage('Vote for ' + colorToInc +
+          ' failed: ' + data.error);
+      } else if (data.hasOwnProperty('count') && data.count > 0) {
+        activePoints[0].value = data.count;
+        colorCounts[colorToInc].value = data.count;
+        updateChart = true;
+        updateLastApiMessage('Incremented ' + colorToInc +
+          ' ... new count is ' + data.count);
+      }
+    });
+  });
+
 
   setInterval(function() {
     if (updateChart) {
@@ -196,3 +201,4 @@ dromedaryChartHandler = function () {
     }
   }, 100);
 };
+
