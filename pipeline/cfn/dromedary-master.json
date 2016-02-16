@@ -25,7 +25,7 @@
     "BaseTemplateURL":{
       "Type":"String",
       "Description":"S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)",
-      "Default":"https://s3.amazonaws.com/bettinger/dromedary/consec/"
+      "Default":"https://s3.amazonaws.com/stelligent-training-public/master/"
     },
     "VPCCFNTemplateFile":{
       "Type":"String",
@@ -1458,7 +1458,7 @@
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
-          
+
         }
       }
     }
