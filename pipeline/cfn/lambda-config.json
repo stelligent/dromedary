@@ -83,12 +83,26 @@
             }
          }
       },
+      "rVPCRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-VPCRule",
+            "Scope":{
+               "ComplianceResourceTypes":[
+               ]
+            },
+            "Source":{
+               "Owner":"AWS",
+               "SourceDetails":[],
+               "SourceIdentifier":"INSTANCES_IN_VPC"
+            }
+         },
+         "DependsOn":"configRulePolicy"
+      },
       "rIAMRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":{
-               "Ref":"AWS::StackName"
-            },
+            "ConfigRuleName":"ConSec-IAMRule",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::IAM::User"
@@ -123,6 +137,33 @@
             },
             "Action":"lambda:InvokeFunction",
             "Principal":"config.amazonaws.com"
+         }
+      },
+      "configRulePolicy":{
+        "Type":"AWS::IAM::Policy",
+        "Properties":{
+           "PolicyDocument": {
+             "Statement":[
+                {
+                   "Action":[
+                      "iam:List*",
+                      "iam:Get*"
+                   ],
+                   "Effect":"Allow",
+                   "Resource":"*"
+                },
+                {
+                   "Action":[
+                      "config:*"
+                   ],
+                   "Effect":"Allow",
+                   "Resource":"*"
+                }
+             ],
+             "Version":"2012-10-17"
+           },
+           "PolicyName": "configRulePolicy",
+           "Roles": ["config-role"]
          }
       },
       "lambdaExecutionRole":{
