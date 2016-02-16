@@ -99,6 +99,38 @@
          },
          "DependsOn":"configRulePolicy"
       },
+      "rSSHRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-SSHRule",
+            "Scope":{
+               "ComplianceResourceTypes":[
+               ]
+            },
+            "Source":{
+               "Owner":"AWS",
+               "SourceDetails":[],
+               "SourceIdentifier":"INCOMING_SSH_DISABLED"
+            }
+         },
+         "DependsOn":"configRulePolicy"
+      },
+      "rEncryptionRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-EncrpytionRule",
+            "Scope":{
+               "ComplianceResourceTypes":[
+               ]
+            },
+            "Source":{
+               "Owner":"AWS",
+               "SourceDetails":[],
+               "SourceIdentifier":"ENCRYPTED_VOLUMES"
+            }
+         },
+         "DependsOn":"configRulePolicy"
+      },
       "rIAMRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
@@ -124,9 +156,9 @@
                }
             }
          },
-         "DependsOn":"rConfigPermissionToCallLambda"
+         "DependsOn":"configPermissionToCallLambda"
       },
-      "rConfigPermissionToCallLambda":{
+      "configPermissionToCallLambda":{
          "Type":"AWS::Lambda::Permission",
          "Properties":{
             "FunctionName":{
