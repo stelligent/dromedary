@@ -24,6 +24,7 @@ describe('config_rule') do
       rule_stats[rule.config_rule_name] = comp_status
       if comp_status != "COMPLIANT"
         fail_count = fail_count + 1
+      end
     end
     rule_stats.each {|key, value| puts "#{key} is #{value}:  #{value == "COMPLIANT" ? "PASS" : "FAIL"}" }
     expect(fail_count).to eq 0
