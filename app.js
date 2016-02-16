@@ -3,7 +3,7 @@
 var express = require('express');
 var app = express();
 var CS = require(__dirname + '/lib/inMemoryStorage.js');
-var commitSha = require(__dirname + '/sha.js');
+var sha = require(__dirname + '/lib/sha.js');
 var reqThrottle = require(__dirname + '/lib/requestThrottle.js');
 var DDBP = require(__dirname + '/lib/dynamoDbPersist.js');
 var serverPort = 8080;
@@ -73,11 +73,15 @@ setInterval(reqThrottle.gcMap, 1000);
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
 
-/* GET requests to /sha returns git commit sha */
-app.get('/sha', function (req, res) {
-  console.log('Request received from %s for /sha', getClientIp(req));
-  sendJsonResponse(res, {sha: commitSha});
+/* GET requests to /config.json means the site is being served from /public */
+app.get('/config.json', function (req, res) {
+  console.log('Request received from %s for /config.json', getClientIp(req));
+
+  sha(function(version) {
+    sendJsonResponse(res, { apiBaseurl: '', version: version });
+  });
 });
+
 
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
