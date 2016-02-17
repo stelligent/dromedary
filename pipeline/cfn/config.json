@@ -4,18 +4,8 @@
   "Resources": {
     "ConfigBucket": {
       "Type": "AWS::S3::Bucket",
+      "DeletionPolicy" : "Retain",
       "Properties": {
-        "BucketName": {
-          "Fn::Join": [
-            "-",
-            [
-              "config",
-              {
-                "Ref": "AWS::AccountId"
-              }
-            ]
-          ]
-        },
         "AccessControl": "BucketOwnerFullControl"
       }
     },
@@ -211,6 +201,13 @@
         "SnsTopicARN": {
           "Ref": "ConfigTopic"
         }
+      }
+    }
+  },
+  "Outputs":{
+    "StackName":{
+      "Value":{
+        "Ref":"AWS::StackName"
       }
     }
   }
