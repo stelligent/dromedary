@@ -7,6 +7,15 @@ DYNAMODB_TABLE_NAME=xxxxx
 GITHUB_TOKEN=xxxx
 GITHUB_USER=xxxx
 AWS_REGION=xxxx
+DEV_BUCKET=xxxx
+BASE_TEMPLATE_URL=https://s3.amazonaws.com/${DEV_BUCKET}/
+
+aws s3api create-bucket --bucket ${DEV_BUCKET}
+
+for json in $(ls pipeline/cfn/*.json);
+do
+  aws s3 cp ${json} s3://${DEV_BUCKET}/
+done
 
 which jq
 if [[ $? != 0 ]];
@@ -36,12 +45,12 @@ fi
 
 aws cloudformation create-stack \
 --stack-name DromedaryStack  \
---template-body https://raw.githubusercontent.com/stelligent/dromedary/master/pipeline/cfn/dromedary-master.json \
+--template-body file://pipeline/cfn/dromedary-master.json \
 --region ${AWS_REGION} \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
 --parameters ParameterKey=KeyName,ParameterValue=${EC2_KEY_PAIR_NAME} \
 	ParameterKey=Branch,ParameterValue=master \
-	ParameterKey=BaseTemplateURL,ParameterValue=https://s3.amazonaws.com/stelligent-training-public/master/ \
+	ParameterKey=BaseTemplateURL,ParameterValue=${BASE_TEMPLATE_URL} \
 	ParameterKey=GitHubUser,ParameterValue=${GITHUB_USER} \
 	ParameterKey=GitHubToken,ParameterValue=${GITHUB_TOKEN} \
 	ParameterKey=DDBTableName,ParameterValue=${DYNAMODB_TABLE_NAME} \
