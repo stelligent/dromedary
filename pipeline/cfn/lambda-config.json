@@ -96,8 +96,7 @@
                "SourceDetails":[],
                "SourceIdentifier":"INSTANCES_IN_VPC"
             }
-         },
-         "DependsOn":"configRulePolicy"
+         }
       },
       "rSSHRule":{
          "Type":"AWS::Config::ConfigRule",
@@ -112,8 +111,7 @@
                "SourceDetails":[],
                "SourceIdentifier":"INCOMING_SSH_DISABLED"
             }
-         },
-         "DependsOn":"configRulePolicy"
+         }
       },
       "rEncryptionRule":{
          "Type":"AWS::Config::ConfigRule",
@@ -128,8 +126,7 @@
                "SourceDetails":[],
                "SourceIdentifier":"ENCRYPTED_VOLUMES"
             }
-         },
-         "DependsOn":"configRulePolicy"
+         }
       },
       "rIAMRule":{
          "Type":"AWS::Config::ConfigRule",
@@ -169,33 +166,6 @@
             },
             "Action":"lambda:InvokeFunction",
             "Principal":"config.amazonaws.com"
-         }
-      },
-      "configRulePolicy":{
-        "Type":"AWS::IAM::Policy",
-        "Properties":{
-           "PolicyDocument": {
-             "Statement":[
-                {
-                   "Action":[
-                      "iam:List*",
-                      "iam:Get*"
-                   ],
-                   "Effect":"Allow",
-                   "Resource":"*"
-                },
-                {
-                   "Action":[
-                      "config:*"
-                   ],
-                   "Effect":"Allow",
-                   "Resource":"*"
-                }
-             ],
-             "Version":"2012-10-17"
-           },
-           "PolicyName": "configRulePolicy",
-           "Roles": ["config-role"]
          }
       },
       "lambdaExecutionRole":{

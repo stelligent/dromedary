@@ -1,0 +1,217 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Setup Config Service",
+  "Resources": {
+    "ConfigBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Fn::Join": [
+            "-",
+            [
+              "config",
+              {
+                "Ref": "AWS::AccountId"
+              }
+            ]
+          ]
+        },
+        "AccessControl": "BucketOwnerFullControl"
+      }
+    },
+    "ConfigTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "config-topic",
+        "TopicName": "config-topic"
+      }
+    },
+    "ConfigRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sts:AssumeRole"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "config.amazonaws.com"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "sns:Publish",
+                  "Resource": {
+                    "Ref": "ConfigTopic"
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:PutObject"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "ConfigBucket"
+                          },
+                          "/AWSLogs/",
+                          {
+                            "Ref": "AWS::AccountId"
+                          },
+                          "/*"
+                        ]
+                      ]
+                    }
+                  ],
+                  "Condition": {
+                    "StringLike": {
+                      "s3:x-amz-acl": "bucket-owner-full-control"
+                    }
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetBucketAcl"
+                  ],
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:::",
+                        {
+                          "Ref": "ConfigBucket"
+                        }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "appstream:Get*",
+                    "autoscaling:Describe*",
+                    "cloudformation:DescribeStacks",
+                    "cloudformation:DescribeStackEvents",
+                    "cloudformation:DescribeStackResource",
+                    "cloudformation:DescribeStackResources",
+                    "cloudformation:GetTemplate",
+                    "cloudformation:List*",
+                    "cloudfront:Get*",
+                    "cloudfront:List*",
+                    "cloudtrail:DescribeTrails",
+                    "cloudtrail:GetTrailStatus",
+                    "cloudwatch:Describe*",
+                    "cloudwatch:Get*",
+                    "cloudwatch:List*",
+                    "config:Put*",
+                    "directconnect:Describe*",
+                    "dynamodb:GetItem",
+                    "dynamodb:BatchGetItem",
+                    "dynamodb:Query",
+                    "dynamodb:Scan",
+                    "dynamodb:DescribeTable",
+                    "dynamodb:ListTables",
+                    "ec2:Describe*",
+                    "elasticache:Describe*",
+                    "elasticbeanstalk:Check*",
+                    "elasticbeanstalk:Describe*",
+                    "elasticbeanstalk:List*",
+                    "elasticbeanstalk:RequestEnvironmentInfo",
+                    "elasticbeanstalk:RetrieveEnvironmentInfo",
+                    "elasticloadbalancing:Describe*",
+                    "elastictranscoder:Read*",
+                    "elastictranscoder:List*",
+                    "iam:List*",
+                    "iam:Get*",
+                    "kinesis:Describe*",
+                    "kinesis:Get*",
+                    "kinesis:List*",
+                    "opsworks:Describe*",
+                    "opsworks:Get*",
+                    "route53:Get*",
+                    "route53:List*",
+                    "redshift:Describe*",
+                    "redshift:ViewQueriesInConsole",
+                    "rds:Describe*",
+                    "rds:ListTagsForResource",
+                    "s3:Get*",
+                    "s3:List*",
+                    "sdb:GetAttributes",
+                    "sdb:List*",
+                    "sdb:Select*",
+                    "ses:Get*",
+                    "ses:List*",
+                    "sns:Get*",
+                    "sns:List*",
+                    "sqs:GetQueueAttributes",
+                    "sqs:ListQueues",
+                    "sqs:ReceiveMessage",
+                    "storagegateway:List*",
+                    "storagegateway:Describe*",
+                    "tag:Get*",
+                    "trustedadvisor:Describe*"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            },
+            "PolicyName": "root"
+          }
+        ]
+      }
+    },
+    "ConfigRecorder": {
+      "Type": "AWS::Config::ConfigurationRecorder",
+      "Properties": {
+        "Name": "default",
+        "RecordingGroup": {
+          "ResourceTypes": [
+            "AWS::EC2::Instance",
+            "AWS::EC2::SecurityGroup",
+            "AWS::EC2::VPC",
+            "AWS::IAM::User",
+            "AWS::IAM::Role"
+          ]
+        },
+        "RoleARN": {
+          "Fn::GetAtt": [
+            "ConfigRole",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "DeliveryChannel": {
+      "Type": "AWS::Config::DeliveryChannel",
+      "Properties": {
+        "ConfigSnapshotDeliveryProperties": {
+          "DeliveryFrequency": "Twelve_Hours"
+        },
+        "S3BucketName": {
+          "Ref": "ConfigBucket"
+        },
+        "SnsTopicARN": {
+          "Ref": "ConfigTopic"
+        }
+      }
+    }
+  }
+}
