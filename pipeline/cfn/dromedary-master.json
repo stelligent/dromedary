@@ -975,15 +975,22 @@
         }
       },
       "Properties":{
-        "SubnetId": {
-          "Fn::GetAtt": [
-            "VPCStack",
-            "Outputs.SubnetId"
-          ]
-        },
-        "SecurityGroupIds":[
+        "NetworkInterfaces": [
           {
-            "Ref":"InstanceSecurityGroup"
+             "AssociatePublicIpAddress" : true,
+             "DeleteOnTermination" : true,
+             "DeviceIndex" : "0",
+             "GroupSet": [
+               {
+                 "Ref":"InstanceSecurityGroup"
+               }
+             ],
+             "SubnetId" : {
+               "Fn::GetAtt": [
+                 "VPCStack",
+                 "Outputs.SubnetId"
+               ]
+             }
           }
         ],
         "KeyName":{
