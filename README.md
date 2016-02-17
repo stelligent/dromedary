@@ -77,12 +77,22 @@ ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `
 
 As part of the bootstrapping process, it will automatically launch the Dromedary application stack via CodePipeline. 
 
+#### Outputs
+
+A few of the most relevant CloudFormation outputs are listed in the table below.
+
+Output | Description
+---------- | ------------
+DromedaryAppURL | Available in the master stack outputs. Link to the working application once the application pipeline is complete
+CodePipelineURL | Available in the CodePipeline stack outputs. Link to the CodePipeline pipeline
+
+
+#### Post-bootstrap steps
+
  **IMPORTANT**: You will need to manually delete the CloudFormation stack once you've completed usage. You will be charged for AWS resource usage.
 
 **Bootstrapping Tests**
 View the outputs in CloudFormation for links to test reports uploaded to your Dromedary S3 bucket.
-
-#### Post-bootstrap steps
 
 Upon completion of a successful pipeline execution, Dromedary will be available by going to the Outputs tab on the master CloudFormation stack and clicking on the value for the `DromedaryAppURL` Output. If that hosted zone is not a publicly registered domain, you can access Dromedary via IP address. The IP address can be queried by viewing the EIP output of the ENI CloudFormation stack.
 
