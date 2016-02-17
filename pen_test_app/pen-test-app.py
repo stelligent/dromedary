@@ -36,24 +36,25 @@ def main():
 
     zap = openZapProxy(args)
 
-    sys.stdout.write('Accessing args.target %s' % args.target)
+    sys.stdout.write('Accessing %s\n' % args.target)
     zap.urlopen(args.target)
     # Give the sites tree a chance to get updated
     time.sleep(2)
 
-    sys.stdout.write('Spidering args.target %s' % args.target)
+    sys.stdout.write('Spidering %s\n' % args.target)
     zap.spider.scan(args.target)
 
     time.sleep(2)
+    print zap.spider.status()
     while (int(zap.spider.status()) < 100):
-        sys.stdout.write('Spider progress %: ' + zap.spider.status())
+        sys.stdout.write('Spider progress %: \n' + zap.spider.status())
         time.sleep(2)
 
     sys.stdout.write('Spider completed')
     # Give the passive scanner a chance to finish
     time.sleep(5)
 
-    sys.stdout.write('Scanning args.target')
+    sys.stdout.write('Scanning %s\n' % args.target)
     zap.ascan.scan(args.target)
     while (int(zap.ascan.status()) < 100):
         time.sleep(5)

@@ -42,3 +42,6 @@ cookbooks/dromedary/files/default/app
 
 # Results from pen tests
 pen-test-app/results.json
+
+# Ignore vim swapfile
+*.swp
