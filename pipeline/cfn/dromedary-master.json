@@ -735,7 +735,8 @@
       "Type":"AWS::EC2::Instance",
       "DependsOn":[
         "DynamoDBStack",
-        "PipelineStoreStack"
+        "PipelineStoreStack",
+        "VPCStack"
       ],
       "Metadata":{
         "AWS::CloudFormation::Init":{
@@ -974,7 +975,13 @@
         }
       },
       "Properties":{
-        "SecurityGroups":[
+        "SubnetId": {
+          "Fn::GetAtt": [
+            "VPCStack",
+            "Outputs.SubnetId"
+          ]
+        },
+        "SecurityGroupIds":[
           {
             "Ref":"InstanceSecurityGroup"
           }
@@ -1088,6 +1095,12 @@
     "InstanceSecurityGroup":{
       "Type":"AWS::EC2::SecurityGroup",
       "Properties":{
+        "VpcId": {
+          "Fn::GetAtt": [
+            "VPCStack",
+            "Outputs.VPC"
+          ]
+        },
         "GroupDescription":"Enable SSH access and HTTP access on the inbound port",
         "SecurityGroupIngress":[
           {
