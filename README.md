@@ -64,7 +64,7 @@ aws cloudformation create-stack \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
 ```
 
-In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
+In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
 
 Parameters | Description
 ---------- | ------------
@@ -73,7 +73,7 @@ GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
 BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
-ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `.`. 
+ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `.` See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account. 
 
 As part of the bootstrapping process, it will automatically launch the Dromedary application stack via CodePipeline. 
 

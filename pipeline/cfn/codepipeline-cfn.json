@@ -296,6 +296,23 @@
       "Value":{
         "Ref":"AWS::StackName"
       }
+    },
+    "CodePipelineURL":{
+      "Value":{
+        "Fn::Join":[
+          "",
+          [
+            "https://console.aws.amazon.com/codepipeline/home?region=",
+            {
+              "Ref":"AWS::Region"
+            },
+            "#/view/",
+            {
+              "Ref":"AppPipeline"
+            }
+          ]
+        ]
+      }
     }
   }
 }
