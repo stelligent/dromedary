@@ -17,6 +17,7 @@ VPCStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_
 IAMStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`IAMStackName`].OutputValue')"
 DDBStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`DDBStackName`].OutputValue')"
 ENIStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`ENIStackName`].OutputValue')"
+ConfigStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`ConfigStackName`].OutputValue')"
 LambdaConfigStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`LambdaConfigStackName`].OutputValue')"
 MasterStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`MasterStackName`].OutputValue')"
 dromedary_s3_bucket=dromedary-"$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`DromedaryS3Bucket`].OutputValue')"
@@ -57,6 +58,7 @@ dromedary_vpc_stack_name="$(aws cloudformation describe-stacks --stack-name $pip
 dromedary_iam_stack_name="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`IAMStackName`].OutputValue')"
 dromedary_ddb_stack_name="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`DDBStackName`].OutputValue')"
 dromedary_eni_stack_name="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`ENIStackName`].OutputValue')"
+dromedary_config_stack_name="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`ConfigStackName`].OutputValue')"
 dromedary_lambdaconfig_stack_name="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`LambdaConfigStackName`].OutputValue')"
 #dromedary_eni_stack_name="ENIStack$(echo $uuid)"
 jenkins_custom_action_provider_name="Jenkins$(echo $uuid)"
@@ -69,6 +71,7 @@ echo "The value of VPCStackName is $VPCStackName"
 echo "The value of IAMStackName is $IAMStackName"
 echo "The value of DDBStackName is $DDBStackName"
 echo "The value of ENIStackName is $ENIStackName"
+echo "The value of ConfigStackName is $ConfigStackName"
 echo "The value of LambdaConfigStackName is $LambdaConfigStackName"
 echo "The value of MasterStackName is $MasterStackName"
 echo "The value of dromedary_s3_bucket is $dromedary_s3_bucket"
@@ -79,6 +82,7 @@ echo "The value of dromedary_zone_id is $dromedary_zone_id"
 echo "The value of dromedary_iam_stack_name is $dromedary_iam_stack_name"
 echo "The value of dromedary_ddb_stack_name is $dromedary_ddb_stack_name"
 echo "The value of dromedary_eni_stack_name is $dromedary_eni_stack_name"
+echo "The value of dromedary_config_stack_name is $dromedary_config_stack_name"
 echo "The value of dromedary_lambdaconfig_stack_name is $dromedary_lambdaconfig_stack_name"
 echo "The value of jenkins_custom_action_provider_name is $jenkins_custom_action_provider_name"
 echo "The value of dromedary_eni_stack_name is $dromedary_eni_stack_name"
@@ -99,6 +103,7 @@ sed s/VPC_PLACEHOLDER/$dromedary_vpc_stack_name/ drom-build/config.xml > drom-bu
 sed s/IAM_PLACEHOLDER/$dromedary_iam_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/DDB_PLACEHOLDER/$dromedary_ddb_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/ENI_PLACEHOLDER/$dromedary_eni_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/CONFIG_PLACEHOLDER/$dromedary_config_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/LAMBDACONFIG_PLACEHOLDER/$dromedary_lambdaconfig_stack_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/KEY_PLACEHOLDER/$dromedary_ec2_key/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
@@ -133,6 +138,7 @@ aws cloudformation update-stack \
         ParameterKey=IAMStackName,ParameterValue=$IAMStackName \
         ParameterKey=DDBStackName,ParameterValue=$DDBStackName \
         ParameterKey=ENIStackName,ParameterValue=$dromedary_eni_stack_name \
+        ParameterKey=ConfigStackName,ParameterValue=$dromedary_config_stack_name \
         ParameterKey=LambdaConfigStackName,ParameterValue=$dromedary_lambdaconfig_stack_name \
         ParameterKey=DromedaryAppURL,ParameterValue=$prod_dns_param \
         ParameterKey=KeyName,ParameterValue=$dromedary_ec2_key
