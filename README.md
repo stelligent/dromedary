@@ -78,6 +78,9 @@ ProdHostedZone | Route53 Hosted Zone. You must precede `YOURHOSTEDZONE` with a `
 As part of the bootstrapping process, it will automatically launch the Dromedary application stack via CodePipeline. 
 
 #### Outputs
+
+A few of the most relevant CloudFormation outputs are listed in the table below.
+
 Output | Description
 ---------- | ------------
 DromedaryAppURL | Available in the master stack outputs. Link to the working application once the application pipeline is complete
