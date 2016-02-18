@@ -2,7 +2,7 @@
    "AWSTemplateFormatVersion":"2010-09-09",
    "Description":"Creates Lambda functions which enable the lookup of 'upstream' Stack Outputs and Resources from within a 'downstream' CloudFormation template (without having to use code external to the template) ",
    "Resources":{
-      "rValidateIAM":{
+      "iamMFAFunction":{
          "Type":"AWS::Lambda::Function",
          "Properties":{
             "Code":{
@@ -83,10 +83,10 @@
             }
          }
       },
-      "rVPCRule":{
+      "ec2VPCRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":"ConSec-VPCRule",
+            "ConfigRuleName":"ConSec-EC2-VPC-Rule",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -98,10 +98,10 @@
             }
          }
       },
-      "rSSHRule":{
+      "ec2SSHRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":"ConSec-SSHRule",
+            "ConfigRuleName":"ConSec-EC2-SSH-Rule",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -113,10 +113,10 @@
             }
          }
       },
-      "rEncryptionRule":{
+      "ec2EncryptionRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":"ConSec-EncrpytionRule",
+            "ConfigRuleName":"ConSec-EC2-Encryption-Rule",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -128,10 +128,10 @@
             }
          }
       },
-      "rIAMRule":{
+      "iamMFARule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":"ConSec-IAMRule",
+            "ConfigRuleName":"ConSec-IAM-MFA-Rule",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::IAM::User"
@@ -147,7 +147,7 @@
                ],
                "SourceIdentifier":{
                   "Fn::GetAtt":[
-                     "rValidateIAM",
+                     "iamMFAFunction",
                      "Arn"
                   ]
                }
@@ -160,7 +160,7 @@
          "Properties":{
             "FunctionName":{
                "Fn::GetAtt":[
-                  "rValidateIAM",
+                  "iamMFAFunction",
                   "Arn"
                ]
             },
