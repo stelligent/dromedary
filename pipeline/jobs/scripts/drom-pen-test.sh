@@ -11,7 +11,8 @@ if [ -z "$dest_host" ]; then
 fi
 export TARGET_URL=http://$dest_host:8080
 
-pen_test_app/pen-test-app.py \
+pushd pen_test_app
+python pen-test-app.py \
     --zap-host http://127.0.0.1:8090 \
     --target ${TARGET_URL}
 behave
