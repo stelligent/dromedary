@@ -175,10 +175,17 @@
         "RecordingGroup": {
           "ResourceTypes": [
             "AWS::EC2::Instance",
+            "AWS::EC2::InternetGateway",
+            "AWS::EC2::NetworkAcl",
+            "AWS::EC2::NetworkInterface",
+            "AWS::EC2::RouteTable",
             "AWS::EC2::SecurityGroup",
+            "AWS::EC2::Subnet",
+            "AWS::EC2::Volume",
             "AWS::EC2::VPC",
-            "AWS::IAM::User",
-            "AWS::IAM::Role"
+            "AWS::IAM::Policy",
+            "AWS::IAM::Role",
+            "AWS::IAM::User"
           ]
         },
         "RoleARN": {
