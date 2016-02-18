@@ -15,4 +15,4 @@ pushd pen_test_app
 python pen-test-app.py \
     --zap-host http://127.0.0.1:8090 \
     --target ${TARGET_URL}
-behave
+/usr/local/bin/behave
