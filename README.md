@@ -22,7 +22,15 @@ backend to increment the value for that color and update the chart with the new 
 The frontend will also poll the backend for changes to values of the colors of the pie chart and update the chart
 appropriately. If it detects that a new version of the app has been deployed, it will reload the page.
 
-Directions are provided to run this demo in AWS and locally. 
+Directions are provided to run this demo in AWS and locally.
+
+## Core Demo Requirements
+
+The bootstrapping and the application must be capable of launching with a single command or CloudFormation button click
+
+An application pipeline in CodePipeline must run in less than 10 minutes.
+
+It should be capable of running on a new AWS account without any additional setup.
 
 ## Feature Backlog :dromedary_camel:
 
