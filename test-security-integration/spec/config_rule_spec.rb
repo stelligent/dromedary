@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'json'
 
 describe('all_config_rules') do
   it 'have a status of COMPLIANT' do
@@ -10,7 +11,8 @@ describe('all_config_rules') do
       next_token: "",
     })
 
-    rule_stats = Hash.new
+
+    rule_stats = Array.new
     fail_count = 0
 
     #Get compliance status for each rule
@@ -21,12 +23,17 @@ describe('all_config_rules') do
         next_token: "",
       })
       comp_status = comp.compliance_by_config_rules[0].compliance.compliance_type
-      rule_stats[rule.config_rule_name] = comp_status
+      comp_result = comp_status == "COMPLIANT" ? "PASS" : "FAIL"
+      rule_stat = {"rule" => rule.config_rule_name, "status" => comp_status, "result" => comp_result}
+      rule_stats.push(rule_stat)
       if comp_status != "COMPLIANT"
         fail_count = fail_count + 1
       end
     end
-    rule_stats.each {|key, value| puts "#{key} is #{value}:  #{value == "COMPLIANT" ? "PASS" : "FAIL"}" }
+    rule_stats.each {|rule| puts "#{rule.rule} is #{rule.status}:  #{rule.result}" }
+    File.open("../template/test_results.json","w") do |f|
+      f.write(rule_stats.to_json)
+    end
     expect(fail_count).to eq 0
   end
 end
