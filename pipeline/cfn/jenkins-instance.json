@@ -240,7 +240,6 @@
                 },
                 "\n",
                 "\n",
-                "curl -o /var/lib/jenkins/plugins/rbenv.hpi http://updates.jenkins-ci.org/latest/rbenv.hpi\n",
                 "service jenkins start\n",
                 "node -v \n",
                 "npm -v\n",

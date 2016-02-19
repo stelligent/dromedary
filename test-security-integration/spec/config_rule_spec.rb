@@ -1,7 +1,7 @@
 require 'aws-sdk'
 
-describe('config_rule') do
-  it 'has a status of COMPLIANT' do
+describe('all_config_rules') do
+  it 'have a status of COMPLIANT' do
     client = Aws::ConfigService::Client.new(region: 'us-east-1')
 
     #Get Config rules
