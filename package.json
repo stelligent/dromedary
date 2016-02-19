@@ -35,7 +35,6 @@
     "gulp-util": "^3.0.6",
     "mocha": "^2.2.5",
     "run-sequence": "^1.1.2",
-    "spawn-sync": "^1.0.13",
     "urllib-sync": "^1.1.0",
     "yargs": "^3.19.0"
   },
