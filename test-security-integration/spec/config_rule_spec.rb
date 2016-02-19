@@ -30,10 +30,13 @@ describe('all_config_rules') do
         fail_count = fail_count + 1
       end
     end
-    rule_stats.each {|rule| puts "#{rule.rule} is #{rule.status}:  #{rule.result}" }
-    File.open("../template/test_results.json","w") do |f|
-      f.write(rule_stats.to_json)
+    rule_stats.each {|rule| puts "#{rule["rule"]} is #{rule["status"]}:  #{rule["result"]}" }
+    status = fail_count == 0 ? "PASS" : "FAIL"
+    rule_stats_output = {"status" => status, "results" => rule_stats}
+    puts "cwd: #{Dir.pwd}"
+    File.open("template/test_results.json","w") do |f|
+      f.write(rule_stats_output.to_json)
     end
-    expect(fail_count).to eq 0
+    expect(status).to eq "PASS"
   end
 end

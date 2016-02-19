@@ -13,7 +13,7 @@ function loadJSON(callback) {
 }
 
 Handlebars.registerHelper('if_eq', function(a, b, opts) {
-    if(a === b)
+    if(a.toLowerCase() === b.toLowerCase())
         return opts.fn(this);
     else
         return opts.inverse(this);
