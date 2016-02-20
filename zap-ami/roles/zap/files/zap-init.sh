@@ -46,10 +46,20 @@ start_zap() {
         exit 1
     fi
     pushd /opt/zap 1 >> /dev/null
-    ${ZAP} -daemon -port 8090 -config api.disablekey=true >> $ZAP_LOG 2>&1 &
+    timeout=0
+    ${ZAP} \
+        -daemon \
+        -host 0.0.0.0 \
+        -port 8080 \
+        -config api.disablekey=true >> $ZAP_LOG 2>&1 &
     sleep 2
     while [ -z "$(tail -n 2 $ZAP_LOG | grep 'ZAP is now listening')" ]; do
+        timeout=$(( timeout + 1 ))
         sleep 1
+        if [ $timeout -ge 60 ]; then
+            echo "FAILED"
+            exit 1
+        fi
     done
     echo $! > /var/run/zap.run
     echo "Started"
@@ -63,9 +73,15 @@ stop_zap() {
     fi
 
     PID=$(cat /var/run/zap.run)
+    timeout=0
     kill ${PID}
     while [ -n "$(ps -p ${PID} -o comm=)" ]; do
+        timeout=$(( timeout + 1 ))
         sleep 1
+        if [ $timeout -ge 60 ]; then
+            echo "FAILED"
+            exit 1
+        fi
     done
     rm -f /var/run/zap.run
 
