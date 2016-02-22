@@ -1,0 +1,55 @@
+{
+  "Description": "Dromedary CloudFront provisioning",
+
+  "Parameters": {
+    "pDistributionDomainName": {
+      "Type": "String",
+      "Description": "Domain name for the CloudFront distribution."
+    }
+  },
+
+  "Resources": {
+    "rDistribution": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Origins": [
+            {
+              "DomainName": { "Ref": "pDistributionDomainName"},
+              "Id": "favoriteColorOrigin",
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "OriginProtocolPolicy": "http-only"
+              }
+            }
+          ],
+
+          "Enabled": "true",
+
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "favoriteColorOrigin",
+            "SmoothStreaming" : "false",
+            "ForwardedValues": {
+              "QueryString": "true",
+              "Cookies" : { "Forward" : "none" }
+            },
+            "ViewerProtocolPolicy": "allow-all"
+          },
+
+          "PriceClass" : "PriceClass_100"
+        }
+      }
+    }
+  },
+
+  "Outputs": {
+    "oDistributionId": {
+      "Description": "Distribution Id for converged distribution",
+      "Value": { "Ref": "rDistribution" }
+    },
+    "oDomainName": {
+      "Description": "Distribution Id for converged distribution",
+      "Value": { "Fn::GetAtt": [ "rDistribution", "DomainName" ]}
+    }
+  }
+}
