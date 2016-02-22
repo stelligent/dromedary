@@ -34,8 +34,8 @@
     "gulp-untar": "0.0.4",
     "gulp-util": "^3.0.6",
     "mocha": "^2.2.5",
+    "request-promise": "^2.0.1",
     "run-sequence": "^1.1.2",
-    "urllib-sync": "^1.1.0",
     "yargs": "^3.19.0"
   },
   "dependencies": {
