@@ -3,9 +3,12 @@ var rp        = require('request-promise');
 var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
 
 describe("/increment", function() {
-  var chartData, initialColorCount, color, expectedNewColorCount;
-  var incrementResponse, newColorCounts, badIncrementResponse;
-  before(function(done) {
+    var chartData, initialColorCount, color, expectedNewColorCount;
+    var incrementResponse, newColorCounts, badIncrementResponse;
+
+    this.timeout(15000);
+
+    before(function(done) {
     var apiBaseurl;
 
     rp({ uri: targetUrl+'/config.json', json:true})
