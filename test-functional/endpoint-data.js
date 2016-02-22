@@ -6,6 +6,7 @@ var expectedNumberOfItems = 3;
 var expectedProperties = ['value', 'color', 'highlight', 'label'];
 
 describe("/data", function() {
+  this.timeout(15000);
 
   var apiBaseurl;
   before(function(done) {
@@ -60,6 +61,8 @@ describe("/data", function() {
 });
 
 describe("/data?countsOnly", function() {
+  this.timeout(15000);
+
   var apiBaseurl;
   before(function(done) {
       rp({ uri: targetUrl+'/config.json', json:true})
