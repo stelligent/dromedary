@@ -10,9 +10,9 @@ describe("/increment", function() {
 
     this.color = chartData[0].label.toLowerCase();
     this.expectedNewColorCount = initialColorCount + 1;
-    this.incrementResponse = JSON.parse(request(targetUrl + '/increment?color=' + this.color).data.toString('utf-8'));
+    this.incrementResponse = JSON.parse(request(targetUrl + '/increment?color=' + this.color,  { method: 'POST' }).data.toString('utf-8'));
     this.newColorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
-    this.badIncrementResponse = JSON.parse(request(targetUrl + '/increment?color=UKNOWN').data.toString('utf-8'));
+    this.badIncrementResponse = JSON.parse(request(targetUrl + '/increment?color=UKNOWN',  { method: 'POST' }).data.toString('utf-8'));
   });
 
   it("returns new count", function() {
