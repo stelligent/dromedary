@@ -40,7 +40,7 @@ dromedaryChartHandler = function () {
 
   function incrementColorViaColorCounts(colorToInc) {
     var incUrl = apiBaseurl+'increment?color=' + colorToInc;
-    $.getJSON(incUrl, {}, function(data, status) {
+    $.post(incUrl, {}, function(data, status) {
       var segment;
       var segmentColor;
       var segmentIndex;
@@ -65,7 +65,7 @@ dromedaryChartHandler = function () {
           }
         }
       }
-    });
+    },'json');
   }
 
   function pollForUpdates() {
@@ -168,7 +168,7 @@ dromedaryChartHandler = function () {
     }
     colorToInc = activePoints[0].label.toLowerCase();
     incUrl = apiBaseurl+'increment?color=' + colorToInc;
-    $.getJSON(incUrl, {}, function(data, status) {
+    $.post(incUrl, {}, function(data, status) {
       console.log('Color increment GET status: ' + status);
       if (status !== 'success') {
         console.log('Failed to fetch /increment?color=' + colorToInc);
@@ -185,7 +185,7 @@ dromedaryChartHandler = function () {
         updateLastApiMessage('Incremented ' + colorToInc +
           ' ... new count is ' + data.count);
       }
-    });
+    }, 'json');
   });
 
 
