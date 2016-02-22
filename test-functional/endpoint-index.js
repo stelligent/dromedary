@@ -6,7 +6,7 @@ var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_UR
 describe("/", function() {
   var expectedIndex;
   before(function() {
-      expectedIndex = fs.readFileSync('./public/index.html').toString('utf-8');
+      expectedIndex = fs.readFileSync(__dirname+'/../public/index.html').toString('utf-8');
   });
 
   var servedIndex;
