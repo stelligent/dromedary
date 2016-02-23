@@ -2,85 +2,43 @@
    "AWSTemplateFormatVersion":"2010-09-09",
    "Description":"Creates Lambda functions which enable the lookup of 'upstream' Stack Outputs and Resources from within a 'downstream' CloudFormation template (without having to use code external to the template) ",
    "Resources":{
-      "iamMFAFunction":{
-         "Type":"AWS::Lambda::Function",
-         "Properties":{
-            "Code":{
-               "ZipFile":{
-                  "Fn::Join":[
-                     "",
-                     [
-                        "var aws = require('aws-sdk');",
-                        "var config = new aws.ConfigService();",
-                        "var iam = new aws.IAM();",
-                        "function checkDefined(reference, referenceName) {",
-                        "  if (!reference) {",
-                        "    console.log(\"Error: \" + referenceName + \" is not defined\");",
-                        "    throw referenceName;",
-                        "  }",
-                        "  return reference;",
-                        "}",
-                        "function isApplicable(configurationItem, event) {",
-                        "  checkDefined(configurationItem, \"configurationItem\");",
-                        "  checkDefined(event, \"event\");",
-                        "  var status = configurationItem.configurationItemStatus;",
-                        "  var eventLeftScope = event.eventLeftScope;",
-                        "  return ('OK' === status || 'ResourceDiscovered' === status) && false === eventLeftScope;",
-                        "}",
-                        "exports.handler = function(event, context) {",
-                        "  event = checkDefined(event, \"event\");",
-                        "  var invokingEvent = JSON.parse(event.invokingEvent);",
-                        "  var configurationItem = checkDefined(invokingEvent.configurationItem, \"invokingEvent.configurationItem\");",
-                        "  var compliance = 'NOT_APPLICABLE';",
-                        "  var putEvaluationsRequest = {};",
-                        "  if (isApplicable(invokingEvent.configurationItem, event)) {",
-                        "    compliance = 'NOT_APPLICABLE';",
-                        "   var params = {",
-                        "      UserName: configurationItem.configuration.userName",
-                        "    };",
-                        "    iam.listMFADevices(params, function(err,data){",
-                        "      if (err){",
-                        "        responseData = { Error: 'listMFADevices call failed'};",
-                        "        console.log(responseData.Error + ':\\n', err);",
-                        "      } else {",
-                        "        if (data.MFADevices.length < 1) {",
-                        "          compliance = 'NON_COMPLIANT';",
-                        "        } else {",
-                        "          compliance = 'COMPLIANT';",
-                        "        }",
-                        "        putEvaluationsRequest.Evaluations = [",
-                        "          {",
-                        "            ComplianceResourceType: configurationItem.resourceType,",
-                        "            ComplianceResourceId: configurationItem.resourceId,",
-                        "            ComplianceType: compliance,",
-                        "            OrderingTimestamp: configurationItem.configurationItemCaptureTime",
-                        "          }",
-                        "        ];",
-                        "        putEvaluationsRequest.ResultToken = event.resultToken;",
-                        "        config.putEvaluations(putEvaluationsRequest, function (err, data) {",
-                        "          if (err) {",
-                        "            context.fail(err);",
-                        "          } else {",
-                        "            context.succeed(data);",
-                        "          }",
-                        "        });",
-                        "      }",
-                        "    });",
-                        "  }",
-                        "};"
-                     ]
-                  ]
-               }
+      "iamMFAFunction": {
+         "Type": "AWS::Lambda::Function",
+         "Properties": {
+            "Handler": "iam-user-mfa.handler",
+            "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
+            "Code": {
+               "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
+               "S3Key": "lambda/config-rules.zip"
             },
-            "Handler":"index.handler",
-            "Runtime":"nodejs",
-            "Timeout":"30",
-            "Role":{
-               "Fn::GetAtt":[
-                  "lambdaExecutionRole",
-                  "Arn"
-               ]
-            }
+            "Runtime": "nodejs",
+            "Timeout": "5"
+         }
+      },
+      "ec2SecGrpCidrIngressFunction": {
+         "Type": "AWS::Lambda::Function",
+         "Properties": {
+            "Handler": "ec2-secgrp-cidr-ingress.handler",
+            "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
+            "Code": {
+               "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
+               "S3Key": "lambda/config-rules.zip"
+            },
+            "Runtime": "nodejs",
+            "Timeout": "5"
+         }
+      },
+      "ec2SecGrpCidrEgressFunction": {
+         "Type": "AWS::Lambda::Function",
+         "Properties": {
+            "Handler": "ec2-secgrp-cidr-egress.handler",
+            "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
+            "Code": {
+               "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
+               "S3Key": "lambda/config-rules.zip"
+            },
+            "Runtime": "nodejs",
+            "Timeout": "5"
          }
       },
       "ec2VPCRule":{
@@ -153,14 +111,94 @@
                }
             }
          },
-         "DependsOn":"configPermissionToCallLambda"
+         "DependsOn":"iamMFAPerm"
       },
-      "configPermissionToCallLambda":{
+      "ec2SecGrpCidrIngressRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-EC2-SecGrp-Cidr-Ingress-Rule",
+            "Scope":{
+               "ComplianceResourceTypes":[
+                  "AWS::EC2::SecurityGroup"
+               ]
+            },
+            "Source":{
+               "Owner":"CUSTOM_LAMBDA",
+               "SourceDetails":[
+                  {
+                     "EventSource":"aws.config",
+                     "MessageType":"ConfigurationItemChangeNotification"
+                  }
+               ],
+               "SourceIdentifier":{
+                  "Fn::GetAtt":[
+                     "ec2SecGrpCidrIngressFunction",
+                     "Arn"
+                  ]
+               }
+            }
+         },
+         "DependsOn":"ec2SecGrpCidrIngressPerm"
+      },
+      "ec2SecGrpCidrEgressRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-EC2-SecGrp-Cidr-Egress-Rule",
+            "Scope":{
+               "ComplianceResourceTypes":[
+                  "AWS::EC2::SecurityGroup"
+               ]
+            },
+            "Source":{
+               "Owner":"CUSTOM_LAMBDA",
+               "SourceDetails":[
+                  {
+                     "EventSource":"aws.config",
+                     "MessageType":"ConfigurationItemChangeNotification"
+                  }
+               ],
+               "SourceIdentifier":{
+                  "Fn::GetAtt":[
+                     "ec2SecGrpCidrEgressFunction",
+                     "Arn"
+                  ]
+               }
+            }
+         },
+         "DependsOn":"ec2SecGrpCidrEgressPerm"
+      },
+      "iamMFAPerm":{
          "Type":"AWS::Lambda::Permission",
          "Properties":{
             "FunctionName":{
                "Fn::GetAtt":[
                   "iamMFAFunction",
+                  "Arn"
+               ]
+            },
+            "Action":"lambda:InvokeFunction",
+            "Principal":"config.amazonaws.com"
+         }
+      },
+      "ec2SecGrpCidrIngressPerm":{
+         "Type":"AWS::Lambda::Permission",
+         "Properties":{
+            "FunctionName":{
+               "Fn::GetAtt":[
+                  "ec2SecGrpCidrIngressFunction",
+                  "Arn"
+               ]
+            },
+            "Action":"lambda:InvokeFunction",
+            "Principal":"config.amazonaws.com"
+         }
+      },
+      "ec2SecGrpCidrEgressPerm":{
+         "Type":"AWS::Lambda::Permission",
+         "Properties":{
+            "FunctionName":{
+               "Fn::GetAtt":[
+                  "ec2SecGrpCidrEgressFunction",
                   "Arn"
                ]
             },
@@ -195,7 +233,8 @@
                         {
                            "Action":[
                               "iam:List*",
-                              "iam:Get*"
+                              "iam:Get*",
+                              "ec2:Describe*"
                            ],
                            "Effect":"Allow",
                            "Resource":"*"
