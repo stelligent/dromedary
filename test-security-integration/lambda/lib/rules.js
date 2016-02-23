@@ -21,6 +21,10 @@ exports.getRules = function(){
               if (ipRange.CidrIp === "0.0.0.0/0"){
                 non_comp_cnt++;
               }
+              //make sure it applies to a single host
+              if (ipRange.CidrIp.split("/")[1] !== "32"){
+                non_comp_cnt++;
+              }
             }
           });
         });
@@ -35,6 +39,10 @@ exports.getRules = function(){
             if (ipRange.CidrIp.search(cidrRangeRegex) !== -1){
               //if it's a cidr then make sure it's not open to the world
               if (ipRange.CidrIp === "0.0.0.0/0"){
+                non_comp_cnt++;
+              }
+              //make sure it applies to a single host
+              if (ipRange.CidrIp.split("/")[1] !== "32"){
                 non_comp_cnt++;
               }
             }

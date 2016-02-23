@@ -45,6 +45,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-EC2-VPC-Rule",
+            "Description": "Checks whether your EC2 instances belong to a virtual private cloud (VPC).",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -60,6 +61,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-EC2-SSH-Rule",
+            "Description": "Checks whether security groups that are in use disallow unrestricted incoming SSH traffic.",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -75,6 +77,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-EC2-Encryption-Rule",
+            "Description": "Checks whether EBS volumes that are in an attached state are encrypted.",
             "Scope":{
                "ComplianceResourceTypes":[
                ]
@@ -90,6 +93,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-IAM-MFA-Rule",
+            "Description": "Checks whether Users have an MFA Device configured.",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::IAM::User"
@@ -117,6 +121,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-EC2-SecGrp-Cidr-Ingress-Rule",
+            "Description": "Checks whether a Security Group has an ingress rule with a CIDR range that disallows unrestricted traffic and applies to a single host.",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::EC2::SecurityGroup"
@@ -144,6 +149,7 @@
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
             "ConfigRuleName":"ConSec-EC2-SecGrp-Cidr-Egress-Rule",
+            "Description": "Checks whether a Security Group has an egress rule with a CIDR range that disallows unrestricted traffic and applies to a single host.",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::EC2::SecurityGroup"
