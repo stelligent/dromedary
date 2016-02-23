@@ -77,6 +77,11 @@
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"lambda-config.json"
     },
+    "pCloudFrontCFNTemplateFile":{
+      "Type":"String",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
+      "Default":"cloudfront-cfn.json"
+    },
     "DDBTableName":{
       "Type":"String",
       "Description":"Unique name for the Dromedary Dynamo DB table"
@@ -170,6 +175,14 @@
       "Default":"0.0.0.0/0",
       "AllowedPattern":"(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription":"must be a valid IP CIDR range of the form x.x.x.x/x."
+    },
+    "pEnableCloudFrontAndWaf": {
+      "Type":"String",
+      "Default": "false"
+    },
+    "pEnableConfig": {
+      "Type":"String",
+      "Default": "true"
     }
   },
   "Mappings":{
@@ -669,6 +682,12 @@
       }
     }
   },
+
+  "Conditions" : {
+    "cEnableCloudFrontAndWaf" : {"Fn::Equals" : [{"Ref" : "pEnableCloudFrontAndWaf"}, "true"]},
+    "cEnableConfig" : {"Fn::Equals" : [{"Ref" : "pEnableConfig"}, "true"]}
+  },
+
   "Resources":{
     "LogRole":{
       "Type":"AWS::IAM::Role",
@@ -1294,15 +1313,27 @@
             ]
           },
           "ConfigStackName":{
-            "Fn::GetAtt":[
-              "ConfigStack",
-              "Outputs.StackName"
+            "Fn::If" : [
+              "cEnableConfig",
+              {
+                "Fn::GetAtt": [
+                  "ConfigStack",
+                  "Outputs.StackName"
+                ]
+              },
+              { "Ref" : "AWS::NoValue" }
             ]
           },
           "LambdaConfigStackName":{
-            "Fn::GetAtt":[
-              "LambdaConfigStack",
-              "Outputs.StackName"
+            "Fn::If" : [
+              "cEnableConfig",
+              {
+                "Fn::GetAtt": [
+                  "LambdaConfigStack",
+                  "Outputs.StackName"
+                ]
+              },
+              { "Ref" : "AWS::NoValue" }
             ]
           }
         }
@@ -1315,10 +1346,22 @@
         "VPCStack",
         "IAMStack",
         "PipelineStoreStack",
-        "WebServerInstance",
-        "ConfigStack",
-        "LambdaConfigStack"
+        "WebServerInstance"
       ],
+      "Metadata": {
+        "conditionalOrderingHack" : {
+          "Fn::If" : [
+            "cEnableConfig",
+            {
+              "Fn::GetAtt": [
+                "LambdaConfigStack",
+                "Outputs.StackName"
+              ]
+            },
+            "dontcare"
+          ]
+        }
+      },
       "Properties":{
         "TemplateURL":{
           "Fn::Join":[
@@ -1474,6 +1517,7 @@
       "Type":"AWS::CloudFormation::Stack",
       "DependsOn":[
       ],
+      "Condition": "cEnableConfig",
       "Properties":{
         "TemplateURL":{
           "Fn::Join":[
@@ -1499,6 +1543,7 @@
       "DependsOn":[
         "ConfigStack"
       ],
+      "Condition": "cEnableConfig",
       "Properties":{
         "TemplateURL":{
           "Fn::Join":[
@@ -1516,6 +1561,32 @@
         "TimeoutInMinutes":"60",
         "Parameters":{
 
+        }
+      }
+    },
+    "rCloudFrontStack": {
+      "Type":"AWS::CloudFormation::Stack",
+      "Condition": "cEnableCloudFrontAndWaf",
+      "Properties":{
+        "TemplateURL":{
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"pCloudFrontCFNTemplateFile"
+              }
+            ]
+          ]
+        },
+        "TimeoutInMinutes":"60",
+        "Parameters":{
+
+          "pDistributionDomainName":{
+            "Ref":"Domain"
+          }
         }
       }
     }

@@ -101,8 +101,8 @@ app.get('/data', function (req, res) {
   });
 });
 
-/* GET requests to /increment to increment counts */
-app.get('/increment', function (req, res) {
+/* POST requests to /increment to increment counts */
+app.post('/increment', function (req, res) {
   var ip = getClientIp(req);
   if (! reqThrottle.checkIp(ip) ) {
     console.log('Request throttled from %s for /increment', ip);
