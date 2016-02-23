@@ -33,7 +33,9 @@
               "QueryString": "true",
               "Cookies" : { "Forward" : "none" }
             },
-            "ViewerProtocolPolicy": "allow-all"
+            "ViewerProtocolPolicy": "allow-all",
+            "AllowedMethods": ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
+            "CachedMethods": ["HEAD", "GET"]
           },
 
           "PriceClass" : "PriceClass_100"
