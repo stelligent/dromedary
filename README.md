@@ -77,7 +77,7 @@ In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Rout
 Parameters | Description
 ---------- | ------------
 KeyName | The EC2 keypair name to use for ssh access to the bootstrapping instance.
-GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
+GitHubUser | GitHub UserName. This username must be the owner of the Repo.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
 BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
