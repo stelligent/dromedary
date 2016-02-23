@@ -24,8 +24,8 @@ then
   exit 1
 fi
 
-key_pair_count=$(aws ec2 describe-key-pairs --key-names ${EC2_KEY_PAIR_NAME} --region ${AWS_REGION} | jq '.KeyPairs|length')
-if [[ ${key_pair_count} == 0 ]];
+aws ec2 describe-key-pairs --key-names ${EC2_KEY_PAIR_NAME} --region ${AWS_REGION} | jq '.KeyPairs|length'
+if [[ $? != 0 ]];
 then
   set -e
   aws ec2 create-key-pair --key-name ${EC2_KEY_PAIR_NAME} \
