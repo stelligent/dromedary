@@ -71,11 +71,6 @@
       "Type":"String",
       "Description":"Unique name for the Dromedary Dynamo DB table"
     },
-    "DromedaryRepo":{
-      "Type":"String",
-      "Description":"The Github https address to the public dromedary repository.",
-      "Default":"https://github.com/stelligent/dromedary.git"
-    },
     "Branch":{
       "Type":"String",
       "Description":"The Github branch the public dromedary repository.",
@@ -1035,7 +1030,20 @@
                 },
                 " ",
                 {
-                  "Ref":"DromedaryRepo"
+                  "Fn::Join":[
+                    "",
+                    [
+                      "https://github.com/",
+                      {
+                        "Ref":"GitHubUser"
+                      },
+                      "/",
+                      {
+                        "Ref":"Repo"
+                      },
+                      ".git"
+                    ]
+                  ]
                 },
                 " /opt/dromedary\n",
                 "export AWS_DEFAULT_REGION=",
