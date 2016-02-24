@@ -26,9 +26,9 @@ Directions are provided to run this demo in AWS and locally.
 
 ## Core Demo Requirements
 
-The bootstrapping and the application must be capable of launching with a single _CloudFormation_ command and a CloudFormation button click
+Given a version-control repository, the bootstrapping and the application must be capable of launching from a single _CloudFormation_ command and a CloudFormation button click
 
-An application pipeline in CodePipeline must run in less than 10 minutes.
+An application pipeline in CodePipeline must go from commit to production in less than 10 minutes.
 
 It should be capable of running on a new AWS account without any additional setup.
 
