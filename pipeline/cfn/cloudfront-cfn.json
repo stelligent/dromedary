@@ -31,9 +31,12 @@
             "SmoothStreaming" : "false",
             "ForwardedValues": {
               "QueryString": "true",
-              "Cookies" : { "Forward" : "none" }
+              "Cookies" : { "Forward" : "none" },
+              "Headers": ["*"]
             },
-            "ViewerProtocolPolicy": "allow-all"
+            "ViewerProtocolPolicy": "allow-all",
+            "AllowedMethods": ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
+            "CachedMethods": ["HEAD", "GET"]
           },
 
           "PriceClass" : "PriceClass_100"

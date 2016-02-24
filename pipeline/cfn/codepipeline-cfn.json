@@ -170,6 +170,31 @@
                   "ProjectName":"drom-staticcode-anal"
                 },
                 "RunOrder":1
+              },
+              {
+                "InputArtifacts":[
+                  {
+                    "Name":{
+                      "Ref":"MyInputArtifacts"
+                    }
+                  }
+                ],
+                "Name":"SecStaticCodeAnalysis",
+                "ActionTypeId":{
+                  "Category":"Test",
+                  "Owner":"Custom",
+                  "Version":"1",
+                  "Provider":{
+                    "Ref":"MyBuildProvider"
+                  }
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "ProjectName":"drom-sec-static-anal"
+                },
+                "RunOrder":1
               }
             ]
           },

@@ -155,6 +155,9 @@
               },
               "15-install-node-modules":{
                 "command":"npm install -g gulp"
+              },
+              "20-install-jq": {
+                "command":"yum install -y jq"
               }
             }
           }

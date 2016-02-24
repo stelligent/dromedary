@@ -1583,9 +1583,19 @@
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
-
           "pDistributionDomainName":{
-            "Ref":"Domain"
+            "Fn::Join":[
+              "",
+              [
+                {
+                  "Ref":"AWS::StackName"
+                },
+                "",
+                {
+                  "Ref":"ProdHostedZone"
+                }
+              ]
+            ]
           }
         }
       }
