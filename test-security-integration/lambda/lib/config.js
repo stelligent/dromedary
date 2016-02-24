@@ -16,4 +16,4 @@ exports.setConfig = function(event, context, config, configurationItem, complian
       context.succeed(data);
     }
   });
-}
+};

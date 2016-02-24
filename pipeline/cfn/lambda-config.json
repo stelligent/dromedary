@@ -28,19 +28,6 @@
             "Timeout": "5"
          }
       },
-      "iamPolicyPermissionFunction": {
-         "Type": "AWS::Lambda::Function",
-         "Properties": {
-            "Handler": "iam-policy-permission.handler",
-            "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
-            "Code": {
-               "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
-               "S3Key": "lambda/config-rules.zip"
-            },
-            "Runtime": "nodejs",
-            "Timeout": "5"
-         }
-      },
       "ec2SecGrpCidrIngressFunction": {
          "Type": "AWS::Lambda::Function",
          "Properties": {
@@ -171,34 +158,6 @@
          },
          "DependsOn":"iamUserPolicyPerm"
       },
-      "iamPolicyPermissionRule":{
-         "Type":"AWS::Config::ConfigRule",
-         "Properties":{
-            "ConfigRuleName":"ConSec-IAM-Policy-Permission-Rule",
-            "Description": "Checks whether managed Policies have full wildcard access to Actions or Resources",
-            "Scope":{
-               "ComplianceResourceTypes":[
-                  "AWS::IAM::Policy"
-               ]
-            },
-            "Source":{
-               "Owner":"CUSTOM_LAMBDA",
-               "SourceDetails":[
-                  {
-                     "EventSource":"aws.config",
-                     "MessageType":"ConfigurationItemChangeNotification"
-                  }
-               ],
-               "SourceIdentifier":{
-                  "Fn::GetAtt":[
-                     "iamPolicyPermissionFunction",
-                     "Arn"
-                  ]
-               }
-            }
-         },
-         "DependsOn":"iamPolicyPermissionPerm"
-      },
       "ec2SecGrpCidrIngressRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
@@ -274,19 +233,6 @@
             "FunctionName":{
                "Fn::GetAtt":[
                   "iamUserPolicyFunction",
-                  "Arn"
-               ]
-            },
-            "Action":"lambda:InvokeFunction",
-            "Principal":"config.amazonaws.com"
-         }
-      },
-      "iamPolicyPermissionPerm":{
-         "Type":"AWS::Lambda::Permission",
-         "Properties":{
-            "FunctionName":{
-               "Fn::GetAtt":[
-                  "iamPolicyPermissionFunction",
                   "Arn"
                ]
             },

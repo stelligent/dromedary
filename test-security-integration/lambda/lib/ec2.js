@@ -1,5 +1,3 @@
-
-
 exports.getFunctions = function(){
   var aws = require('aws-sdk');
   var ec2 = new aws.EC2();
@@ -10,8 +8,6 @@ exports.getFunctions = function(){
       var params = {
         "GroupIds": [configurationItem.resourceId]
       };
-
-      //var checkCompliance = checkCompliance;
       ec2.describeSecurityGroups(params, function(err, data){
         var responseData = {};
         var compliance = undefined;
@@ -27,10 +23,9 @@ exports.getFunctions = function(){
             compliance = checkCompliance(data.SecurityGroups[0]);
             configLib.setConfig(event, context, config, configurationItem, compliance);
           }
-
         }
       });
     }
   }
-}
+};
 

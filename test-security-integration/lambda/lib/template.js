@@ -1,4 +1,3 @@
-
 exports.defineTest = function(event, context, resourceType, resourceGroup, testCase){
   var awsLib = require('./aws');
   var resourceLib = require('./'+ resourceType.toLowerCase());
@@ -7,4 +6,4 @@ exports.defineTest = function(event, context, resourceType, resourceGroup, testC
   awsLib.evaluate(event, context, function(event, context, configurationItem){
     resourceLib.getFunctions()[resourceFunction](event, context, configurationItem, ruleLib.getRules()[resourceType][testCase]);
   });
-}
+};

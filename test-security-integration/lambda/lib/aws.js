@@ -14,14 +14,18 @@ var isApplicable = function(configurationItem, event) {
 }
 
 exports.evaluate = function(event, context, evalFunction){
+  var aws = require('aws-sdk');
+  var config = new aws.ConfigService();
+  var configLib = require('./config');
   event = checkDefined(event, 'event');
   var invokingEvent = JSON.parse(event.invokingEvent);
   var configurationItem = checkDefined(invokingEvent.configurationItem, 'invokingEvent.configurationItem');
   var compliance = 'NOT_APPLICABLE';
-
   if (isApplicable(invokingEvent.configurationItem, event)) {
-    compliance = 'NOT_APPLICABLE';
-
     evalFunction(event, context, configurationItem);
   }
-}
+  else {
+    configLib.setConfig(event, context, config, configurationItem, compliance);
+  }
+
+};

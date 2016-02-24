@@ -35,7 +35,6 @@ exports.getFunctions = function(){
           compliance = checkCompliance(data.Policy);
           configLib.setConfig(event, context, config, configurationItem, compliance);
         }
-
       });
     }
   }

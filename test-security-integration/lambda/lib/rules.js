@@ -6,7 +6,7 @@ exports.getRules = function(){
       "MFADevice": function(user){
         var compliance = 'NON_COMPLIANT';
         var params = {
-          "UserName": user.userName
+          "UserName": user.UserName
         };
         iam.listMFADevices(params, function(err,data){
           var responseData = {};
@@ -14,7 +14,7 @@ exports.getRules = function(){
             responseData = { Error: 'listMFADevices call failed'};
             console.log(responseData.Error + ':\\n', err);
           } else {
-            if (data.mfaDevices.length >= 1) {
+            if (data.MFADevices.length >= 1) {
               compliance = 'COMPLIANT';
             }
           }
@@ -24,7 +24,7 @@ exports.getRules = function(){
       "Policy": function(user) {
         var nonCompCnt = 0;
         var params = {
-          "UserName": user.userName
+          "UserName": user.UserName
         };
         iam.listUserPolicies(params, function (err, data) {
           var responseData = {};
@@ -40,7 +40,7 @@ exports.getRules = function(){
         iam.listAttachedUserPolicies(params, function (err, data) {
           var responseData = {};
           if (err) {
-            responseData = {Error: 'listUserPolicies call failed'};
+            responseData = {Error: 'listAttachedUserPolicies call failed'};
             console.log(responseData.Error + ':\\n', err);
           } else {
             if (data.AttachedPolicies.length !== 0) {
@@ -119,4 +119,4 @@ exports.getRules = function(){
       }
     }
   }
-}
+};
