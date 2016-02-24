@@ -13,6 +13,8 @@ exports.getFunctions = function(){
 
       //var checkCompliance = checkCompliance;
       ec2.describeSecurityGroups(params, function(err, data){
+        var responseData = {};
+        var compliance = undefined;
         if (err){
           responseData = { Error: 'describeSecurityGroups call failed'};
           console.log(responseData.Error + ':\\n', err);
@@ -22,9 +24,7 @@ exports.getFunctions = function(){
             console.log(responseData.Error + ':\\n', err);
           }
           else {
-            //console.log(data.SecurityGroups[0].IpPermissionsEgress[0]);
             compliance = checkCompliance(data.SecurityGroups[0]);
-            //console.log(compliance);
             configLib.setConfig(event, context, config, configurationItem, compliance);
           }
 
@@ -34,44 +34,3 @@ exports.getFunctions = function(){
   }
 }
 
-/*
-exports.evaluateEC2SecurityGroup = function(event, context, configurationItem, checkCompliance){
-  var params = {
-    "GroupIds": [configurationItem.resourceId]
-  };
-  var putEvaluationsRequest = {};
-  var checkCompliance = checkCompliance;
-  ec2.describeSecurityGroups(params, function(err, data){
-    if (err){
-      responseData = { Error: 'describeSecurityGroups call failed'};
-      console.log(responseData.Error + ':\\n', err);
-    } else {
-      if (data.SecurityGroups.length === 0){
-        responseData = { Error: 'Security Group not found'};
-        console.log(responseData.Error + ':\\n', err);
-      }
-      else {
-        console.log(data.SecurityGroups[0].IpPermissions[0]);
-        compliance = checkCompliance(data.SecurityGroups[0]);
-        console.log(compliance);
-      }
-      putEvaluationsRequest.Evaluations = [
-        {
-          ComplianceResourceType: configurationItem.resourceType,
-          ComplianceResourceId: configurationItem.resourceId,
-          ComplianceType: compliance,
-          OrderingTimestamp: configurationItem.configurationItemCaptureTime
-        }
-      ];
-      putEvaluationsRequest.ResultToken = event.resultToken;
-      config.putEvaluations(putEvaluationsRequest, function (err, data) {
-        if (err) {
-          context.fail(err);
-        } else {
-          context.succeed(data);
-        }
-      });
-    }
-  });
-}
-*/

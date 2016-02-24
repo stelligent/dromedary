@@ -8,17 +8,35 @@ exports.getFunctions = function(){
       var params = {
         "UserName": configurationItem.configuration.userName
       };
-      //var checkCompliance = checkCompliance;
-      iam.listMFADevices(params, function(err,data){
+      iam.getUser(params, function(err,data){
+        var responseData = {};
+        var compliance = undefined;
         if (err){
-          responseData = { Error: 'listMFADevices call failed'};
+          responseData = { Error: 'getUser call failed'};
           console.log(responseData.Error + ':\\n', err);
         } else {
-          compliance = checkCompliance(data.MFADevices);
+          compliance = checkCompliance(data.User);
+          configLib.setConfig(event, context, config, configurationItem, compliance);
+        }
+
+      });
+    },
+    evaluateIAMPolicy: function(event, context, configurationItem, checkCompliance){
+      var params = {
+        "PolicyArn": configurationItem.ARN
+      };
+      iam.getPolicy(params, function(err,data){
+        var responseData = {};
+        var compliance = undefined;
+        if (err){
+          responseData = { Error: 'getPolicy call failed'};
+          console.log(responseData.Error + ':\\n', err);
+        } else {
+          compliance = checkCompliance(data.Policy);
           configLib.setConfig(event, context, config, configurationItem, compliance);
         }
 
       });
     }
   }
-}
+};
