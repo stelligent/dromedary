@@ -87,13 +87,13 @@ As part of the bootstrapping process, it will automatically launch the Dromedary
 
 #### Outputs
 
-A few of the most relevant CloudFormation outputs are listed in the table below.
+A few of the most relevant CloudFormation outputs from the master stack are listed in the table below.
 
 Output | Description
 ---------- | ------------
+CodePipelineURL | The URL to the instantiated pipeline
+JenkinsURL | The URL to Jenkins server that runs the execution of jobs for CodePipeline
 DromedaryAppURL | Available in the master stack outputs. Link to the working application once the application pipeline is complete
-CodePipelineURL | Available in the CodePipeline stack outputs. Link to the CodePipeline pipeline
-
 
 #### Post-bootstrap steps
 
