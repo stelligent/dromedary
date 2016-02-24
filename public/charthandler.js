@@ -72,7 +72,7 @@ dromedaryChartHandler = function () {
     if (!myPieChart.hasOwnProperty('segments')) {
       return;
     }
-    $.getJSON(apiBaseurl+'data?countsOnly=true', {}, function(data, status) {
+    $.getJSON(apiBaseurl+'data?countsOnly=true&nocache='+Date.now(), {}, function(data, status) {
       var segment;
       var segmentIndex;
       var color;
