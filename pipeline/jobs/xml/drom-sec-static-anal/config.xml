@@ -6,7 +6,7 @@
   <properties/>
   <scm class="com.amazonaws.codepipeline.jenkinsplugin.AWSCodePipelineSCM" plugin="codepipeline@0.6">
     <clearWorkspace>true</clearWorkspace>
-    <projectName>drom-sec-staticcode-anal</projectName>
+    <projectName>drom-sec-static-anal</projectName>
     <actionTypeCategory>Test</actionTypeCategory>
     <actionTypeProvider>DromedaryJenkins</actionTypeProvider>
     <actionTypeVersion>1</actionTypeVersion>
