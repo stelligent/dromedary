@@ -93,7 +93,7 @@ Output | Description
 ---------- | ------------
 CodePipelineURL | The URL to the instantiated pipeline
 JenkinsURL | The URL to Jenkins server that runs the execution of jobs for CodePipeline
-DromedaryAppURL | Available in the master stack outputs. Link to the working application once the application pipeline is complete
+DromedaryAppURL | Link to the working application once the application pipeline is complete
 
 #### Post-bootstrap steps
 
