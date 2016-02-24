@@ -1441,7 +1441,26 @@
         "Ref":"AWS::StackName"
       }
     },
+    "CodePipelineURL":{
+      "Description":"The URL to the instantiated pipeline",
+      "Value":{
+        "Fn::GetAtt":[
+          "CodePipelineStack",
+          "Outputs.CodePipelineURL"
+        ]
+      }
+    },
+    "JenkinsURL":{
+      "Description":"The URL to Jenkins server that runs the execution of jobs for CodePipeline",
+      "Value":{
+        "Fn::GetAtt":[
+          "JenkinsStack",
+          "Outputs.JenkinsURL"
+        ]
+      }
+    },
     "DromedaryAppURL":{
+      "Description":"The URL to Dromedary application. Only operations once a pipeline has completed its first run.",
       "Value":{
         "Fn::Join":[
           "",
