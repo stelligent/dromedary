@@ -257,6 +257,32 @@
                     "Name":"DromedaryCreate"
                   }
                 ],
+                "Name":"AutomatedPenTest",
+                "ActionTypeId":{
+                  "Category":"Test",
+                  "Owner":"Custom",
+                  "Version":"1",
+                  "Provider":{
+                    "Ref":"MyBuildProvider"
+                  }
+                },
+                "OutputArtifacts":[
+                  {
+                    "Name":"DromedaryPenTest"
+                  }
+                ],
+                "Configuration":{
+                  "ProjectName":"drom-pen-test"
+                },
+                "RunOrder":2
+              },
+
+              {
+                "InputArtifacts":[
+                  {
+                    "Name":"DromedaryCreate"
+                  }
+                ],
                 "Name":"InfrastructureTest",
                 "ActionTypeId":{
                   "Category":"Test",

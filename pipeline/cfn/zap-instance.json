@@ -1,0 +1,237 @@
+{
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Description":"Stelligent CloudFormation Template for launching OWASP Zed Attack Proxy (ZAP) on an EC2 instance ** This template creates one or more Amazon resources. You will be billed for the AWS resources used if you create a stack from this template.",
+  "Parameters":{
+    "Ec2Key":{
+      "Type":"String",
+      "Description":"Ec2 key for ssh access",
+      "Default":"nick-labs"
+    },
+    "SubnetId":{
+      "Type":"String",
+      "Description":"VPC subnet id in which to place zap"
+    },
+    "VPC":{
+      "Type":"String",
+      "Description":"VPC ID in which to place Zap"
+    },
+    "CfnInitRole":{
+      "Type":"String",
+      "Description":"IAM Role for cfn-init"
+    },
+    "InstanceProfile":{
+      "Type":"String",
+      "Description":"Instance profile for ZAP instance"
+    },
+    "SshCidr":{
+      "Type":"String",
+      "Description":"Whitelisted network CIDR for inbound SSH",
+      "Default":"0.0.0.0/0"
+    }
+  },
+  "Conditions":{
+    "NoEc2Key":{
+      "Fn::Equals":[
+        {
+          "Ref":"Ec2Key"
+        },
+        ""
+      ]
+    }
+  },
+  "Mappings":{
+    "RegionConfig":{
+      "us-east-1":{
+        "ami":"ami-805868ea"
+      }
+    }
+  },
+  "Resources":{
+    "ZapSecurityGroup":{
+      "Type":"AWS::EC2::SecurityGroup",
+      "Properties":{
+        "VpcId":{
+          "Ref":"VPC"
+        },
+        "GroupDescription":"Open SSH and ZAP",
+        "SecurityGroupIngress":[
+          {
+            "IpProtocol":"tcp",
+            "FromPort":"22",
+            "ToPort":"22",
+            "CidrIp":{
+              "Ref":"SshCidr"
+            }
+          },
+          {
+            "IpProtocol":"tcp",
+            "FromPort":"8080",
+            "ToPort":"8080",
+            "CidrIp":{
+              "Ref":"SshCidr"
+            }
+          }
+        ]
+      }
+    },
+    "ZapInstance":{
+      "Type":"AWS::EC2::Instance",
+      "Metadata":{
+        "AWS::CloudFormation::Init":{
+          "packages":{
+            "python":{
+              "behave": [],
+              "python-owasp-zap-v2.4": []
+            }
+          }
+        }
+      },
+      "Properties":{
+        "ImageId":{
+          "Fn::FindInMap":[
+            "RegionConfig",
+            {
+              "Ref":"AWS::Region"
+            },
+            "ami"
+          ]
+        },
+        "InstanceType":"t2.micro",
+        "IamInstanceProfile":{
+          "Ref":"InstanceProfile"
+        },
+        "KeyName":{
+          "Fn::If":[
+            "NoEc2Key",
+            {
+              "Ref":"AWS::NoValue"
+            },
+            {
+              "Ref":"Ec2Key"
+            }
+          ]
+        },
+        "Tags":[
+          {
+            "Key":"Application",
+            "Value":{
+              "Ref":"AWS::StackId"
+            }
+          },
+          {
+            "Key":"Name",
+            "Value":{
+              "Ref":"AWS::StackName"
+            }
+          }
+        ],
+        "NetworkInterfaces":[
+          {
+            "GroupSet":[
+              {
+                "Ref":"ZapSecurityGroup"
+              }
+            ],
+            "AssociatePublicIpAddress":"true",
+            "DeviceIndex":"0",
+            "DeleteOnTermination":"true",
+            "SubnetId":{
+              "Ref":"SubnetId"
+            }
+          }
+        ],
+        "UserData":{
+          "Fn::Base64":{
+            "Fn::Join":[
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                "yum update -y aws-cfn-bootstrap\n",
+                "yum -y upgrade\n",
+                "\n",
+                "service zap stop\n",
+                "/opt/aws/bin/cfn-init -v",
+                " --stack ",
+                {
+                  "Ref":"AWS::StackName"
+                },
+                " --resource ZapInstance ",
+                " --role ",
+                {
+                  "Ref":"CfnInitRole"
+                },
+                " --region ",
+                {
+                  "Ref":"AWS::Region"
+                },
+                "\n",
+                "pip install behave python-owasp-zap-v2.4\n",
+                "/etc/init.d/zap start\n",
+                "\n",
+                "/opt/aws/bin/cfn-signal -e $? ",
+                " --stack ",
+                {
+                  "Ref":"AWS::StackName"
+                },
+                " --resource ZapInstance ",
+                " --region ",
+                {
+                  "Ref":"AWS::Region"
+                },
+                "\n"
+              ]
+            ]
+          }
+        }
+      },
+      "CreationPolicy":{
+        "ResourceSignal":{
+          "Timeout":"PT15M"
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "StackName":{
+      "Value":{
+        "Ref":"AWS::StackName"
+      }
+    },
+    "PublicDns":{
+      "Description":"Public DNS of Zap instance",
+      "Value":{
+        "Fn::GetAtt":[
+          "ZapInstance",
+          "PublicIp"
+        ]
+      }
+    },
+    "ZapURL":{
+      "Description":"Zap URL",
+      "Value":{
+        "Fn::Join":[
+          "",
+          [
+            "http://",
+            {
+              "Fn::GetAtt":[
+                "ZapInstance",
+                "PublicIp"
+              ]
+            },
+            ":8080"
+          ]
+        ]
+      }
+    },
+    "SecurityGroup":{
+      "Description":"Zap Security Group",
+      "Value":{
+        "Fn::GetAtt":[
+          "ZapSecurityGroup",
+          "GroupId"
+        ]
+      }
+    }
+  }
+}

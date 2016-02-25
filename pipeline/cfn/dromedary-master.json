@@ -47,6 +47,11 @@
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
       "Default":"app-eni.json"
     },
+    "ZapCFNTemplateFile":{
+      "Type":"String",
+      "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
+      "Default":"zap-instance.json"
+    },
     "JenkinsCFNTemplateFile":{
       "Type":"String",
       "Description":"Just the name of the CloudFormation template. Used with BaseTemplateURL.",
@@ -1249,7 +1254,8 @@
       "DependsOn":[
         "DynamoDBStack",
         "VPCStack",
-        "IAMStack"
+        "IAMStack",
+        "ZapStack"
       ],
       "Properties":{
         "TemplateURL":{
@@ -1334,6 +1340,61 @@
                 ]
               },
               { "Ref" : "AWS::NoValue" }
+            ]
+          },
+          "ZapStackName":{
+            "Fn::GetAtt":[
+              "ZapStack",
+              "Outputs.StackName"
+            ]
+          }
+        }
+      }
+    },
+    "ZapStack":{
+      "Type":"AWS::CloudFormation::Stack",
+      "DependsOn":[
+        "VPCStack",
+        "IAMStack"
+      ],
+      "Properties":{
+        "TemplateURL":{
+          "Fn::Join":[
+            "",
+            [
+              {
+                "Ref":"BaseTemplateURL"
+              },
+              {
+                "Ref":"ZapCFNTemplateFile"
+              }
+            ]
+          ]
+        },
+        "TimeoutInMinutes":"60",
+        "Parameters":{
+          "SubnetId":{
+            "Fn::GetAtt":[
+              "VPCStack",
+              "Outputs.SubnetId"
+            ]
+          },
+          "CfnInitRole":{
+            "Fn::GetAtt":[
+              "IAMStack",
+              "Outputs.InstanceRole"
+            ]
+          },
+          "VPC":{
+            "Fn::GetAtt":[
+              "VPCStack",
+              "Outputs.VPC"
+            ]
+          },
+          "InstanceProfile":{
+            "Fn::GetAtt":[
+              "IAMStack",
+              "Outputs.InstanceProfile"
             ]
           }
         }
