@@ -4,7 +4,7 @@ set -e
 
 ruby -v
 
-gem install cfn-nag --version 0.0.6 \
+gem install cfn-nag --version 0.0.8 \
                     --conservative
 
 set +e
