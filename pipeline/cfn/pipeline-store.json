@@ -86,6 +86,11 @@
       "Type":"String",
       "Default":"EMPTY",
       "Description":"The URL users use to launch the Dromedary application"
+    },
+    "ZapStackName":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"ZapStackName"
     }
   },
   "Resources":{
@@ -211,6 +216,12 @@
       "Description":"The URL users use to launch the Dromedary application",
       "Value":{
         "Ref":"DromedaryAppURL"
+      }
+    },
+    "ZapStackName":{
+      "Description":"Zap Stack to query",
+      "Value":{
+        "Ref":"ZapStackName"
       }
     }
   }

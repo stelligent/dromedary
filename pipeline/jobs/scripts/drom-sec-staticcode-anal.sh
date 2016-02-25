@@ -4,7 +4,7 @@ set -e
 
 ruby -v
 
-gem install cfn-nag --version 0.0.5 \
+gem install cfn-nag --version 0.0.8 \
                     --conservative
 
 set +e
@@ -15,7 +15,8 @@ for cfn_json in ${templates_to_audit};
 do
   echo "Linting: ${cfn_json}"
 
-  cfn_nag --input-json ${cfn_json}
+  cfn_nag --input-json ${cfn_json} \
+          --output-format json
   result=$?
   if [[ ${result} != 0 ]];
   then

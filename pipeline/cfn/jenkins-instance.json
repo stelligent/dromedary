@@ -91,6 +91,12 @@
           }
         },
         "AWS::CloudFormation::Init":{
+          "packages":{
+            "python":{
+              "behave": [],
+              "python-owasp-zap-v2.4": []
+            }
+          },
           "config":{
             "files":{
               "/tmp/job-configs.tgz":{
