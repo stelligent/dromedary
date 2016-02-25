@@ -34,7 +34,7 @@ describe('all_config_rules') do
     status = fail_count == 0 ? "PASS" : "FAIL"
     rule_stats_output = {"status" => status, "results" => rule_stats}
     puts "cwd: #{Dir.pwd}"
-    File.open("template/test_results.json","w") do |f|
+    File.open("template/data/test_results.json","w") do |f|
       f.write(rule_stats_output.to_json)
     end
     expect(status).to eq "PASS"

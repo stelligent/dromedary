@@ -43,6 +43,12 @@ then
                                  --hosted-zone-config Comment="for dromedary hacking"
 fi
 
+#create and stage lambda deployment package
+cd test-security-integration/lambda
+zip -r config-rules.zip *
+aws s3 cp config-rules.zip s3://${DEV_BUCKET}/lambda/
+rm config-rules.zip
+
 aws cloudformation create-stack \
 --stack-name DromedaryStack  \
 --template-body file://pipeline/cfn/dromedary-master.json \

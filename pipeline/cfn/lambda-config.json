@@ -15,10 +15,23 @@
             "Timeout": "5"
          }
       },
-      "iamUserPolicyFunction": {
+      "iamUserInlinePolicyFunction": {
          "Type": "AWS::Lambda::Function",
          "Properties": {
-            "Handler": "iam-user-policy.handler",
+            "Handler": "iam-user-inlinepolicy.handler",
+            "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
+            "Code": {
+               "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
+               "S3Key": "lambda/config-rules.zip"
+            },
+            "Runtime": "nodejs",
+            "Timeout": "5"
+         }
+      },
+      "iamUserManagedPolicyFunction": {
+         "Type": "AWS::Lambda::Function",
+         "Properties": {
+            "Handler": "iam-user-managedpolicy.handler",
             "Role": { "Fn::GetAtt" : ["lambdaExecutionRole", "Arn"] },
             "Code": {
                "S3Bucket": {"Fn::Join":["", ["dromedary-", {"Ref":"AWS::AccountId"}]]},
@@ -130,11 +143,11 @@
          },
          "DependsOn":"iamMFAPerm"
       },
-      "iamUserPolicyRule":{
+      "iamUserInlinePolicyRule":{
          "Type":"AWS::Config::ConfigRule",
          "Properties":{
-            "ConfigRuleName":"ConSec-IAM-User-Policy-Rule",
-            "Description": "Checks whether Users have an inline or managed policy directly attached.",
+            "ConfigRuleName":"ConSec-IAM-User-InlinePolicy-Rule",
+            "Description": "Checks whether Users have an inline policy.",
             "Scope":{
                "ComplianceResourceTypes":[
                   "AWS::IAM::User"
@@ -150,13 +163,41 @@
                ],
                "SourceIdentifier":{
                   "Fn::GetAtt":[
-                     "iamUserPolicyFunction",
+                     "iamUserInlinePolicyFunction",
                      "Arn"
                   ]
                }
             }
          },
-         "DependsOn":"iamUserPolicyPerm"
+         "DependsOn":"iamUserInlinePolicyPerm"
+      },
+      "iamUserManagedPolicyRule":{
+         "Type":"AWS::Config::ConfigRule",
+         "Properties":{
+            "ConfigRuleName":"ConSec-IAM-User-ManagedPolicy-Rule",
+            "Description": "Checks whether Users have a managed policy directly attached.",
+            "Scope":{
+               "ComplianceResourceTypes":[
+                  "AWS::IAM::User"
+               ]
+            },
+            "Source":{
+               "Owner":"CUSTOM_LAMBDA",
+               "SourceDetails":[
+                  {
+                     "EventSource":"aws.config",
+                     "MessageType":"ConfigurationItemChangeNotification"
+                  }
+               ],
+               "SourceIdentifier":{
+                  "Fn::GetAtt":[
+                     "iamUserManagedPolicyFunction",
+                     "Arn"
+                  ]
+               }
+            }
+         },
+         "DependsOn":"iamUserManagedPolicyPerm"
       },
       "ec2SecGrpCidrIngressRule":{
          "Type":"AWS::Config::ConfigRule",
@@ -227,12 +268,25 @@
             "Principal":"config.amazonaws.com"
          }
       },
-      "iamUserPolicyPerm":{
+      "iamUserInlinePolicyPerm":{
          "Type":"AWS::Lambda::Permission",
          "Properties":{
             "FunctionName":{
                "Fn::GetAtt":[
-                  "iamUserPolicyFunction",
+                  "iamUserInlinePolicyFunction",
+                  "Arn"
+               ]
+            },
+            "Action":"lambda:InvokeFunction",
+            "Principal":"config.amazonaws.com"
+         }
+      },
+      "iamUserManagedPolicyPerm":{
+         "Type":"AWS::Lambda::Permission",
+         "Properties":{
+            "FunctionName":{
+               "Fn::GetAtt":[
+                  "iamUserManagedPolicyFunction",
                   "Arn"
                ]
             },
@@ -305,6 +359,15 @@
                            ],
                            "Effect":"Allow",
                            "Resource":"*"
+                        },
+                        {
+                           "Action": [
+                              "logs:CreateLogGroup",
+                              "logs:CreateLogStream",
+                              "logs:PutLogEvents"
+                           ],
+                           "Effect": "Allow",
+                           "Resource": "arn:aws:logs:*:*:*"
                         }
                      ],
                      "Version":"2012-10-17"
