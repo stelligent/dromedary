@@ -45,12 +45,11 @@ def main():
     zap.spider.scan(args.target)
 
     time.sleep(2)
-    print zap.spider.status()
     while (int(zap.spider.status()) < 100):
         sys.stdout.write('Spider progress %: \n' + zap.spider.status())
         time.sleep(2)
 
-    sys.stdout.write('Spider completed')
+    sys.stdout.write('Spider completed\n')
     # Give the passive scanner a chance to finish
     time.sleep(5)
 
