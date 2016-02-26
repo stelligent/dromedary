@@ -35,12 +35,9 @@ describe('all_config_rules') do
     status = fail_count == 0 ? "PASS" : "FAIL"
     rule_stats_output = {"result" => status, "results" => rule_stats}
     puts "cwd: #{Dir.pwd}"
-    s3resp = s3.put_object({
-        acl: "public-read",
-        body: JSON.pretty_generate(rule_stats_output),
-        bucket: "dromedary-test-results",
-        key: "data/sec_int_test_results.json",
-                           })
+    File.open("sec_int_test_results.json","w") do |f|
+      f.write(rule_stats_output.to_json)
+    end
     expect(status).to eq "PASS"
   end
 end

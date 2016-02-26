@@ -19,6 +19,14 @@ Handlebars.registerHelper('if_eq', function(a, b, opts) {
         return opts.inverse(this);
 });
 
+Handlebars.registerHelper('array_to_list', function(a) {
+    return a.join(",");
+});
+
+Handlebars.registerHelper('toUpperCase', function(str) {
+    return str.toUpperCase();
+});
+
 function renderSection(sourceId, targetId, dataPath){
     var source = document.getElementById(sourceId).innerHTML;
     var target = document.getElementById(targetId);

@@ -30,7 +30,7 @@
   <concurrentBuild>true</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bash ./pipeline/jobs/scripts/drom-sec-int-test.sh</command>
+      <command>bash ./pipeline/jobs/scripts/drom-sec-int-test.sh ${JOB_NAME} ${BUILD_NUMBER} ${BUILD_ID} ${BUILD_URL}</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

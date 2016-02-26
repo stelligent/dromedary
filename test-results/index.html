@@ -74,7 +74,7 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="">
 
                     <div id="cfn-nag-wrapper" class="panel-body">
@@ -85,7 +85,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="">
 
                     <div id="sec-int-wrapper" class="panel-body">
@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="">
 
                     <div id="auto-pen-wrapper" class="panel-body">
@@ -115,42 +115,48 @@
 
 <script src="js/handlebars.min.js"></script>
 <script id="cfn-nag-template" type="text/x-handlebars-template">
-    {{#if_eq status "PASS"}}
+    {{#if_eq result "PASS"}}
     <a class="toggle-link" data-toggle="collapse" href="#cfn-nag-table-wrapper">
         <h3>Static Code Analysis<span class="pull-right label label-success">PASS</span></h3>
+    </a>
+    {{else}}
+    {{#if_eq result "PASS"}}
+    <a class="toggle-link" data-toggle="collapse" href="#cfn-nag-table-wrapper">
+        <h3>Static Code Analysis<span class="pull-right label label-warning">PASS</span></h3>
     </a>
     {{else}}
     <a class="toggle-link" data-toggle="collapse" href="#cfn-nag-table-wrapper">
         <h3>Static Code Analysis<span class="pull-right label label-danger">FAIL</span></h3>
     </a>
     {{/if_eq}}
+    {{/if_eq}}
     <h5>Job: drom-sec-int-test  Build: 123</h5>
     <div class="collapse" id="cfn-nag-table-wrapper">
         <table class="table">
             <thead>
             <tr>
-                <th>Config Rule</th>
-                <th>Status</th>
-                <th>Test Result</th>
+                <th>Logical Resource IDs</th>
+                <th>Message</th>
+                <th class="consec-result-col">Test Result</th>
             </tr>
             </thead>
             <tbody>
             {{#results}}
-            {{#if_eq result "Pass"}}
-            <tr class="success consec-row">
+            {{#if_eq type "Warn"}}
+            <tr class="warning consec-row">
                 {{else}}
             <tr class="danger consec-row">
                 {{/if_eq}}
 
-                <td>{{rule}}</td>
-                <td>{{status}}</td>
+                <td>{{array_to_list logical_resource_ids}}</td>
+                <td>{{message}}</td>
                 <td>
-                    {{#if_eq result "Pass"}}
-                    <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {{#if_eq type "Warn"}}
+                    <span class="glyphicon glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                     {{else}}
                     <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
                     {{/if_eq}}
-                    {{result}}</td>
+                    {{toUpperCase type}}</td>
             </tr>
             {{/results}}
             </tbody>
@@ -159,7 +165,7 @@
 
 </script>
 <script id="sec-int-template" type="text/x-handlebars-template">
-    {{#if_eq status "PASS"}}
+    {{#if_eq result "PASS"}}
     <a class="toggle-link" data-toggle="collapse" href="#sec-int-table-wrapper">
         <h3>Security Integration Tests<span class="pull-right label label-success">PASS</span></h3>
     </a>
@@ -174,9 +180,9 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Config Rule</th>
+                <th>Rule</th>
                 <th>Status</th>
-                <th>Test Result</th>
+                <th class="consec-result-col">Test Result</th>
             </tr>
             </thead>
             <tbody>
@@ -205,7 +211,7 @@
 </script>
 
 <script id="auto-pen-template" type="text/x-handlebars-template">
-    {{#if_eq status "PASS"}}
+    {{#if_eq result "PASS"}}
     <a class="toggle-link" data-toggle="collapse" href="#auto-pen-table-wrapper">
         <h3>Automated Penetration Tests<span class="pull-right label label-success">PASS</span></h3>
     </a>
@@ -220,9 +226,9 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Config Rule</th>
+                <th>Rule</th>
                 <th>Status</th>
-                <th>Test Result</th>
+                <th class="consec-result-col">Test Result</th>
             </tr>
             </thead>
             <tbody>
@@ -256,9 +262,9 @@
 
 
 <script>
-    renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/sec_int_test_results.json");
+    renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/cfn_nag_results.json");
     renderSection("sec-int-template", "sec-int-wrapper", "data/sec_int_test_results.json");
-    renderSection("auto-pen-template", "auto-pen-wrapper", "data/sec_int_test_results.json");
+    renderSection("auto-pen-template", "auto-pen-wrapper", "data/automated_pen_test_results.json");
 </script>
 
 

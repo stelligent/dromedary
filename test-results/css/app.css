@@ -9,3 +9,7 @@
 .consec-row{
     border-bottom: 2px solid white;
 }
+
+.consec-result-col{
+    width: 100px;
+}
