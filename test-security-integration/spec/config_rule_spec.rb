@@ -33,7 +33,7 @@ describe('all_config_rules') do
     end
     rule_stats.each {|rule| puts "#{rule["rule"]} is #{rule["status"]}:  #{rule["result"]}" }
     status = fail_count == 0 ? "PASS" : "FAIL"
-    rule_stats_output = {"status" => status, "results" => rule_stats}
+    rule_stats_output = {"result" => status, "results" => rule_stats}
     puts "cwd: #{Dir.pwd}"
     s3resp = s3.put_object({
         acl: "public-read",
