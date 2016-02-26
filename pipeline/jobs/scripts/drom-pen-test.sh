@@ -17,5 +17,7 @@ python pen-test-app.py \
     --zap-host ${zap_host} \
     --target ${TARGET_URL}
 behave_result=$(/usr/local/bin/behave -f json.pretty > automated_pen_test_results.json; echo "$?")
-aws s3 cp automated_pen_test_results.json s3://dromedary-test-results/data/
+python report_results.py \
+    --bucket dromedary-test-results \
+    --filename data/automated_pen_test_results.json
 exit "${behave_result}"
