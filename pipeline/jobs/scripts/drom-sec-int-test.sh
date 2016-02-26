@@ -1,6 +1,6 @@
 #!/bin/bash
 . /etc/profile
-set -ex
+set -x
 
 . ./environment.sh
 
@@ -12,8 +12,9 @@ EOF
     aws s3 cp sec_int_test_job_info.json s3://dromedary-test-results/sec_int_test_job_info.json
 }
 
+pushd test-security-integration
 gem install rspec aws-sdk
 rspec
-
-trap publish_results EXIT
+publish_results
+popd
 
