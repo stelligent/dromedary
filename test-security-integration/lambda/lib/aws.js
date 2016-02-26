@@ -26,7 +26,7 @@ exports.evaluate = function (event, context, evalFunction) {
         evalFunction(event, context, configurationItem);
     }
     else {
-        var configurator = new configLib(event, context, config, configurationItem);
+        var configurator = new configLib.configurator(event, context, config, configurationItem);
         configurator.setConfig(compliance);
     }
 
