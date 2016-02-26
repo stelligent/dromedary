@@ -9,6 +9,7 @@ RESULTS_FILES = dict({'zap_results': 'results.json',
                       'behave_results': 'behave_results.json',
                       'all_results': 'data/automated_pen_test_results.json'})
 
+
 def fetchArguments():
     parse = argparse.ArgumentParser()
     parse.add_argument('-b', '--bucket', help='Bucket to upload results',
@@ -30,7 +31,7 @@ def fetchResults(filename):
 
 def sendToS3(contents, key, bucket):
     s3 = boto3.resource('s3')
-    result = s3.Bucket(bucket).put_object(Key=key, Body=contents)
+    s3.Bucket(bucket).put_object(Key=key, Body=contents)
 
 
 def main():
@@ -41,7 +42,7 @@ def main():
 
     # Fetch the overall result of the tests
     results['result'] = behave_results[0]['status']
-    
+
     # Check each test
     results['results'] = list()
     for element in behave_results[0]['elements']:
@@ -52,14 +53,14 @@ def main():
             if step['result']['status'] == 'failed':
                 test['result'] = 'FAIL'
                 test['status'] = '\n'.join(step['result']['error_message'])
-            
+
         results['results'].append(test)
 
     results['behave'] = behave_results
     results['zap'] = zap_results
 
     pretty_results = json.dumps(results, sort_keys=True,
-                                indent=4, separators=(',', ': '))    
+                                indent=4, separators=(',', ': '))
 
     sendToS3(pretty_results, args.filename, args.bucket)
 
