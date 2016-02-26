@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="HTML, CSS, JS, JavaScript, framework, bootstrap, front-end, frontend, web development, showcase, expo">
+    <meta name="author" content="Mark Otto, Nicole Bartelt">
+
+    <title>
+
+        Continuous Security
+
+    </title>
+
+    <link href="css/bootstrap-expo.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+
+<body>
+
+<div class="masthead">
+    <h1 class="masthead-title">
+        <img src="img/stelogo.png" height="20px"/><br>Continuous<br>Security
+    </h1>
+    <p class="masthead-lead">
+        Continuous automated security monitoring and testing for your CI/CD pipeline and AWS resources.
+    </p>
+
+    <hr class="masthead-hr">
+
+    <ul class="masthead-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/">AWS Account Info</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">Infrastructure Info</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">Pipeline Info</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/">Release Info</a>
+        </li>
+
+    </ul>
+
+    <hr class="masthead-hr">
+
+
+
+
+</div>
+
+
+<div class="listing">
+<div class="result-wrapper">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="">
+
+                    <div id="cfn-nag-wrapper" class="panel-body">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="">
+
+                    <div id="sec-int-wrapper" class="panel-body">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="">
+
+                    <div id="auto-pen-wrapper" class="panel-body">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+<script src="js/handlebars.min.js"></script>
+<script id="cfn-nag-template" type="text/x-handlebars-template">
+    {{#if_eq status "PASS"}}
+    <a class="toggle-link" data-toggle="collapse" href="#cfn-nag-table-wrapper">
+        <h3>Static Code Analysis<span class="pull-right label label-success">PASS</span></h3>
+    </a>
+    {{else}}
+    <a class="toggle-link" data-toggle="collapse" href="#cfn-nag-table-wrapper">
+        <h3>Static Code Analysis<span class="pull-right label label-danger">FAIL</span></h3>
+    </a>
+    {{/if_eq}}
+    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <div class="collapse" id="cfn-nag-table-wrapper">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Config Rule</th>
+                <th>Status</th>
+                <th>Test Result</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#results}}
+            {{#if_eq result "Pass"}}
+            <tr class="success consec-row">
+                {{else}}
+            <tr class="danger consec-row">
+                {{/if_eq}}
+
+                <td>{{rule}}</td>
+                <td>{{status}}</td>
+                <td>
+                    {{#if_eq result "Pass"}}
+                    <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {{else}}
+                    <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {{/if_eq}}
+                    {{result}}</td>
+            </tr>
+            {{/results}}
+            </tbody>
+        </table>
+    </div>
+
+</script>
+<script id="sec-int-template" type="text/x-handlebars-template">
+    {{#if_eq status "PASS"}}
+    <a class="toggle-link" data-toggle="collapse" href="#sec-int-table-wrapper">
+        <h3>Security Integration Tests<span class="pull-right label label-success">PASS</span></h3>
+    </a>
+    {{else}}
+    <a class="toggle-link" data-toggle="collapse" href="#sec-int-table-wrapper">
+        <h3>Security Integration Tests<span class="pull-right label label-danger">FAIL</span></h3>
+    </a>
+
+    {{/if_eq}}
+    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <div class="collapse" id="sec-int-table-wrapper">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Config Rule</th>
+                <th>Status</th>
+                <th>Test Result</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#results}}
+            {{#if_eq result "Pass"}}
+            <tr class="success consec-row">
+                {{else}}
+            <tr class="danger consec-row">
+                {{/if_eq}}
+
+                <td>{{rule}}</td>
+                <td>{{status}}</td>
+                <td>
+                    {{#if_eq result "Pass"}}
+                    <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {{else}}
+                    <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {{/if_eq}}
+                    {{result}}</td>
+            </tr>
+            {{/results}}
+            </tbody>
+        </table>
+    </div>
+
+</script>
+
+<script id="auto-pen-template" type="text/x-handlebars-template">
+    {{#if_eq status "PASS"}}
+    <a class="toggle-link" data-toggle="collapse" href="#auto-pen-table-wrapper">
+        <h3>Automated Penetration Tests<span class="pull-right label label-success">PASS</span></h3>
+    </a>
+    {{else}}
+    <a class="toggle-link" data-toggle="collapse" href="#auto-pen-table-wrapper">
+        <h3>Automated Penetration Tests<span class="pull-right label label-danger">FAIL</span></h3>
+    </a>
+
+    {{/if_eq}}
+    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <div class="collapse" id="auto-pen-table-wrapper">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Config Rule</th>
+                <th>Status</th>
+                <th>Test Result</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#results}}
+            {{#if_eq result "Pass"}}
+            <tr class="success consec-row">
+                {{else}}
+            <tr class="danger consec-row">
+                {{/if_eq}}
+
+                <td>{{rule}}</td>
+                <td>{{status}}</td>
+                <td>
+                    {{#if_eq result "Pass"}}
+                    <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {{else}}
+                    <span class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    {{/if_eq}}
+                    {{result}}</td>
+            </tr>
+            {{/results}}
+            </tbody>
+        </table>
+    </div>
+
+</script>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="js/transition.js"></script>
+<script type="text/javascript" src="js/collapse.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+
+<script>
+    renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/sec_int_test_results.json");
+    renderSection("sec-int-template", "sec-int-wrapper", "data/sec_int_test_results.json");
+    renderSection("auto-pen-template", "auto-pen-wrapper", "data/sec_int_test_results.json");
+</script>
+
+
+
+
+</body></html>

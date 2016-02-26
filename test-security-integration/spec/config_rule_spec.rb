@@ -4,6 +4,7 @@ require 'json'
 describe('all_config_rules') do
   it 'have a status of COMPLIANT' do
     client = Aws::ConfigService::Client.new(region: 'us-east-1')
+    s3 = Aws::S3::Client.new(region: 'us-east-1')
 
     #Get Config rules
     rules = client.describe_config_rules({
@@ -34,9 +35,12 @@ describe('all_config_rules') do
     status = fail_count == 0 ? "PASS" : "FAIL"
     rule_stats_output = {"status" => status, "results" => rule_stats}
     puts "cwd: #{Dir.pwd}"
-    File.open("template/data/test_results.json","w") do |f|
-      f.write(rule_stats_output.to_json)
-    end
+    s3resp = s3.put_object({
+        acl: "public-read",
+        body: JSON.pretty_generate(rule_stats_output),
+        bucket: "dromedary-test-results",
+        key: "data/sec_int_test_results.json",
+                           })
     expect(status).to eq "PASS"
   end
 end

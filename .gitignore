@@ -45,3 +45,6 @@ pen-test-app/results.json
 
 # Ignore vim swapfile
 *.swp
+
+# Test Results app data folder
+test-results/data/*
