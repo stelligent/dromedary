@@ -52,13 +52,14 @@ def step_impl(context):
 
     for alert in context.matches:
         if alert['risk'] in risk_list:
-            high_risks.append(dict({'alert': alert['alert'],
-                                    'risk': alert['risk']}))
+            if not any(n['alert'] == alert['alert'] for n in high_risks):
+                high_risks.append(dict({'alert': alert['alert'],
+                                        'risk': alert['risk']}))
 
     if len(high_risks) > 0:
         sys.stderr.write("The following alerts failed:\n")
         for risk in high_risks:
-            sys.stderr.write("%-5s: %s\n" % (risk['alert'], risk['risk']))
+            sys.stderr.write("\t%-5s: %s\n" % (risk['alert'], risk['risk']))
         assert False
 
     assert True
