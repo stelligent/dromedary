@@ -20,7 +20,7 @@ cat cfn_nag_results_raw.json | \
 
 set -e
 aws s3api put-object --bucket dromedary-test-results \
-                     --key 'data...tests_result_data_to_be_specific/cfn_nag_results.json' \
+                     --key 'data/cfn_nag_results.json' \
                      --body cfn_nag_results.json
 
 exit ${cfn_nag_result}
