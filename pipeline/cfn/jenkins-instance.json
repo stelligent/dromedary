@@ -252,7 +252,7 @@
                 "service jenkins start\n",
                 "node -v \n",
                 "npm -v\n",
-                "pip install behave python-owasp-zap-v2.4\n",
+                "pip install behave python-owasp-zap-v2.4 boto3\n",
                 "\n",
                 "/opt/aws/bin/cfn-signal -e $? ",
                 " --stack ",
