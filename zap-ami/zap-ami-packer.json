@@ -5,8 +5,8 @@
 
     "ansible_version": "2.0.0",
 
-    "vpc_id_to_build_ami_in": "vpc-ffeeb29b",
-    "subnet_id_to_build_ami_in": "subnet-c337ef9b",
+    "vpc_id_to_build_ami_in": "vpc-f399e097",
+    "subnet_id_to_build_ami_in": "subnet-d68818eb",
     "associate_public_ip_address": "true",
     "region": "us-east-1",
     "source_ami": "ami-8fcee4e5"
