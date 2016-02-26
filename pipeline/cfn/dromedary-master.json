@@ -1373,6 +1373,9 @@
         },
         "TimeoutInMinutes":"60",
         "Parameters":{
+          "Ec2Key":{
+            "Ref":"KeyName"
+          },
           "SubnetId":{
             "Fn::GetAtt":[
               "VPCStack",
