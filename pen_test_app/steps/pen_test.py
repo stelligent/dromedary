@@ -22,9 +22,31 @@ def step_impl(context):
                              (results_file, e))
             assert False
 
-@when('there is a cross-site-script vulnerability')
+@when('there is a cross domain source inclusion vulnerability')
 def step_impl(context):
     pattern = re.compile(r'cross(?:-|\s+)(?:domain|site)', re.IGNORECASE)
+    matches = list()
+
+    for alert in context.alerts:
+        if pattern.match(alert['alert']) is not None:
+            matches.append(alert)
+    context.matches = matches
+    assert True
+
+@when('there is not an X-Frame-Options Header set')
+def step_impl(context):
+    pattern = re.compile(r'X-Frame-Options Header Not Set')
+    matches = list()
+
+    for alert in context.alerts:
+        if pattern.match(alert['alert']) is not None:
+            matches.append(alert)
+    context.matches = matches
+    assert True
+
+@when('there is not an X-Content-Type-Options Header set')
+def step_impl(context):
+    pattern = re.compile(r'X-Content-Type-Options Header Missing')
     matches = list()
 
     for alert in context.alerts:
