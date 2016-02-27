@@ -21,10 +21,11 @@ cat cfn_nag_results_raw.json | \
   jq '{ result: (if ([.[]|.file_results.failure_count]|reduce .[] as $item (0; . + $item)) > 0 then "FAIL" else "PASS" end), results: .}' > aggregate_status_cfn_nag_results.json
 
 cat aggregate_status_cfn_nag_results.json | \
-  jq '{ result: .result, results: [.results[]|.filename as $filename|.file_results.violations[]|.filename=$filename]}' > cfn_nag_results.json
+  jq '{ result: .result, results: [.results[]|.filename as $filename|.file_results.violations[]|.filename=$filename]|sort_by(.type)}' > cfn_nag_results.json
 
-aws s3api put-object --bucket dromedary-test-results \
+aws s3api put-object --bucket demo.stelligent-continuous-security.com \
                      --key 'data/cfn_nag_results.json' \
-                     --body cfn_nag_results.json
+                     --body cfn_nag_results.json \
+                     --region us-east-1
 
 exit ${cfn_nag_result}
