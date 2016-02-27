@@ -9,6 +9,9 @@ GITHUB_USER=xxxx
 AWS_REGION=xxxx
 DEV_BUCKET=xxxx
 BASE_TEMPLATE_URL=https://s3.amazonaws.com/${DEV_BUCKET}/
+ENABLE_CONFIG=false
+DROMEDARY_BUCKET=xxxx #for example in goldbase it would be:  dromedary-592804526322
+STACK_NAME=DromedaryStack
 
 aws s3api create-bucket --bucket ${DEV_BUCKET}
 
@@ -43,14 +46,23 @@ then
                                  --hosted-zone-config Comment="for dromedary hacking"
 fi
 
-#create and stage lambda deployment package
-cd test-security-integration/lambda
+pushd test-security-integration/lambda
 zip -r config-rules.zip *
-aws s3 cp config-rules.zip s3://${DEV_BUCKET}/lambda/
+aws s3 cp config-rules.zip s3://${DROMEDARY_BUCKET}/lambda/ --profile ${AWS_PROFILE}
 rm config-rules.zip
+popd
+
+#update the lambdas if ENABLE_CONFIG=false
+if [[ "$ENABLE_CONFIG" = "false" ]]; then
+    echo "Update the lambdas with the new code:"
+    for func in `aws lambda list-functions | jq -c '.Functions[] | select(.FunctionName | startswith("'"${STACK_NAME:0:25}"'"))? | {FunctionName} | .FunctionName'`
+    do
+        echo "aws lambda update-function-code --function-name ${func} --s3-bucket ${DROMEDARY_BUCKET} --s3-key lambda/config-rules.zip --publish" | sh
+    done
+fi
 
 aws cloudformation create-stack \
---stack-name DromedaryStack  \
+--stack-name ${STACK_NAME}  \
 --template-body file://pipeline/cfn/dromedary-master.json \
 --region ${AWS_REGION} \
 --disable-rollback --capabilities="CAPABILITY_IAM" \
@@ -61,4 +73,5 @@ aws cloudformation create-stack \
 	ParameterKey=GitHubToken,ParameterValue=${GITHUB_TOKEN} \
 	ParameterKey=DDBTableName,ParameterValue=${DYNAMODB_TABLE_NAME} \
 	ParameterKey=ProdHostedZone,ParameterValue=.${HOSTED_ZONE_NAME} \
+	ParameterKey=pEnableConfig,ParameterValue=.${ENABLE_CONFIG} \
 	ParameterKey=Domain,ParameterValue=${HOSTED_ZONE_NAME}.
