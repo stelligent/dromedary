@@ -27,15 +27,18 @@ Handlebars.registerHelper('toUpperCase', function(str) {
     return str.toUpperCase();
 });
 
-function renderSection(sourceId, targetId, dataPath){
+function renderSection(sourceId, targetId, dataPath, callback){
     var source = document.getElementById(sourceId).innerHTML;
     var target = document.getElementById(targetId);
     var template = Handlebars.compile(source);
     loadJSON(dataPath, function(response){
         var data = JSON.parse(response);
         target.innerHTML = template(data);
+        typeof callback === 'function' && callback();
     });
-};
+}
+
+
 
 
 

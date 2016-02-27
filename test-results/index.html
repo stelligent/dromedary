@@ -38,33 +38,22 @@
     <p class="masthead-lead">
         Continuous automated security monitoring and testing for your CI/CD pipeline and AWS resources.
     </p>
-
     <hr class="masthead-hr">
-
     <ul class="masthead-nav">
         <li class="nav-item">
             <a class="nav-link" href="/">AWS Account Info</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="/">Infrastructure Info</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="/">Pipeline Info</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link" href="/">Release Info</a>
         </li>
-
     </ul>
-
     <hr class="masthead-hr">
-
-
-
-
 </div>
 
 
@@ -129,7 +118,7 @@
     </a>
     {{/if_eq}}
     {{/if_eq}}
-    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <h3 class="job-info"><small><strong>Job:</strong> {{JOB_NAME}} <strong>Build:</strong> {{BUILD_NUMBER}}</small></h3>
     <div class="collapse" id="cfn-nag-table-wrapper">
         <table class="table">
             <thead>
@@ -174,7 +163,10 @@
     </a>
 
     {{/if_eq}}
-    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <div id="sec-int-job-info">
+
+    </div>
+
     <div class="collapse" id="sec-int-table-wrapper">
         <table class="table">
             <thead>
@@ -209,6 +201,10 @@
 
 </script>
 
+<script id="job-info-template" type="text/x-handlebars-template">
+    <h3 class="job-info"><small><strong>Job:</strong> {{JOB_NAME}} <strong>Build:</strong> {{BUILD_NUMBER}}</small></h3>
+</script>
+
 <script id="auto-pen-template" type="text/x-handlebars-template">
     {{#if_eq result "PASS"}}
     <a class="toggle-link" data-toggle="collapse" href="#auto-pen-table-wrapper">
@@ -220,7 +216,7 @@
     </a>
 
     {{/if_eq}}
-    <h5>Job: drom-sec-int-test  Build: 123</h5>
+    <h3 class="job-info"><small><strong>Job:</strong> {{JOB_NAME}} <strong>Build:</strong> {{BUILD_NUMBER}}</small></h3>
     <div class="collapse" id="auto-pen-table-wrapper">
         <table class="table">
             <thead>
@@ -262,8 +258,11 @@
 
 <script>
     renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/cfn_nag_results.json");
-    renderSection("sec-int-template", "sec-int-wrapper", "data/sec_int_test_results.json");
+    renderSection("sec-int-template", "sec-int-wrapper", "data/sec_int_test_results.json", function(){
+        renderSection("job-info-template", "sec-int-job-info", "data/sec_int_test_job_info.json" );
+    });
     renderSection("auto-pen-template", "auto-pen-wrapper", "data/automated_pen_test_results.json");
+
 </script>
 
 

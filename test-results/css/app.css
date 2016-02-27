@@ -1,3 +1,7 @@
+html{
+
+}
+
 .toggle-link{
     text-decoration: none !important;
 }
@@ -12,4 +16,10 @@
 
 .consec-result-col{
     width: 100px;
+}
+
+.job-info{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    line-height: 12px;
 }
