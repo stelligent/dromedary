@@ -4,7 +4,7 @@ set -x
 
 . ./environment.sh
 
-function publish_results {
+function publish_results () {
     cat << EOF > sec_int_test_job_info.json
 { "JOB_NAME": "$1", "BUILD_NUMBER": "$2", "BUILD_ID": "$3", "BUILD_URL": "$4"}
 EOF
@@ -15,6 +15,6 @@ EOF
 pushd test-security-integration
 gem install rspec aws-sdk
 rspec
-publish_results
+publish_results $1 $2 $3 $4
 popd
 
