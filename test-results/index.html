@@ -123,6 +123,7 @@
         <table class="table">
             <thead>
             <tr>
+                <th>File</th>
                 <th>Logical Resource IDs</th>
                 <th>Message</th>
                 <th class="consec-result-col">Test Result</th>
@@ -135,7 +136,7 @@
                 {{else}}
             <tr class="danger consec-row">
                 {{/if_eq}}
-
+                <td>{{shortFilename filename}}</td>
                 <td>{{array_to_list logical_resource_ids}}</td>
                 <td>{{message}}</td>
                 <td>
