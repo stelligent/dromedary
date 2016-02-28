@@ -10,12 +10,13 @@ import sys
 RESULTS_FILES = dict({'zap_results': 'results.json',
                       'behave_results': 'behave_results.json',
                       'all_results': 'data/automated_pen_test_results.json'})
+DEFAULT_BUCKET = "demo.stelligent-continious-security.com"
 
 
 def fetchArguments():
     parse = argparse.ArgumentParser()
     parse.add_argument('-b', '--bucket', help='Bucket to upload results',
-                       dest='bucket', default='dromedary-test-results')
+                       dest='bucket', default=DEFAULT_BUCKET)
     parse.add_argument('-f', '--filename', help='Filename to store resutls',
                        dest='filename', default=RESULTS_FILES['all_results'])
 
