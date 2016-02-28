@@ -8,7 +8,7 @@ gem install cfn-nag --version 0.0.10 \
                     --conservative
 
 set +e
-templates_to_audit=pipeline/cfn/dromedary-master.json
+templates_to_audit=pipeline/cfn/app-instance.json
 #templates_to_audit=pipeline/cfn/
 
 cfn_nag --input-json-path ${templates_to_audit} \
