@@ -1,6 +1,7 @@
 #!/bin/bash -x
 set -o pipefail
 
+# env variables
 EC2_KEY_PAIR_NAME=xxxx
 HOSTED_ZONE_NAME=xxx.com
 DYNAMODB_TABLE_NAME=xxxxx
