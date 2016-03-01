@@ -130,16 +130,8 @@ From CodePipeline, click on any of the Actions to launch Jenkins. From Jenkins, 
 1. Check the `Administer` box
 1. Click the `Save` button
 
-#### Manual Cleanup
-For manually bootstrapped builds, to delete (nearly) all Dromedary resources, execute the delete script:
-
-```
-./bin/delete-all.sh
-```
-
-The only resources that remain and require manual deletion is the Dromedary S3 bucket.
-
-Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout. You will need to manually delete the CloudFormation stack.
+#### Cleanup
+To delete (nearly) all Dromedary resources, delete any Dromedary application stacks and delete the master CloudFormation stack. The only resources that remain and require manual deletion is the Dromedary S3 bucket.
 
 ### Running Locally :dromedary_camel:
 
