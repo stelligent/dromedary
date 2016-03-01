@@ -71,7 +71,6 @@
       "Type":"String",
       "MinLength":"1",
       "MaxLength":"32",
-      "AllowedPattern":"[a-zA-Z0-9]*",
       "Description":"Unique name for the Dromedary Dynamo DB table"
     },
     "Branch":{
