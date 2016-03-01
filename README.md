@@ -72,7 +72,11 @@ aws cloudformation create-stack \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
 ```
 
-In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
+In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account.
+
+To integrate with GitHub, AWS CodePipeline uses OAuth tokens. Generate your token at [GitHub](https://github.com/settings/tokens) and ensure you enable the following two scopes:
+* `admin:repo_hook`, which is used to detect when you have committed and pushed changes to the repository
+* `repo`, which is used to read and pull artifacts from public and private repositories into a pipeline
 
 Parameters | Description
 ---------- | ------------
@@ -126,16 +130,8 @@ From CodePipeline, click on any of the Actions to launch Jenkins. From Jenkins, 
 1. Check the `Administer` box
 1. Click the `Save` button
 
-#### Manual Cleanup
-For manually bootstrapped builds, to delete (nearly) all Dromedary resources, execute the delete script:
-
-```
-./bin/delete-all.sh
-```
-
-The only resources that remain and require manual deletion is the Dromedary S3 bucket.
-
-Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout. You will need to manually delete the CloudFormation stack.
+#### Cleanup
+To delete (nearly) all Dromedary resources, delete any Dromedary application stacks and delete the master CloudFormation stack. The only resources that remain and require manual deletion is the Dromedary S3 bucket.
 
 ### Running Locally :dromedary_camel:
 
