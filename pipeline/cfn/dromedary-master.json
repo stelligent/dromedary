@@ -203,52 +203,52 @@
       ],
       "ParameterLabels":{
         "BaseTemplateURL":{
-          "default":"BaseTemplateURL"
+          "default":"S3 URL for Base Template"
         },
         "Branch":{
-          "default":"Branch"
+          "default":"GitHub Branch"
         },
         "CodePipelineActionsCFNTemplateFile":{
-          "default":"CodePipelineActionsCFNTemplateFile"
+          "default":"CFN Template File for Custom Actions"
         },
         "CodePipelineCFNTemplateFile":{
-          "default":"CodePipelineCFNTemplateFile"
+          "default":"CFN Template File for CodePipeline"
         },
         "DDBCFNTemplateFile":{
-          "default":"DDBCFNTemplateFile"
+          "default":"CFN Template File for DynamoDB"
         },
         "DDBTableName":{
-          "default":"DDBTableName"
+          "default":"Unique name for DynamoDB table"
         },
         "Domain":{
-          "default":"Domain"
+          "default":"Domain Name"
         },
         "ENICFNTemplateFile":{
-          "default":"ENICFNTemplateFile"
+          "default":"CFN Template File for ENI"
         },
         "GitHubToken":{
-          "default":"GitHubToken"
+          "default":"GitHub Token"
         },
         "GitHubUser":{
-          "default":"GitHubUser"
+          "default":"GitHub User"
         },
         "IAMCFNTemplateFile":{
-          "default":"IAMCFNTemplateFile"
+          "default":"CFN Template File for AIM"
         },
         "InstanceType":{
-          "default":"InstanceType"
+          "default":"EC2 Instance Type"
         },
         "JenkinsCFNTemplateFile":{
-          "default":"JenkinsCFNTemplateFile"
+          "default":"CFN Template File for Jenkins"
         },
         "KeyName":{
-          "default":"KeyName"
+          "default":"EC2 Key Pair Name"
         },
         "PipelineStoreCFNTemplateFile":{
-          "default":"PipelineStoreCFNTemplateFile"
+          "default":"CFN Template File for Pipeline Store"
         },
         "ProdHostedZone":{
-          "default":"ProdHostedZone"
+          "default":"Route 53 Hosted Zone"
         },
         "Repo":{
           "default":"Repo"
