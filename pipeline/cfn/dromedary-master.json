@@ -71,22 +71,22 @@
       "Type":"String",
       "MinLength":"1",
       "MaxLength":"32",
-      "Description":"Unique name for the Dromedary Dynamo DB table"
+      "Description":"Unique name for the generated Dromedary Dynamo DB table."
     },
     "Branch":{
       "Type":"String",
-      "Description":"The Github branch the public dromedary repository.",
+      "Description":"The GitHub branch to the public Dromedary repository.",
       "Default":"master"
     },
     "Domain":{
       "Type":"String",
-      "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
+      "Description":"Route53 Hosted Zone name for prod IP (include trailing .). Your AWS account must have access to this Hosted Zone.",
       "Default":"oneclickdeployment.com."
     },
     "ProdHostedZone":{
       "Type":"String",
       "Default":".oneclickdeployment.com",
-      "Description":"Route53 Hosted Zone (e.g. .HOSTEDZONE or .oneclickdeployment.com)"
+      "Description":"Route53 Hosted Zone (include leading .). Your AWS account must have access to this Hosted Zone."
     },
     "InstanceType":{
       "Description":"WebServer EC2 instance type",
