@@ -15,7 +15,7 @@
     "GitHubToken":{
       "NoEcho":"true",
       "Type":"String",
-      "Description":"Secret. OAuthToken with access to Repo. The default is invalid and used for example purposes. Go to https://github.com/settings/tokens"
+      "Description":"Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://github.com/settings/tokens"
     },
     "GitHubUser":{
       "Type":"String",
@@ -69,6 +69,9 @@
     },
     "DDBTableName":{
       "Type":"String",
+      "MinLength":"1",
+      "MaxLength":"32",
+      "AllowedPattern":"[a-zA-Z0-9]*",
       "Description":"Unique name for the Dromedary Dynamo DB table"
     },
     "Branch":{
@@ -83,6 +86,7 @@
     },
     "ProdHostedZone":{
       "Type":"String",
+      "Default":".oneclickdeployment.com",
       "Description":"Route53 Hosted Zone (e.g. .HOSTEDZONE or .oneclickdeployment.com)"
     },
     "InstanceType":{
@@ -168,10 +172,10 @@
             "BaseTemplateURL",
             "Branch",
             "Domain",
+            "ProdHostedZone",
             "DDBTableName",
             "GitHubToken",
-            "KeyName",
-            "ProdHostedZone"
+            "KeyName"
           ]
         },
         {
@@ -251,13 +255,13 @@
           "default":"Route 53 Hosted Zone"
         },
         "Repo":{
-          "default":"Repo"
+          "default":"GitHub Repository Name"
         },
         "SSHLocation":{
-          "default":"SSHLocation"
+          "default":"CIDR Block for EC2 Instance"
         },
         "VPCCFNTemplateFile":{
-          "default":"VPCCFNTemplateFile"
+          "default":"CFN Template File for VPC"
         }
       }
     }
