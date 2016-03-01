@@ -72,7 +72,11 @@ aws cloudformation create-stack \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
 ```
 
-In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
+In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account.
+
+To integrate with GitHub, AWS CodePipeline uses OAuth tokens. Generate your token at [GitHub](https://github.com/settings/tokens) and ensure you enable the following two scopes:
+* `admin:repo_hook`, which is used to detect when you have committed and pushed changes to the repository
+* `repo`, which is used to read and pull artifacts from public and private repositories into a pipeline
 
 Parameters | Description
 ---------- | ------------
