@@ -8,7 +8,7 @@ import re
 import sys
 
 RESULTS_FILES = dict({'zap_results': 'results.json',
-                      'behave_results': 'behave_results.json',
+                      'behave_results': 'automated_pen_test_results.json',
                       'all_results': 'data/automated_pen_test_results.json'})
 DEFAULT_BUCKET = "demo.stelligent-continious-security.com"
 
