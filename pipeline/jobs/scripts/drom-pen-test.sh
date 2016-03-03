@@ -18,6 +18,6 @@ python pen-test-app.py \
     --target ${TARGET_URL}
 behave_result=$(/usr/local/bin/behave -f json.pretty > automated_pen_test_results.json; echo "$?")
 python report_results.py \
-    --bucket dromedary-test-results \
+    --bucket demo.stelligent-continious-security.com \
     --filename data/automated_pen_test_results.json
 exit "${behave_result}"
