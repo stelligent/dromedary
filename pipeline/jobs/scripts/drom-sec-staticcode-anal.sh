@@ -4,6 +4,15 @@ set -e
 
 ruby -v
 
+necessary_env_vars=(JOB_NAME BUILD_NUMBER BUILD_ID BUILD_URL)
+for necessary_env_var in "${necessary_env_vars[@]}";
+do
+  if [[ -z ${!necessary_env_var} ]];
+  then
+    echo The env var: ${necessary_env_var} must be set!
+  fi
+done
+
 gem install cfn-nag --version 0.0.10 \
                     --conservative
 
@@ -26,6 +35,15 @@ cat aggregate_status_cfn_nag_results.json | \
 aws s3api put-object --bucket demo.stelligent-continuous-security.com \
                      --key 'data/cfn_nag_results.json' \
                      --body cfn_nag_results.json \
+                     --region us-east-1
+
+cat << EOF > sec_staticcode_anal_job_info.json
+{ "JOB_NAME": "${JOB_NAME}", "BUILD_NUMBER": "${BUILD_NUMBER}", "BUILD_ID": "${BUILD_ID}", "BUILD_URL": "${BUILD_URL}"}
+EOF
+
+aws s3api put-object --bucket demo.stelligent-continuous-security.com \
+                     --key 'data/sec_staticcode_anal_job_info.json' \
+                     --body sec_staticcode_anal_job_info.json \
                      --region us-east-1
 
 exit ${cfn_nag_result}
