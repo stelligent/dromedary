@@ -17,8 +17,11 @@ def fetchArguments():
     parse = argparse.ArgumentParser()
     parse.add_argument('-b', '--bucket', help='Bucket to upload results',
                        dest='bucket', default=DEFAULT_BUCKET)
-    parse.add_argument('-f', '--filename', help='Filename to store resutls',
+    parse.add_argument('-f', '--filename', help='Filename to store results',
                        dest='filename', default=RESULTS_FILES['all_results'])
+    parse.add_argument('-i', '--inputfile', help="Input results JSON file",
+                       dest='inputfile',
+                       default=RESULTS_FILES['behave_results'])
 
     return parse.parse_args()
 
@@ -62,7 +65,7 @@ def sendToS3(contents, key, bucket):
 def main():
     args = fetchArguments()
     results = fetchJenkinsVars()
-    behave_results = fetchResults(RESULTS_FILES['behave_results'])
+    behave_results = fetchResults(args.inputfile)
     zap_results = fetchResults(RESULTS_FILES['zap_results'])
 
     # Fetch the overall result of the tests

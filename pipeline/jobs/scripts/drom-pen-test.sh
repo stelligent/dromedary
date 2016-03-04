@@ -2,6 +2,8 @@
 . /etc/profile
 set -ex
 
+declare PENTEST_RESULTS="automated_pen_test_results.json"
+
 . environment.sh
 
 zap_host="$(aws cloudformation describe-stacks --stack-name "$dromedary_zap_stack_name" --output text --query 'Stacks[0].Outputs[?OutputKey==`ZapURL`].OutputValue')"
@@ -16,8 +18,14 @@ pushd pen_test_app
 python pen-test-app.py \
     --zap-host ${zap_host} \
     --target ${TARGET_URL}
-behave_result=$(/usr/local/bin/behave -f json.pretty > automated_pen_test_results.json; echo "$?")
+behave_result=$(/usr/local/bin/behave --no-summary --format json.pretty > ${PENTEST_RESULTS}; echo "$?")
+[ -f ${PENTEST_RESULTS} ] || \
+{
+    echo "Failed to find behave output file '${PENTEST_RESULTS}'." 1>&2
+    exit 1
+}
 python report_results.py \
-    --bucket dromedary-test-results \
-    --filename data/automated_pen_test_results.json
+    --bucket demo.stelligent-continuous-security.com \
+    --filename data/automated_pen_test_results.json \
+    --inputfile ${PENTEST_RESULTS}
 exit "${behave_result}"
