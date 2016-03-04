@@ -19,7 +19,7 @@ describe("/increment", function() {
             apiBaseurl = data.apiBaseurl;
           }
 
-          return rp({ uri: apiBaseurl+'/data', json:true});
+          return rp({ uri: apiBaseurl+'/data', qs: {nocache:true}, json:true});
         })
         .then(function(data) {
           chartData = data;
@@ -31,7 +31,7 @@ describe("/increment", function() {
         })
         .then(function(data) {
             incrementResponse = data;
-            return rp({ uri: apiBaseurl+'/data',qs: {countsOnly: true}, json:true});
+            return rp({ uri: apiBaseurl+'/data',qs: {nocache:true, countsOnly: true}, json:true});
         })
         .then(function(data) {
             newColorCounts = data;
@@ -50,11 +50,9 @@ describe("/increment", function() {
     expect(incrementResponse.count).to.equal(expectedNewColorCount);
   });
 
-/*
   it("new count matches expected value", function() {
     expect(newColorCounts[color]).to.equal(expectedNewColorCount);
   });
-*/
 
   it("bad color produces error", function() {
     expect(badIncrementResponse.hasOwnProperty('error')).to.be.true;
