@@ -86,7 +86,8 @@ app.get('/config.json', function (req, res) {
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
   console.log('Request received from %s for /data', getClientIp(req));
-  getChartData(req.headers.host, req.query.hasOwnProperty('nocache'),function (err, data) {
+  var nocache = req.query.hasOwnProperty('nocache') ;
+  getChartData(req.headers.host,nocache,function (err, data) {
     var chartData = data;
     if (err) {
       console.log(err);
@@ -116,7 +117,8 @@ app.get('/increment', function (req, res) {
     return;
   }
 
-  getChartData(req.headers.host, req.query.hasOwnProperty('nocache'),function (err, data) {
+  var nocache = req.query.hasOwnProperty('nocache') ;
+  getChartData(req.headers.host,nocache,function (err, data) {
     console.log('Request received from %s for /increment', ip);
     reqThrottle.logIp(ip);
     if (err) {
