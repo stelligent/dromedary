@@ -1,6 +1,7 @@
 var gulp        = require('gulp');
 var bg          = require('gulp-bg');
 var download    = require('gulp-download');
+var zip         = require('gulp-zip');
 var gzip        = require('gulp-gzip');
 var gunzip      = require('gulp-gunzip');
 var jshint      = require('gulp-jshint');
@@ -190,6 +191,33 @@ gulp.task('default', function(callback) {
     'serve',
     callback
   );
+});
+
+
+gulp.task('package-site', ['lint-charthandler'],function () {
+  return gulp.src('public/**/*')
+      .pipe(zip('site.zip'))
+      .pipe(gulp.dest('dist'));
+});
+
+gulp.task('dist-app', function() {
+  return gulp.src(['package.json','index.js','app.js','lib{,/*.js}'])
+      .pipe(gulp.dest('dist/app/'))
+      .pipe(install({production: true}));
+});
+
+gulp.task('package-app', ['lint-app','test','dist-app'], function () {
+  return gulp.src(['!dist/app/package.json','!dist/app/**/aws-sdk{,/**}', 'dist/app/**/*'])
+      .pipe(zip('lambda.zip'))
+      .pipe(gulp.dest('dist'));
+});
+
+gulp.task('package-swagger', function() {
+  return gulp.src('swagger.json')
+      .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('package',['package-site','package-app','package-swagger'],  function() {
 });
 
 
