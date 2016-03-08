@@ -26,9 +26,9 @@ Directions are provided to run this demo in AWS and locally.
 
 ## Core Demo Requirements
 
-The bootstrapping and the application must be capable of launching with a single command or CloudFormation button click
+Given a version-control repository, the bootstrapping and the application must be capable of launching from a single _CloudFormation_ command and a CloudFormation button click - assuming that an [EC2 Key Pair](http://docs.aws.amazon.com/gettingstarted/latest/wah/getting-started-prereq.html#create-a-key-pair) and [Route 53 Hosted Zone](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html) has been configured. The demo should not be required to run from a local envrionment. 
 
-An application pipeline in CodePipeline must run in less than 10 minutes.
+An application pipeline in CodePipeline must go from commit to production in less than 10 minutes.
 
 It should be capable of running on a new AWS account without any additional setup.
 
@@ -72,12 +72,16 @@ aws cloudformation create-stack \
 	ParameterKey=ProdHostedZone,ParameterValue=.YOURHOSTEDZONE
 ```
 
-In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account. You'll need to configure your own GitHub token by going to https://github.com/settings/tokens. 
+In the above example, you'll need to set the `YOURHOSTEDZONE` value to your Route53 hosted zone. See [Hosted Zones](https://console.aws.amazon.com/route53/home?region=us-east-1#hosted-zones:) for the hosted zones configured in your AWS account.
+
+To integrate with GitHub, AWS CodePipeline uses OAuth tokens. Generate your token at [GitHub](https://github.com/settings/tokens) and ensure you enable the following two scopes:
+* `admin:repo_hook`, which is used to detect when you have committed and pushed changes to the repository
+* `repo`, which is used to read and pull artifacts from public and private repositories into a pipeline
 
 Parameters | Description
 ---------- | ------------
 KeyName | The EC2 keypair name to use for ssh access to the bootstrapping instance.
-GitHubUser | GitHub UserName. This username must have access to the GitHubToken.
+GitHubUser | GitHub UserName. This username must be the owner of the Repo.
 GitHubToken | Secret. OAuthToken with access to Repo. Go to https://github.com/settings/tokens.
 BaseTemplateURL | S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)
 DDBTableName | Unique TableName for the Dromedary DynamoDB database.
@@ -87,13 +91,13 @@ As part of the bootstrapping process, it will automatically launch the Dromedary
 
 #### Outputs
 
-A few of the most relevant CloudFormation outputs are listed in the table below.
+A few of the most relevant CloudFormation outputs from the master stack are listed in the table below.
 
 Output | Description
 ---------- | ------------
-DromedaryAppURL | Available in the master stack outputs. Link to the working application once the application pipeline is complete
-CodePipelineURL | Available in the CodePipeline stack outputs. Link to the CodePipeline pipeline
-
+CodePipelineURL | The URL to the instantiated pipeline
+JenkinsURL | The URL to Jenkins server that runs the execution of jobs for CodePipeline
+DromedaryAppURL | Link to the working application once the application pipeline is complete
 
 #### Post-bootstrap steps
 
@@ -126,16 +130,8 @@ From CodePipeline, click on any of the Actions to launch Jenkins. From Jenkins, 
 1. Check the `Administer` box
 1. Click the `Save` button
 
-#### Manual Cleanup
-For manually bootstrapped builds, to delete (nearly) all Dromedary resources, execute the delete script:
-
-```
-./bin/delete-all.sh
-```
-
-The only resources that remain and require manual deletion is the Dromedary S3 bucket.
-
-Builds made using the AWS Test Drive CloudFormation stack will self terminate all resources after the AliveDuration timeout. You will need to manually delete the CloudFormation stack.
+#### Cleanup
+To delete (nearly) all Dromedary resources, delete any Dromedary application stacks and delete the master CloudFormation stack. The only resources that remain and require manual deletion is the Dromedary S3 bucket.
 
 ### Running Locally :dromedary_camel:
 

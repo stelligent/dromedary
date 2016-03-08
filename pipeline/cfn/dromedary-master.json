@@ -15,7 +15,7 @@
     "GitHubToken":{
       "NoEcho":"true",
       "Type":"String",
-      "Description":"Secret. OAuthToken with access to Repo. The default is invalid and used for example purposes. Go to https://github.com/settings/tokens"
+      "Description":"Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://github.com/settings/tokens"
     },
     "GitHubUser":{
       "Type":"String",
@@ -69,26 +69,24 @@
     },
     "DDBTableName":{
       "Type":"String",
-      "Description":"Unique name for the Dromedary Dynamo DB table"
-    },
-    "DromedaryRepo":{
-      "Type":"String",
-      "Description":"The Github https address to the public dromedary repository.",
-      "Default":"https://github.com/stelligent/dromedary.git"
+      "MinLength":"1",
+      "MaxLength":"32",
+      "Description":"Unique name for the generated Dromedary Dynamo DB table."
     },
     "Branch":{
       "Type":"String",
-      "Description":"The Github branch the public dromedary repository.",
+      "Description":"The GitHub branch to the public Dromedary repository.",
       "Default":"master"
     },
     "Domain":{
       "Type":"String",
-      "Description":"Route53 Hosted Zone name for prod IP (include trailing .)",
+      "Description":"Route53 Hosted Zone name for prod IP (include trailing .). Your AWS account must have access to this Hosted Zone.",
       "Default":"oneclickdeployment.com."
     },
     "ProdHostedZone":{
       "Type":"String",
-      "Description":"Route53 Hosted Zone (e.g. .HOSTEDZONE or .oneclickdeployment.com)"
+      "Default":".oneclickdeployment.com",
+      "Description":"Route53 Hosted Zone (include leading .). Your AWS account must have access to this Hosted Zone."
     },
     "InstanceType":{
       "Description":"WebServer EC2 instance type",
@@ -160,6 +158,111 @@
       "Default":"0.0.0.0/0",
       "AllowedPattern":"(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription":"must be a valid IP CIDR range of the form x.x.x.x/x."
+    }
+  },
+  "Metadata":{
+    "AWS::CloudFormation::Interface":{
+      "ParameterGroups":[
+        {
+          "Label":{
+            "default":"Dynamic Configuration"
+          },
+          "Parameters":[
+            "BaseTemplateURL",
+            "Branch",
+            "Domain",
+            "ProdHostedZone",
+            "DDBTableName",
+            "GitHubToken",
+            "KeyName"
+          ]
+        },
+        {
+          "Label":{
+            "default":"CloudFormation Files"
+          },
+          "Parameters":[
+            "CodePipelineActionsCFNTemplateFile",
+            "CodePipelineCFNTemplateFile",
+            "DDBCFNTemplateFile",
+            "ENICFNTemplateFile",
+            "IAMCFNTemplateFile",
+            "JenkinsCFNTemplateFile",
+            "PipelineStoreCFNTemplateFile",
+            "VPCCFNTemplateFile"
+          ]
+        },
+        {
+          "Label":{
+            "default":"Additional Configuration"
+          },
+          "Parameters":[
+            "GitHubUser",
+            "InstanceType",
+            "Repo",
+            "SSHLocation"
+          ]
+        }
+      ],
+      "ParameterLabels":{
+        "BaseTemplateURL":{
+          "default":"S3 URL for Base Template"
+        },
+        "Branch":{
+          "default":"GitHub Branch"
+        },
+        "CodePipelineActionsCFNTemplateFile":{
+          "default":"CFN Template File for Custom Actions"
+        },
+        "CodePipelineCFNTemplateFile":{
+          "default":"CFN Template File for CodePipeline"
+        },
+        "DDBCFNTemplateFile":{
+          "default":"CFN Template File for DynamoDB"
+        },
+        "DDBTableName":{
+          "default":"Unique name for DynamoDB table"
+        },
+        "Domain":{
+          "default":"Domain Name"
+        },
+        "ENICFNTemplateFile":{
+          "default":"CFN Template File for ENI"
+        },
+        "GitHubToken":{
+          "default":"GitHub Token"
+        },
+        "GitHubUser":{
+          "default":"GitHub User"
+        },
+        "IAMCFNTemplateFile":{
+          "default":"CFN Template File for AIM"
+        },
+        "InstanceType":{
+          "default":"EC2 Instance Type"
+        },
+        "JenkinsCFNTemplateFile":{
+          "default":"CFN Template File for Jenkins"
+        },
+        "KeyName":{
+          "default":"EC2 Key Pair Name"
+        },
+        "PipelineStoreCFNTemplateFile":{
+          "default":"CFN Template File for Pipeline Store"
+        },
+        "ProdHostedZone":{
+          "default":"Route 53 Hosted Zone"
+        },
+        "Repo":{
+          "default":"GitHub Repository Name"
+        },
+        "SSHLocation":{
+          "default":"CIDR Block for EC2 Instance"
+        },
+        "VPCCFNTemplateFile":{
+          "default":"CFN Template File for VPC"
+        }
+      }
     }
   },
   "Mappings":{
@@ -1035,7 +1138,20 @@
                 },
                 " ",
                 {
-                  "Ref":"DromedaryRepo"
+                  "Fn::Join":[
+                    "",
+                    [
+                      "https://github.com/",
+                      {
+                        "Ref":"GitHubUser"
+                      },
+                      "/",
+                      {
+                        "Ref":"Repo"
+                      },
+                      ".git"
+                    ]
+                  ]
                 },
                 " /opt/dromedary\n",
                 "export AWS_DEFAULT_REGION=",
@@ -1433,7 +1549,26 @@
         "Ref":"AWS::StackName"
       }
     },
+    "CodePipelineURL":{
+      "Description":"The URL to the instantiated pipeline",
+      "Value":{
+        "Fn::GetAtt":[
+          "CodePipelineStack",
+          "Outputs.CodePipelineURL"
+        ]
+      }
+    },
+    "JenkinsURL":{
+      "Description":"The URL to Jenkins server that runs the execution of jobs for CodePipeline",
+      "Value":{
+        "Fn::GetAtt":[
+          "JenkinsStack",
+          "Outputs.JenkinsURL"
+        ]
+      }
+    },
     "DromedaryAppURL":{
+      "Description":"The URL to Dromedary application. Only operations once a pipeline has completed its first run.",
       "Value":{
         "Fn::Join":[
           "",
