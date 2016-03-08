@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 ### BEGIN INIT INFO
 # Provides:             zap
@@ -9,15 +9,15 @@
 # Short-Description:    OWASP ZAP Daemon Server
 ### END INIT INFO
 
-set -e
+ZAP=/opt/zap/zap.sh
+ZAP_LOG=/var/log/zap.log
+ZAP_HOST=0.0.0.0
+ZAP_PORT=8080
 
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
-
-ZAP=/opt/zap/zap.sh
-ZAP_LOG=/var/log/zap.log
 
 test -x ${ZAP} || exit 0
 
@@ -49,8 +49,8 @@ start_zap() {
     timeout=0
     ${ZAP} \
         -daemon \
-        -host 0.0.0.0 \
-        -port 8080 \
+        -host ${ZAP_HOST} \
+        -port ${ZAP_PORT} \
         -config api.disablekey=true >> $ZAP_LOG 2>&1 &
     sleep 2
     while [ -z "$(tail -n 2 $ZAP_LOG | grep 'ZAP is now listening')" ]; do
