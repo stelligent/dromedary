@@ -61,17 +61,7 @@
         "VpcId":{
           "Ref":"VPC"
         },
-        "GroupDescription":"Open ALL the ports",
-        "SecurityGroupIngress":[
-          {
-            "IpProtocol":"tcp",
-            "FromPort":"1",
-            "ToPort":"65535",
-            "CidrIp":{
-              "Ref":"SshCidr"
-            }
-          }
-        ]
+        "GroupDescription":"No ingress by default"
       }
     },
     "JenkinsInstance":{

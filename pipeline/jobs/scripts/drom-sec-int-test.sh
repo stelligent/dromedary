@@ -13,8 +13,11 @@ EOF
 }
 
 pushd test-security-integration
-gem install rspec aws-sdk
+gem install rspec:3.4.0 aws-sdk:2.2.25
 rspec
+TEST_RESULT=$?
 publish_results $1 $2 $3 $4
 popd
+exit ${TEST_RESULT}
+
 
