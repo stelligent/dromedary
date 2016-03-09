@@ -69,12 +69,15 @@ def main():
     zap_results = fetchResults(RESULTS_FILES['zap_results'])
 
     # Fetch the overall result of the tests
-    results['result'] = behave_results[0]['status']
+    result_str = "FAIL"
+    if re.match(r'pass', behave_results[0]['status']):
+        result_str = 'PASS'
+    results['result'] = result_str
 
     # Check each test
     results['results'] = list()
     for element in behave_results[0]['elements']:
-        test = {'rule': element['name'], 'result': 'PASS', 'status': 'Passed'}
+        test = {'rule': element['name'], 'result': 'PASS', 'status': 'PASS'}
 
         # If any step failed, report failure for the test
         for step in element['steps']:
