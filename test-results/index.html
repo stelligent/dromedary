@@ -118,7 +118,9 @@
     </a>
     {{/if_eq}}
     {{/if_eq}}
-    <h3 class="job-info"><small><strong>Job:</strong> {{JOB_NAME}} <strong>Build:</strong> {{BUILD_NUMBER}}</small></h3>
+    <div id="cfn-nag-job-info">
+
+    </div>
     <div class="collapse" id="cfn-nag-table-wrapper">
         <table class="table">
             <thead>
@@ -258,7 +260,9 @@
 
 
 <script>
-    renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/cfn_nag_results.json");
+    renderSection("cfn-nag-template", "cfn-nag-wrapper", "data/cfn_nag_results.json", function(){
+        renderSection("job-info-template", "cfn-nag-job-info", "data/sec_staticcode_anal_job_info.json" );
+    });
     renderSection("sec-int-template", "sec-int-wrapper", "data/sec_int_test_results.json", function(){
         renderSection("job-info-template", "sec-int-job-info", "data/sec_int_test_job_info.json" );
     });
