@@ -331,7 +331,7 @@
               {
                 "InputArtifacts":[
                   {
-                    "Name":"DromedaryCreate"
+                    "Name":"DromedaryBuild"
                   }
                 ],
                 "Name":"TrustedAdvisor",
