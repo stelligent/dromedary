@@ -10,6 +10,7 @@ do
   if [[ -z ${!necessary_env_var} ]];
   then
     echo The env var: ${necessary_env_var} must be set!
+    exit 1
   fi
 done
 
