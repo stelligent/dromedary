@@ -329,6 +329,11 @@
               },
 
               {
+                "InputArtifacts":[
+                  {
+                    "Name":"DromedaryCreate"
+                  }
+                ],
                 "Name":"TrustedAdvisor",
                 "ActionTypeId":{
                   "Category":"Test",
@@ -338,6 +343,11 @@
                     "Ref":"MyBuildProvider"
                   }
                 },
+                "OutputArtifacts":[
+                  {
+                    "Name":"DromedaryTA"
+                  }
+                ],
                 "Configuration":{
                   "ProjectName":"drom-trusted-advisor"
                 }
