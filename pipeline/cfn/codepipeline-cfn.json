@@ -326,6 +326,21 @@
                   "ProjectName":"drom-sec-int-test"
                 },
                 "RunOrder":3
+              },
+
+              {
+                "Name":"TrustedAdvisor",
+                "ActionTypeId":{
+                  "Category":"Test",
+                  "Owner":"Custom",
+                  "Version":"1",
+                  "Provider":{
+                    "Ref":"MyBuildProvider"
+                  }
+                },
+                "Configuration":{
+                  "ProjectName":"drom-trusted-advisor"
+                }
               }
             ]
           },
