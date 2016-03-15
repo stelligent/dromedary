@@ -46,7 +46,7 @@
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
         <object ruby-class="RvmWrapper" pluginid="rvm">
-          <impl pluginid="rvm" ruby-class="String">2.2.1@sec-trusted-advisor/impl>
+          <impl pluginid="rvm" ruby-class="String">2.2.1@sec-trusted-advisor</impl>
         </object>
         <pluginid pluginid="rvm" ruby-class="String">rvm</pluginid>
       </ruby-object>
