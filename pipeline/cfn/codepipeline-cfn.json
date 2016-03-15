@@ -343,11 +343,6 @@
                     "Ref":"MyBuildProvider"
                   }
                 },
-                "OutputArtifacts":[
-                  {
-                    "Name":"DromedaryTA"
-                  }
-                ],
                 "Configuration":{
                   "ProjectName":"drom-trusted-advisor"
                 }
