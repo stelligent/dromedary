@@ -138,6 +138,33 @@
                                     "node -v \n",
                                     "npm -v\n"
                                 ]]}
+                            },
+                            "30-run-oscap": {
+                              "env": {
+                                "HOME": "/root"
+                              },
+                              "command": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "oscap xccdf eval --profile common ",
+                                    "                 --report ~/report.html",
+                                    "                 --results ~/results.xml",
+                                    "                 --cpe /usr/share/xml/scap/ssg/content/ssg-rhel7-cpe-dictionary.xml",
+                                    "                 /usr/share/xml/scap/ssg/content/ssg-centos7-xccdf.xml\n",
+
+                                    "aws s3api put-object --bucket demo.stelligent-continuous-security.com",
+                                    "                     --key ", { "Fn::GetAtt": ["WebServerInstance", "PublicDnsName"]}, "-oscap-report.html",
+                                    "                     --body ~/report.html",
+                                    "                     --region us-east-1\n",
+
+                                    "aws s3api put-object --bucket demo.stelligent-continuous-security.com",
+                                    "                     --key ", { "Fn::GetAtt": ["WebServerInstance", "PublicDnsName"]}, "-oscap-results.xml",
+                                    "                     --body ~/results.xml",
+                                    "                     --region us-east-1\n"
+                                  ]
+                                ]
+                              }
                             }
                         }
                     },

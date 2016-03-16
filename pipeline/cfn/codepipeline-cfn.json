@@ -346,6 +346,27 @@
                 "Configuration":{
                   "ProjectName":"drom-trusted-advisor"
                 }
+              },
+
+              {
+                "InputArtifacts":[
+                  {
+                    "Name":"DromedaryCreate"
+                  }
+                ],
+                "Name":"OpenSCAP",
+                "ActionTypeId":{
+                  "Category":"Test",
+                  "Owner":"Custom",
+                  "Version":"1",
+                  "Provider":{
+                    "Ref":"MyBuildProvider"
+                  }
+                },
+                "Configuration":{
+                  "ProjectName":"drom-openscap"
+                },
+                "RunOrder":3
               }
             ]
           },

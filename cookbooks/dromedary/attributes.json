@@ -1,6 +1,7 @@
 {
     "run_list": [
         "recipe[dromedary::prereqs]",
-        "recipe[dromedary::default]"
+        "recipe[dromedary::default]",
+        "recipe[openscap::default]"
     ]
 }
