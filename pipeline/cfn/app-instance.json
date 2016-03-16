@@ -143,12 +143,13 @@
                               "env": {
                                 "HOME": "/root"
                               },
+                              "cwd": "/userdata",
                               "command": {
                                 "Fn::Join": [
                                   "",
                                   [
                                     "curl -O https://bootstrap.pypa.io/get-pip.py\n",
-                                    "python get-pip.py\n",
+                                    "python /userdata/get-pip.py\n"
                                     "pip install awscli\n",
 
                                     "public_host_name=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)\n",
@@ -211,14 +212,15 @@
                               "env": {
                                 "HOME": "/root"
                               },
+                              "cwd": "/userdata",
                               "command": {
                                 "Fn::Join": [
                                   "",
                                   [
                                     "curl -O https://bootstrap.pypa.io/get-pip.py\n",
-                                    "python get-pip.py\n",
+                                    "python /userdata/get-pip.py\n",
                                     "pip install awscli\n",
-                                    
+
                                     "public_host_name=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)\n",
 
                                     "oscap xccdf eval --profile common ",
