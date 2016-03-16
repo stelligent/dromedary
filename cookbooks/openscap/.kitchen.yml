@@ -1,0 +1,23 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+  - name: centos-7.1
+
+suites:
+  - name: rhel
+    run_list:
+      - openscap::default
+    excludes:
+      - ubuntu-14.04
+
+  - name: debian
+    run_list:
+      - openscap::default
+    excludes:
+      - centos-7.1

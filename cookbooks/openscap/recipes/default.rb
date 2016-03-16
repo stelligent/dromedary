@@ -1,0 +1,1 @@
+include_recipe "openscap::_#{node['platform_family']}_install"
