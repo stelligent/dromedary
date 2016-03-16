@@ -83,7 +83,7 @@ gulp.task('copy-to-cookbooks', function(callback) {
 
 // Copy cookbooks to dist/
 gulp.task('dist:berks-vendor', function (cb) {
-  exec('cd cookbooks/dromedary/ && berks vendor ../../dist', function (err, stdout, stderr) {
+  exec('cd cookbooks/dromedary/ && berks vendor ../../dist && cp -r ../openscap ../../dist', function (err, stdout, stderr) {
     gutil.log(stdout);
     gutil.log(stderr);
     cb(err);
