@@ -147,6 +147,8 @@
                                 "Fn::Join": [
                                   "",
                                   [
+                                    "public_host_name=$(curl http://169.254.169.254/latest/meta-data/hostname)\n",
+
                                     "oscap xccdf eval --profile common ",
                                     "                 --report ~/report.html",
                                     "                 --results ~/results.xml",
@@ -154,12 +156,12 @@
                                     "                 /usr/share/xml/scap/ssg/content/ssg-centos7-xccdf.xml\n",
 
                                     "aws s3api put-object --bucket demo.stelligent-continuous-security.com",
-                                    "                     --key ", { "Fn::GetAtt": ["WebServerInstance", "PublicDnsName"]}, "-oscap-report.html",
+                                    "                     --key ${public_host_name}-oscap-report.html",
                                     "                     --body ~/report.html",
                                     "                     --region us-east-1\n",
 
                                     "aws s3api put-object --bucket demo.stelligent-continuous-security.com",
-                                    "                     --key ", { "Fn::GetAtt": ["WebServerInstance", "PublicDnsName"]}, "-oscap-results.xml",
+                                    "                     --key ${public_host_name}-oscap-results.xml",
                                     "                     --body ~/results.xml",
                                     "                     --region us-east-1\n"
                                   ]
