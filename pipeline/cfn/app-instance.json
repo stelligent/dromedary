@@ -149,7 +149,7 @@
                                   "",
                                   [
                                     "curl -O https://bootstrap.pypa.io/get-pip.py\n",
-                                    "python /userdata/get-pip.py\n"
+                                    "python /userdata/get-pip.py\n",
                                     "pip install awscli\n",
 
                                     "public_host_name=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)\n",
