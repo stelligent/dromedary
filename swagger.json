@@ -1,17 +1,17 @@
 {
   "swagger": "2.0",
-  "info": {
-    "version": "2016-03-04T07:01:16Z",
-    "title": "Api-serverless-pipeline-ApiGatewayStack-MR9T2J16LGZT"
-  },
-  "host": "3kw0ncpzzf.execute-api.us-west-2.amazonaws.com",
-  "basePath": "/prod",
   "schemes": [
     "https"
   ],
   "paths": {
     "/{subpath}": {
       "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "subpath",
@@ -37,7 +37,6 @@
           }
         },
         "x-amazon-apigateway-integration": {
-          "credentials": "arn:aws:iam::324320755747:role/serverless-pipeline-IAMSt-ApiIntegrationCredential-HS6P5RDKY9AD",
           "responses": {
             ".*": {
               "statusCode": "200",
@@ -54,7 +53,7 @@
           "requestTemplates": {
             "application/json": "{\n  \"stage\": \"$context.stage\",\n  \"request-id\": \"$context.requestId\",\n  \"api-id\": \"$context.apiId\",\n  \"resource-path\": \"$context.resourcePath\",\n  \"resource-id\": \"$context.resourceId\",\n  \"http-method\": \"$context.httpMethod\",\n  \"source-ip\": \"$context.identity.sourceIp\",\n  \"user-agent\": \"$context.identity.userAgent\",\n  \"account-id\": \"$context.identity.accountId\",\n  \"api-key\": \"$context.identity.apiKey\",\n  \"caller\": \"$context.identity.caller\",\n  \"user\": \"$context.identity.user\",\n  \"user-arn\": \"$context.identity.userArn\",\n  \"queryString\": \"$input.params().querystring\",\n  \"headers\": \"$input.params().header\",\n  \"pathParams\": \"$input.params().path\",\n  \"allParams\": \"$input.params()\",\n  \"ddbTableName\": \"$stageVariables.DDBTableName\"\n}"
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:324320755747:function:serverless-pipeline-AppStack-4O9W4GCNL9D-AppLambda-1CVN57R2YHGCX:${stageVariables.AppVersion}/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:324320755747:function:${stageVariables.AppFunctionName}:${stageVariables.AppVersion}/invocations",
           "httpMethod": "POST",
           "requestParameters": {
             "integration.request.path.subpath": "method.request.path.subpath"
@@ -63,6 +62,5 @@
         }
       }
     }
-  },
-  "definitions": {}
+  }
 }
