@@ -5,7 +5,6 @@ dromedaryChartHandler = function () {
   var myPieChart;
   var commitSha = 'unknown';
   var updateChart = false;
-  var reloadPage = false;
   var lastApiHtml = '\n';
   var colorCounts = {};
   var colors = [];
@@ -109,8 +108,8 @@ dromedaryChartHandler = function () {
         return;
       }
       if (commitSha !== data.version) {
-        reloadPage = true;
         updateLastApiMessage('New commit sha detected!');
+        location.reload(true);
       }
     });
   }
@@ -195,9 +194,6 @@ dromedaryChartHandler = function () {
       refreshColorCount();
       updateLastApiMessage('Updating chart');
       updateChart = false;
-    }
-    if (reloadPage) {
-      location.reload(true);
     }
   }, 100);
 };
