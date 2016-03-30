@@ -1,7 +1,0 @@
----
-- name: Install OWASP ZAP
-  hosts: localhost
-  sudo: True
-  roles:
-    - zap
-    
