@@ -1,29 +1,60 @@
 var expect    = require("chai").expect;
-var request   = require('urllib-sync').request;
-
+var rp        = require('request-promise');
 var targetUrl = process.env.hasOwnProperty('TARGET_URL') ? process.env.TARGET_URL : 'http://localhost:8080';
 
 describe("/increment", function() {
-  before(function() {
-    var chartData = JSON.parse(request(targetUrl + '/data').data.toString('utf-8'));
-    var initialColorCount = chartData[0].value;
+    var chartData, initialColorCount, color, expectedNewColorCount;
+    var incrementResponse, newColorCounts, badIncrementResponse;
 
-    this.color = chartData[0].label.toLowerCase();
-    this.expectedNewColorCount = initialColorCount + 1;
-    this.incrementResponse = JSON.parse(request(targetUrl + '/increment?color=' + this.color).data.toString('utf-8'));
-    this.newColorCounts = JSON.parse(request(targetUrl + '/data?countsOnly').data.toString('utf-8'));
-    this.badIncrementResponse = JSON.parse(request(targetUrl + '/increment?color=UKNOWN').data.toString('utf-8'));
+    this.timeout(15000);
+
+    before(function(done) {
+    var apiBaseurl;
+
+    rp({ uri: targetUrl+'/config.json', json:true})
+        .then(function (data) {
+          if(!data.apiBaseurl || data.apiBaseurl == '/') {
+            apiBaseurl = targetUrl;
+          } else {
+            apiBaseurl = data.apiBaseurl;
+          }
+
+          return rp({ uri: apiBaseurl+'/data', qs: {nocache:true}, json:true});
+        })
+        .then(function(data) {
+          chartData = data;
+          initialColorCount = chartData[0].value;
+          color = chartData[0].label.toLowerCase();
+          expectedNewColorCount = initialColorCount + 1;
+
+          return rp({ uri: apiBaseurl+'/increment',qs: {color: color}, json:true});
+        })
+        .then(function(data) {
+            incrementResponse = data;
+            return rp({ uri: apiBaseurl+'/data',qs: {nocache:true, countsOnly: true}, json:true});
+        })
+        .then(function(data) {
+            newColorCounts = data;
+            return rp({ uri: apiBaseurl+'/increment',qs: {color: 'UKNOWN'}, json:true});
+        })
+        .then(function(data) {
+            badIncrementResponse = data;
+            done();
+        })
+        .catch(function (err) {
+          throw err;
+        });
   });
 
   it("returns new count", function() {
-    expect(this.incrementResponse.count).to.equal(this.expectedNewColorCount);
+    expect(incrementResponse.count).to.equal(expectedNewColorCount);
   });
 
   it("new count matches expected value", function() {
-    expect(this.newColorCounts[this.color]).to.equal(this.expectedNewColorCount);
+    expect(newColorCounts[color]).to.equal(expectedNewColorCount);
   });
 
   it("bad color produces error", function() {
-    expect(this.badIncrementResponse.hasOwnProperty('error')).to.be.true;
+    expect(badIncrementResponse.hasOwnProperty('error')).to.be.true;
   });
 });

@@ -12,7 +12,6 @@ var ddbLastFetch = {};
 
 module.exports = app;
 
-
 var ddbPersist = new DDBP();
 
 if (process.env.hasOwnProperty('AUTOMATED_ACCEPTANCE_TEST')) {
@@ -37,13 +36,13 @@ function updateColorCountsFromDdb(siteName, cb) {
 }
 
 /* Returns in memory store chart data store */
-function getChartData(siteName, cb) {
+function getChartData(siteName, nocache, cb) {
   if (!siteChartStore.hasOwnProperty(siteName)) {
     siteChartStore[siteName] = new CS(siteName);
     ddbLastFetch[siteName] = 0;
   }
 
-  if (Date.now() - ddbLastFetch[siteName] > 1000) {
+  if (nocache || (Date.now() - ddbLastFetch[siteName] > 1000)) {
     // Fetch from DDB if it's been more than a second since last refresh
     updateColorCountsFromDdb(siteName, cb);
   } else {
@@ -86,7 +85,8 @@ app.get('/config.json', function (req, res) {
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
   console.log('Request received from %s for /data', getClientIp(req));
-  getChartData(req.headers.host, function (err, data) {
+  var nocache = req.query.hasOwnProperty('nocache') ;
+  getChartData(req.headers.host,nocache,function (err, data) {
     var chartData = data;
     if (err) {
       console.log(err);
@@ -116,7 +116,8 @@ app.get('/increment', function (req, res) {
     return;
   }
 
-  getChartData(req.headers.host, function (err, data) {
+  var nocache = req.query.hasOwnProperty('nocache') ;
+  getChartData(req.headers.host,nocache,function (err, data) {
     console.log('Request received from %s for /increment', ip);
     reqThrottle.logIp(ip);
     if (err) {

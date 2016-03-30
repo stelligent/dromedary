@@ -1,0 +1,66 @@
+{
+  "swagger": "2.0",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{subpath}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "subpath",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
+              "Access-Control-Allow-Methods": {
+                "type": "string"
+              },
+              "Content-Type": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            ".*": {
+              "statusCode": "200",
+              "responseParameters": {
+                "method.response.header.Access-Control-Allow-Methods": "'GET, OPTIONS'",
+                "method.response.header.Content-Type": "integration.response.body.contentType",
+                "method.response.header.Access-Control-Allow-Origin": "'*'"
+              },
+              "responseTemplates": {
+                "application/json": "$util.base64Decode( $input.path('$.payload') )"
+              }
+            }
+          },
+          "requestTemplates": {
+            "application/json": "{\n  \"stage\": \"$context.stage\",\n  \"request-id\": \"$context.requestId\",\n  \"api-id\": \"$context.apiId\",\n  \"resource-path\": \"$context.resourcePath\",\n  \"resource-id\": \"$context.resourceId\",\n  \"http-method\": \"$context.httpMethod\",\n  \"source-ip\": \"$context.identity.sourceIp\",\n  \"user-agent\": \"$context.identity.userAgent\",\n  \"account-id\": \"$context.identity.accountId\",\n  \"api-key\": \"$context.identity.apiKey\",\n  \"caller\": \"$context.identity.caller\",\n  \"user\": \"$context.identity.user\",\n  \"user-arn\": \"$context.identity.userArn\",\n  \"queryString\": \"$input.params().querystring\",\n  \"headers\": \"$input.params().header\",\n  \"pathParams\": \"$input.params().path\",\n  \"allParams\": \"$input.params()\",\n  \"ddbTableName\": \"$stageVariables.DDBTableName\"\n}"
+          },
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:324320755747:function:${stageVariables.AppFunctionName}:${stageVariables.AppVersion}/invocations",
+          "httpMethod": "POST",
+          "requestParameters": {
+            "integration.request.path.subpath": "method.request.path.subpath"
+          },
+          "type": "aws"
+        }
+      }
+    }
+  }
+}
