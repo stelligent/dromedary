@@ -26,7 +26,7 @@ Directions are provided to run this demo in AWS and locally.
 
 ## Core Demo Requirements
 
-Given a version-control repository, the bootstrapping and the application must be capable of launching from a single _CloudFormation_ command and a CloudFormation button click - assuming that an [EC2 Key Pair](http://docs.aws.amazon.com/gettingstarted/latest/wah/getting-started-prereq.html#create-a-key-pair) and [Route 53 Hosted Zone](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html) has been configured. The demo should not be required to run from a local envrionment. 
+Given a version-control repository, the bootstrapping and the application must be capable of launching from a single _CloudFormation_ command and a CloudFormation button click - assuming that an [EC2 Key Pair](http://docs.aws.amazon.com/gettingstarted/latest/wah/getting-started-prereq.html#create-a-key-pair) and [Route 53 Hosted Zone](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/CreatingHostedZone.html) has been configured. The demo should not be required to run from a local environment. 
 
 An application pipeline in CodePipeline must go from commit to production in less than 10 minutes.
 
