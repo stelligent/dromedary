@@ -17,6 +17,9 @@
   "bugs": {
     "url": "https://github.com/stelligent/dromedary/issues"
   },
+  "lambci": {
+    "cmd": "npm install && ./node_modules/gulp/bin/gulp.js test"
+  },
   "homepage": "https://github.com/stelligent/dromedary#readme",
   "devDependencies": {
     "chai": "^3.2.0",
