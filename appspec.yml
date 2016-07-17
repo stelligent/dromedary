@@ -20,7 +20,7 @@ hooks:
     - location: deploy/scripts/applicationStop.sh
       timeout: 30
       runas: root
-  ValidateService:
-    - location: deploy/scripts/validateService.sh
-      timeout: 30
-      runas: root
+#  ValidateService:
+#    - location: deploy/scripts/validateService.sh
+#      timeout: 30
+#      runas: root
