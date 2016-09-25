@@ -8,8 +8,7 @@ Dromedary was featured by [Paul Duvall](https://twitter.com/PaulDuvall),
 ARC307: Infrastructure as Code breakout session at 2015
 [AWS re:Invent](https://reinvent.awsevents.com/).
 
-You can view the recording of that breakout session at
-[https://www.youtube.com/watch?v=WL2xSMVXy5w](https://www.youtube.com/watch?v=WL2xSMVXy5w).
+Click [here](https://www.youtube.com/watch?v=WL2xSMVXy5w) to view a recording of the re:Invent breakout session or, to view a shorter 10-minute walktrhough of the demo, click [here](https://stelligent.com/2015/11/17/stelligent-aws-continuous-delivery-demo-screencast/).
 
 ## The Demo App :dromedary_camel:
 
