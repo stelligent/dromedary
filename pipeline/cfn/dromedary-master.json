@@ -81,11 +81,11 @@
     "Domain":{
       "Type":"String",
       "Description":"Route53 Hosted Zone name for prod IP (include trailing .). Your AWS account must have access to this Hosted Zone.",
-      "Default":"oneclickdeployment.com."
+      "Default":"example.com."
     },
     "ProdHostedZone":{
       "Type":"String",
-      "Default":".oneclickdeployment.com",
+      "Default":".example.com",
       "Description":"Route53 Hosted Zone (include leading .). Your AWS account must have access to this Hosted Zone."
     },
     "InstanceType":{
