@@ -1,0 +1,12 @@
+{
+  "NotificationArn": "arn:aws:sns:us-east-1:ACCTID:TOPICNAME",
+  "TemplateURL": "https://s3.amazonaws.com/stelligent-training-public/master/dromedary-master.json",
+  "KeyName": "YOURKEYPAIRNAME",
+  "Branch": "master",
+  "GitHubUser": "stelligent",
+  "BaseTemplateURL": "https://s3.amazonaws.com/stelligent-training-public/master/",
+  "GitHubToken": "YourGitHubToken",
+  "DDBTableName": "YourUniqueDDBTableName",
+  "ProdHostedZone": ".oneclickdeployment.com",
+  "Domain": "oneclickdeployment.com."
+}
