@@ -1,4 +1,4 @@
-# dromedary :dromedary_camel: <img align="right" src="liatrio.png">
+# dromedary :dromedary_camel: <img align="right" src="public/liatrio.png">
 Dromedary is a sample application used by Liatrio to demonstrate CI/CD methods.
 
 ### The Demo App :dromedary_camel:  
