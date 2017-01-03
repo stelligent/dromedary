@@ -86,7 +86,7 @@ app.get('/config.json', function (req, res) {
 app.get('/data', function (req, res) {
   console.log('Request received from %s for /data', getClientIp(req));
   var nocache = req.query.hasOwnProperty('nocache') ;
-  getChartData(req.headers.host,nocache,function (err, data) {
+  getChartData("app_key",nocache,function (err, data) {
     var chartData = data;
     if (err) {
       console.log(err);
@@ -117,7 +117,7 @@ app.get('/increment', function (req, res) {
   }
 
   var nocache = req.query.hasOwnProperty('nocache') ;
-  getChartData(req.headers.host,nocache,function (err, data) {
+  getChartData("app_key",nocache,function (err, data) {
     console.log('Request received from %s for /increment', ip);
     reqThrottle.logIp(ip);
     if (err) {
@@ -132,7 +132,7 @@ app.get('/increment', function (req, res) {
     }
 
     /*jshint -W101 */
-    ddbPersist.incrementCount(req.headers.host, req.query.color, function (err) {
+    ddbPersist.incrementCount("app_key", req.query.color, function (err) {
       console.log('Incrementing count for ' + req.query.color);
       if (err) {
         console.log(err);
@@ -140,7 +140,7 @@ app.get('/increment', function (req, res) {
         return;
       }
 
-      updateColorCountsFromDdb(req.headers.host, function (err, data) {
+      updateColorCountsFromDdb("app_key", function (err, data) {
         if (err) {
           console.log(err);
           sendJsonResponse( res, {error: 'Failed to increment color count in DDB'});
