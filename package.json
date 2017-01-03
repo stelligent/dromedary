@@ -4,6 +4,7 @@
   "description": "- Stelligent Demo Chart API",
   "main": "app.js",
   "scripts": {
+    "start": "npm install && gulp"
     "test": "gulp test"
   },
   "repository": {
