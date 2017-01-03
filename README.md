@@ -1,7 +1,7 @@
 # dromedary :dromedary_camel: <img align="right" src="liatrio.png">
 Dromedary is a sample application used by Liatrio to demonstrate CI/CD methods.
 
-### The Demo App  
+### The Demo App :dromedary_camel:  
 
 The Dromedary demo app is a simple nodejs application that displays a pie chart to users. The data that
 describes the pie chart (i.e. the colors and their values) is served by the application.
@@ -12,8 +12,8 @@ backend to increment the value for that color and update the chart with the new 
 The frontend will also poll the backend for changes to values of the colors of the pie chart and update the chart
 appropriately. If it detects that a new version of the app has been deployed, it will reload the page.
 
-### Running Locally :dromedary_camel:
-
+### Running Locally :dromedary_camel:  
+  
 #### Install Prerequisites 
 
 1. Ensure [nodejs](https://nodejs.org/) and [npm](https://www.npmjs.com/) are installed
