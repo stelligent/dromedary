@@ -102,7 +102,33 @@ dromedaryChartHandler = function () {
     });
   }
 
+  // Loads build version via ajax requests adds it to version element
+  function loadBuildVersion() {
+    $.getJSON(apiBaseurl+'/build', function(build, status) {
+      if (status !== 'success') {
+        console.log('Failed to fetch /build');
+        return;
+      }
+      $('#build-version').html(build.version);
+    });
+  }
+
   $.ajaxSetup({ timeout: 750 });
+
+  // Load feature toggles config and enable/disable features accordingly
+  $.getJSON(apiBaseurl+'/feature-toggles', {}, function(featureFlags, status) {
+    if (status !== 'success') {
+      console.log('Failed to fetch /feature-toggles');
+      return;
+    }
+    // version-display toggle
+    if (featureFlags['version-display'] === true) {
+      $('#build-version-message').show();
+      loadBuildVersion();
+    } else {
+      $('#build-version-message').hide();
+    }
+  });
 
   // load data now that we have our config info
   $.getJSON(apiBaseurl+'data', {}, function(data, status) {

@@ -71,10 +71,19 @@ setInterval(reqThrottle.gcMap, 1000);
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
 
+// GET requests to /feature-toggles return feature-toggles config object
 app.get('/feature-toggles', function(req, res) {
   console.log(__dirname + '/feature-toggles');
   var featureFlags = require(__dirname + '/feature-toggles');
   sendJsonResponse(res, featureFlags);
+});
+
+// GET requests to /build return build meta-data object
+app.get('/build', function(req, res) {
+  var build = { 
+    version: require(__dirname+'/package.json').version
+  };
+  sendJsonResponse(res, build);
 });
 
 /* GET requests to /data return chart data values */
