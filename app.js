@@ -71,6 +71,12 @@ setInterval(reqThrottle.gcMap, 1000);
 /* Host static content from /public */
 app.use(express.static(__dirname + '/public'));
 
+app.get('/feature-toggles', function(req, res) {
+  console.log(__dirname + '/feature-toggles');
+  var featureFlags = require(__dirname + '/feature-toggles');
+  sendJsonResponse(res, featureFlags);
+});
+
 /* GET requests to /data return chart data values */
 app.get('/data', function (req, res) {
   console.log('Request received from %s for /data', getClientIp(req));
