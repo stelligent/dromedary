@@ -102,54 +102,30 @@ dromedaryChartHandler = function () {
     });
   }
 
-  function pollForNewConfig() {
-    $.getJSON('config.json', {}, function(data, status) {
-      if (status !== 'success' || ! data.hasOwnProperty('version')) {
-        return;
-      }
-      if (commitSha !== data.version) {
-        updateLastApiMessage('New commit sha detected!');
-        location.reload(true);
-      }
-    });
-  }
-
   $.ajaxSetup({ timeout: 750 });
 
-  $.getJSON('config.json', {}, function(data, status) {
-    if (status !== 'success' || ! data.hasOwnProperty('version')) {
+  // load data now that we have our config info
+  $.getJSON(apiBaseurl+'data', {}, function(data, status) {
+    var i;
+    // console.log('Chart data GET status: ' + status);
+    // console.log('Chart data GET: ' + JSON.stringify(data));
+    if (status !== 'success') {
+      console.log('Failed to fetch /data');
       return;
     }
-    commitSha = data.version;
-    apiBaseurl = data.apiBaseurl;
-    document.getElementById('gitCommitSha').innerHTML = commitSha;
-    updateLastApiMessage('Build version is ' + commitSha);
+    myPieChart = new Chart(ctx).Pie(data);
+    updateLastApiMessage('Initial chart data received');
 
-    // load data now that we have our config info
-    $.getJSON(apiBaseurl+'data', {}, function(data, status) {
-      var i;
-      // console.log('Chart data GET status: ' + status);
-      // console.log('Chart data GET: ' + JSON.stringify(data));
-      if (status !== 'success') {
-        console.log('Failed to fetch /data');
-        return;
-      }
-      myPieChart = new Chart(ctx).Pie(data);
-      updateLastApiMessage('Initial chart data received');
-
-      for (i = 0; i < data.length; i++) {
-        colors.push(data[i].label.toLowerCase());
-        colorCounts[data[i].label.toLowerCase()] =
-        {label: data[i].label, value: data[i].value};
-      }
-      refreshColorCount();
-    });
-
-    // check for updates occasionally
-    setInterval(pollForUpdates, 5000);
-    setInterval(pollForNewConfig, 1000);
+    for (i = 0; i < data.length; i++) {
+      colors.push(data[i].label.toLowerCase());
+      colorCounts[data[i].label.toLowerCase()] =
+      {label: data[i].label, value: data[i].value};
+    }
+    refreshColorCount();
   });
 
+  // check for updates occasionally
+  setInterval(pollForUpdates, 5000);
 
   $('#colorCounts').click(function(evt) {
     var colorMatch = evt.target.id.match(/^([a-z]+)Count(Div|Label)?$/);
