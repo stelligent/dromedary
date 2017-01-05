@@ -39,3 +39,6 @@ cookbooks/dromedary/files/default/app
 # IDE
 .idea/
 *.iml
+
+# DS_Store
+.DS_Store
