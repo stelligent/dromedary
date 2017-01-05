@@ -102,54 +102,56 @@ dromedaryChartHandler = function () {
     });
   }
 
-  function pollForNewConfig() {
-    $.getJSON('config.json', {}, function(data, status) {
-      if (status !== 'success' || ! data.hasOwnProperty('version')) {
+  // Loads build version via ajax requests adds it to version element
+  function loadBuildVersion() {
+    $.getJSON(apiBaseurl+'/build', function(build, status) {
+      if (status !== 'success') {
+        console.log('Failed to fetch /build');
         return;
       }
-      if (commitSha !== data.version) {
-        updateLastApiMessage('New commit sha detected!');
-        location.reload(true);
-      }
+      $('#build-version').html(build.version);
     });
   }
 
   $.ajaxSetup({ timeout: 750 });
 
-  $.getJSON('config.json', {}, function(data, status) {
-    if (status !== 'success' || ! data.hasOwnProperty('version')) {
+  // Load feature toggles config and enable/disable features accordingly
+  $.getJSON(apiBaseurl+'/feature-toggles', {}, function(featureFlags, status) {
+    if (status !== 'success') {
+      console.log('Failed to fetch /feature-toggles');
       return;
     }
-    commitSha = data.version;
-    apiBaseurl = data.apiBaseurl;
-    document.getElementById('gitCommitSha').innerHTML = commitSha;
-    updateLastApiMessage('Build version is ' + commitSha);
-
-    // load data now that we have our config info
-    $.getJSON(apiBaseurl+'data', {}, function(data, status) {
-      var i;
-      // console.log('Chart data GET status: ' + status);
-      // console.log('Chart data GET: ' + JSON.stringify(data));
-      if (status !== 'success') {
-        console.log('Failed to fetch /data');
-        return;
-      }
-      myPieChart = new Chart(ctx).Pie(data);
-      updateLastApiMessage('Initial chart data received');
-
-      for (i = 0; i < data.length; i++) {
-        colors.push(data[i].label.toLowerCase());
-        colorCounts[data[i].label.toLowerCase()] =
-        {label: data[i].label, value: data[i].value};
-      }
-      refreshColorCount();
-    });
-
-    // check for updates occasionally
-    setInterval(pollForUpdates, 5000);
-    setInterval(pollForNewConfig, 1000);
+    // version-display toggle
+    if (featureFlags['version-display'] === true) {
+      $('#build-version-message').show();
+      loadBuildVersion();
+    } else {
+      $('#build-version-message').hide();
+    }
   });
 
+  // load data now that we have our config info
+  $.getJSON(apiBaseurl+'data', {}, function(data, status) {
+    var i;
+    // console.log('Chart data GET status: ' + status);
+    // console.log('Chart data GET: ' + JSON.stringify(data));
+    if (status !== 'success') {
+      console.log('Failed to fetch /data');
+      return;
+    }
+    myPieChart = new Chart(ctx).Pie(data);
+    updateLastApiMessage('Initial chart data received');
+
+    for (i = 0; i < data.length; i++) {
+      colors.push(data[i].label.toLowerCase());
+      colorCounts[data[i].label.toLowerCase()] =
+      {label: data[i].label, value: data[i].value};
+    }
+    refreshColorCount();
+  });
+
+  // check for updates occasionally
+  setInterval(pollForUpdates, 5000);
 
   $('#colorCounts').click(function(evt) {
     var colorMatch = evt.target.id.match(/^([a-z]+)Count(Div|Label)?$/);
