@@ -21,6 +21,7 @@ MasterStackName="$(aws cloudformation describe-stacks --stack-name $pipeline_sto
 dromedary_s3_bucket=dromedary-"$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`DromedaryS3Bucket`].OutputValue')"
 dromedary_branch="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`Branch`].OutputValue')"
 dromedary_ec2_key="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`KeyName`].OutputValue')"
+ssh_location="$(aws cloudformation describe-stacks --stack-name $pipeline_store_stackname --output text --query 'Stacks[0].Outputs[?OutputKey==`SSHLocation`].OutputValue')"
 
 #prod_dns_param="pmd.oneclickdeployment.com"
 
@@ -79,6 +80,7 @@ echo "The value of dromedary_eni_stack_name is $dromedary_eni_stack_name"
 echo "The value of jenkins_custom_action_provider_name is $jenkins_custom_action_provider_name"
 echo "The value of dromedary_eni_stack_name is $dromedary_eni_stack_name"
 echo "The value of my_domainname is $my_domainname"
+echo "The value of ssh_location is $ssh_location"
 
 eni_subnet_id="$(aws cloudformation describe-stacks --stack-name $dromedary_vpc_stack_name --output text --query 'Stacks[0].Outputs[?OutputKey==`SubnetId`].OutputValue')"
 
@@ -101,6 +103,8 @@ sed s/HOSTNAME_PLACEHOLDER/$dromedary_hostname/ drom-build/config.xml > drom-bui
 sed s/DOMAINNAME_PLACEHOLDER/$dromedary_domainname/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/ZONE_ID_PLACEHOLDER/$dromedary_zone_id/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
 sed s/ACTION_PROVIDER_PLACEHOLDER/$jenkins_custom_action_provider_name/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+sed s/SSH_LOCATION_PLACEHOLDER/$ssh_location/ drom-build/config.xml > drom-build/config.xml.new && mv drom-build/config.xml.new drom-build/config.xml
+
 
 tar czf job-configs.tgz *
 aws s3 cp job-configs.tgz s3://$dromedary_s3_bucket/$config_tar_path
@@ -130,7 +134,8 @@ aws cloudformation update-stack \
         ParameterKey=DDBStackName,ParameterValue=$DDBStackName \
         ParameterKey=ENIStackName,ParameterValue=$dromedary_eni_stack_name \
         ParameterKey=DromedaryAppURL,ParameterValue=$prod_dns_param \
-        ParameterKey=KeyName,ParameterValue=$dromedary_ec2_key
+        ParameterKey=KeyName,ParameterValue=$dromedary_ec2_key \
+        ParameterKey=SSHLocation,ParameterValue=$ssh_location
  
 sleep 60
 
