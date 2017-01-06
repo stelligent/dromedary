@@ -46,9 +46,7 @@
         },
         "SshCidr":{
             "Type":"String",
-            "Description":"Whitelisted network CIDR for inbound SSH. Enter your IP and range.",
-            "Default":"255.255.255.255/32",
-            "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$"
+            "Description":"Whitelisted network CIDR for inbound SSH. Enter your IP and range."
         }
     },
 

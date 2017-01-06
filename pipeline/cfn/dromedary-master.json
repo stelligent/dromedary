@@ -824,6 +824,22 @@
         "RetentionInDays":7
       }
     },
+    "ArtifactS3Bucket":{
+      "Type":"AWS::S3::Bucket",
+      "Properties":{
+        "BucketName": {
+          "Fn::Join": [
+            "-", 
+            [
+              "dromedary",
+              {
+                "Ref":"AWS::AccountId"
+              }
+            ]
+          ]
+        }
+      }
+    },
     "WebServerInstance":{
       "Type":"AWS::EC2::Instance",
       "DependsOn":[
@@ -1591,6 +1607,12 @@
             "/"
           ]
         ]
+      }
+    },
+    "SSHLocation":{
+      "Description":"Whitelisted IP address for SSH access to instances.",
+      "Value":{
+        "Ref":"SSHLocation"
       }
     }
   }

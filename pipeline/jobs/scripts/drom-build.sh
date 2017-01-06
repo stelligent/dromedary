@@ -9,6 +9,7 @@ else
     echo "export AWS_DEFAULT_REGION=us-east-1" > environment.sh
 fi
 echo "export dromedary_s3_bucket=$DROMEDARY_S3_BUCKET" >> environment.sh
+echo "export dromedary_master_stack_name=$DROMEDARY_MASTER_STACK" >> environment.sh
 echo "export dromedary_vpc_stack_name=$DROMEDARY_VPC_STACK" >> environment.sh
 echo "export dromedary_iam_stack_name=$DROMEDARY_IAM_STACK" >> environment.sh
 echo "export dromedary_ddb_stack_name=$DROMEDARY_DDB_STACK" >> environment.sh
