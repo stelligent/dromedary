@@ -76,6 +76,11 @@
       "Type":"String",
       "Default":"EMPTY",
       "Description":"The URL users use to launch the Dromedary application"
+    },
+    "SSHLocation":{
+      "Type":"String",
+      "Default":"EMPTY",
+      "Description":"Whitelisted IP address for SSH access to EC2 Instances"
     }
   },
   "Resources":{
@@ -189,6 +194,12 @@
       "Description":"The URL users use to launch the Dromedary application",
       "Value":{
         "Ref":"DromedaryAppURL"
+      }
+    },
+    "SSHLocation":{
+      "Description":"Whitelisted IP address for SSH access to EC2 Instances",
+      "Value":{
+        "Ref":"SSHLocation"
       }
     }
   }
