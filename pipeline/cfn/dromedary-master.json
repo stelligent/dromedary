@@ -20,12 +20,12 @@
     "GitHubUser":{
       "Type":"String",
       "Description":"GitHub UserName. This username must have access to the GitHubToken.",
-      "Default":"stelligent"
+      "Default":"akuma12"
     },
     "BaseTemplateURL":{
       "Type":"String",
       "Description":"S3 Base URL of all the CloudFormation templated used in Dromedary (without the file names)",
-      "Default":"https://s3.amazonaws.com/stelligent-training-public/master/"
+      "Default":"https://s3.amazonaws.com/dromedary-jim-test/"
     },
     "VPCCFNTemplateFile":{
       "Type":"String",
@@ -71,7 +71,8 @@
       "Type":"String",
       "MinLength":"1",
       "MaxLength":"32",
-      "Description":"Unique name for the generated Dromedary Dynamo DB table."
+      "Description":"Unique name for the generated Dromedary Dynamo DB table.",
+      "Default": "dromedary-jim-test"
     },
     "Branch":{
       "Type":"String",
@@ -81,11 +82,11 @@
     "Domain":{
       "Type":"String",
       "Description":"Route53 Hosted Zone name for prod IP (include trailing .). Your AWS account must have access to this Hosted Zone.",
-      "Default":"example.com."
+      "Default":"jimtest.com."
     },
     "ProdHostedZone":{
       "Type":"String",
-      "Default":".example.com",
+      "Default":".jimtest.com",
       "Description":"Route53 Hosted Zone (include leading .). Your AWS account must have access to this Hosted Zone."
     },
     "InstanceType":{
