@@ -60,7 +60,7 @@
         "VpcId":{
           "Ref":"VPC"
         },
-        "GroupDescription":"DON'T Open ALL the ports",
+        "GroupDescription":"DO NOT Open ALL the ports",
         "SecurityGroupIngress":[
           {
             "IpProtocol":"tcp",
