@@ -19,7 +19,7 @@ GEM
       cleanroom (~> 1.0)
       faraday (~> 0.9.0)
       httpclient (~> 2.6.0)
-      minitar (~> 0.5.4)
+      minitar (~> 0.6.1)
       octokit (~> 3.0)
       retryable (~> 2.0)
       ridley (~> 4.0)
