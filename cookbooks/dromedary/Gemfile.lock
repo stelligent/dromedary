@@ -81,8 +81,7 @@ GEM
     iniparse (1.4.4)
     ipaddress (0.8.3)
     iso8601 (0.9.1)
-    jmespath (1.0.2)
-      multi_json (~> 1.0)
+    jmespath (1.6.1)
     kitchen-ec2 (0.10.0)
       aws-sdk (~> 2)
       excon
@@ -101,7 +100,7 @@ GEM
     mixlib-log (1.7.1)
     mixlib-shellout (2.2.0)
     molinillo (0.6.6)
-    multi_json (1.11.2)
+    multi_json (1.15.0)
     multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
